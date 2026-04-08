@@ -32,15 +32,19 @@ function findPartIndex(parts, targetPart) {
     // 기능: parts 배열에서 targetPart 와 일치하는 인덱스를 찾아 반환. 없으면 -1.
     // input(parameter): parts(배열), targetPart(string)
     // return값 타입: number
-    // 여기를 채우세요
+    for(let i = 0; i<parts.length; i++){
+         if(parts[i] === targetPart){
+            return i;
+         }
+    } return -1;
 }
 
 // ✅ 함수 완성 후 아래 주석을 풀어서 확인해보세요
-/*
+
 console.log(findPartIndex(["입", "꼬리", "코", "눈"], "코"));  // 2
 console.log(findPartIndex(["입", "꼬리", "코", "눈"], "입"));  // 0
 console.log(findPartIndex(["입", "꼬리", "코", "눈"], "발"));  // -1
-*/
+
 
 
 // ============================================================
@@ -69,14 +73,18 @@ function generateRoute(parts, n) {
     // return값 타입: 배열
     // 꼭 써야 하는 것:
     //   빈 배열 route 만들어서 거기에 채우기
-    //   여기를 채우세요
+    let randomParts = [];
+    for (let i=0; i<n; i++){
+        randomParts.push(parts[Math.floor(Math.random()*parts.length)]);
+    }
+    return randomParts;
 }
 
 // ✅ 함수 완성 후 아래 주석을 풀어서 확인해보세요
-/*
+
 console.log(generateRoute(["입", "꼬리", "코", "눈"], 5));  // 예: ["꼬리", "입", "눈", "입", "코"]
 console.log(generateRoute(["입", "꼬리", "코", "눈"], 3));  // 예: ["코", "코", "입"]
-*/
+
 
 
 // ============================================================
