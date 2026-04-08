@@ -1,113 +1,225 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
-<head>
-<meta charset="UTF-8">
-<title>notebook.js 테스트</title>
-<style>
-body { font-family: monospace; background: #1e1e1e; color: #d4d4d4; padding: 20px; }
-h1 { color: #569cd6; }
-h2 { color: #4ec9b0; margin-top: 30px; }
-p { color: #ce9178; }
-.result { background: #2d2d2d; padding: 15px; margin: 10px 0; border-left: 3px solid #569cd6; line-height: 1.8; }
-.pass { border-left-color: #4ec9b0; }
-.fail { border-left-color: #f44747; }
-.sub { color: #808080; margin-left: 20px; }
-.concept { background: #2d2d2d; padding: 15px; margin: 10px 0; border-left: 3px solid #dcdcaa; line-height: 1.8; color: #dcdcaa; }
+    <head>
+        <meta charset="UTF-8" />
+        <title>notebook.js 테스트</title>
+        <style>
+            body {
+                font-family: monospace;
+                background: #1e1e1e;
+                color: #d4d4d4;
+                padding: 20px;
+            }
+            h1 {
+                color: #569cd6;
+            }
+            h2 {
+                color: #4ec9b0;
+                margin-top: 30px;
+            }
+            p {
+                color: #ce9178;
+            }
+            .result {
+                background: #2d2d2d;
+                padding: 15px;
+                margin: 10px 0;
+                border-left: 3px solid #569cd6;
+                line-height: 1.8;
+            }
+            .pass {
+                border-left-color: #4ec9b0;
+            }
+            .fail {
+                border-left-color: #f44747;
+            }
+            .sub {
+                color: #808080;
+                margin-left: 20px;
+            }
+            .concept {
+                background: #2d2d2d;
+                padding: 15px;
+                margin: 10px 0;
+                border-left: 3px solid #dcdcaa;
+                line-height: 1.8;
+                color: #dcdcaa;
+            }
 
-details {
-  background: #252526;
-  border-left: 3px solid #3c3c3c;
-  margin: 4px 0 16px 0;
-  padding: 0;
-}
-details[open] { border-left-color: #569cd6; }
-summary {
-  padding: 8px 12px;
-  cursor: pointer;
-  color: #808080;
-  font-size: 12px;
-  list-style: none;
-  user-select: none;
-}
-summary::-webkit-details-marker { display: none; }
-summary::before { content: "▶ "; font-size: 10px; }
-details[open] summary::before { content: "▼ "; }
-summary:hover { color: #d4d4d4; }
-.explain-body {
-  padding: 10px 16px 14px 16px;
-  font-size: 12px;
-  line-height: 2;
-  color: #b0b0b0;
-}
-.explain-body b { color: #d4d4d4; }
-.explain-body code {
-  background: #1e1e1e;
-  padding: 1px 5px;
-  border-radius: 3px;
-  color: #9cdcfe;
-  font-size: 12px;
-}
-.explain-body .why { color: #f44747; }
-.explain-body .fix { color: #4ec9b0; }
-.sub.hint { color: #dcdcaa; margin-left: 20px; }
-</style>
-</head>
-<body>
-<h1>📓 notebook.js 테스트</h1>
-<p>notebook.js 파일을 열어서 함수를 구현하고, 이 html 파일을 브라우저에서 열면 결과가 나옵니다.</p>
-<p>개발자 도구 (F12 → Console)에서도 확인할 수 있어요.</p>
-<div class="concept">
-  💡 <b>formatTipLine(input, output)</b> — "입 → 출력" 한 줄짜리 문자열 만들기<br>
-  💡 <b>showNotebook(tips)</b> — formatTipLine 조합, 팁 목록 전체를 한 문자열로 반환
-</div>
+            details {
+                background: #252526;
+                border-left: 3px solid #3c3c3c;
+                margin: 4px 0 16px 0;
+                padding: 0;
+            }
+            details[open] {
+                border-left-color: #569cd6;
+            }
+            summary {
+                padding: 8px 12px;
+                cursor: pointer;
+                color: #808080;
+                font-size: 12px;
+                list-style: none;
+                user-select: none;
+            }
+            summary::-webkit-details-marker {
+                display: none;
+            }
+            summary::before {
+                content: "▶ ";
+                font-size: 10px;
+            }
+            details[open] summary::before {
+                content: "▼ ";
+            }
+            summary:hover {
+                color: #d4d4d4;
+            }
+            .explain-body {
+                padding: 10px 16px 14px 16px;
+                font-size: 12px;
+                line-height: 2;
+                color: #b0b0b0;
+            }
+            .explain-body b {
+                color: #d4d4d4;
+            }
+            .explain-body code {
+                background: #1e1e1e;
+                padding: 1px 5px;
+                border-radius: 3px;
+                color: #9cdcfe;
+                font-size: 12px;
+            }
+            .explain-body .why {
+                color: #f44747;
+            }
+            .explain-body .fix {
+                color: #4ec9b0;
+            }
+            .sub.hint {
+                color: #dcdcaa;
+                margin-left: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>📓 notebook.js 테스트</h1>
+        <p>
+            notebook.js 파일을 열어서 함수를 구현하고, 이 html 파일을
+            브라우저에서 열면 결과가 나옵니다.
+        </p>
+        <p>개발자 도구 (F12 → Console)에서도 확인할 수 있어요.</p>
+        <div class="concept">
+            💡 <b>formatTipLine(input, output)</b> — "입 → 출력" 한 줄짜리
+            문자열 만들기<br />
+            💡 <b>showNotebook(tips)</b> — formatTipLine 조합, 팁 목록 전체를 한
+            문자열로 반환
+        </div>
 
-<!-- ============================== Function 1 ============================== -->
-<h2>✍️ Function 1: formatTipLine</h2>
-<div id="result1" class="result">테스트 대기중...</div>
-<details>
-  <summary>테스트가 ❌이면 무슨 뜻인지 보기</summary>
-  <div class="explain-body">
-    <b>"입 → 떡"이 안 나오면</b> — <span class="why">문자열 조합 방식을 확인하세요.</span><br>
-    <code>input + " → " + output</code> 처럼 화살표(<code>→</code>) 양쪽에 공백이 있어야 합니다.<br>
-    <span class="fix">→ <code>return input + " → " + output;</code> 이 한 줄로 완성됩니다.</span><br><br>
+        <!-- ============================== Function 1 ============================== -->
+        <h2>✍️ Function 1: formatTipLine</h2>
+        <div id="result1" class="result">테스트 대기중...</div>
+        <details>
+            <summary>테스트가 ❌이면 무슨 뜻인지 보기</summary>
+            <div class="explain-body">
+                <b>"입 → 떡"이 안 나오면</b> —
+                <span class="why">문자열 조합 방식을 확인하세요.</span><br />
+                <code>input + " → " + output</code> 처럼 화살표(<code>→</code>)
+                양쪽에 공백이 있어야 합니다.<br />
+                <span class="fix"
+                    >→ <code>return input + " → " + output;</code> 이 한 줄로
+                    완성됩니다.</span
+                ><br /><br />
 
-    <b>"→" 기호가 없다고 나오면</b> — <span class="why">일반 하이픈(<code>-</code>)이나 <code>=></code>를 쓰고 있습니다.</span><br>
-    <span class="fix">→ 화살표는 특수문자 <code>→</code> 입니다. 복사해서 쓰세요.</span><br><br>
+                <b>"→" 기호가 없다고 나오면</b> —
+                <span class="why"
+                    >일반 하이픈(<code>-</code>)이나 <code>=></code>를 쓰고
+                    있습니다.</span
+                ><br />
+                <span class="fix"
+                    >→ 화살표는 특수문자 <code>→</code> 입니다. 복사해서
+                    쓰세요.</span
+                ><br /><br />
 
-    <b>input이 뒤, output이 앞에 오면</b> — <span class="why">매개변수 순서가 바뀌었습니다.</span><br>
-    함수 선언 <code>function formatTipLine(input, output)</code>에서<br>
-    첫 번째 인자가 input, 두 번째가 output입니다.<br>
-    <span class="fix">→ <code>input + " → " + output</code> 순서를 확인하세요.</span><br><br>
+                <b>input이 뒤, output이 앞에 오면</b> —
+                <span class="why">매개변수 순서가 바뀌었습니다.</span><br />
+                함수 선언
+                <code>function formatTipLine(input, output)</code>에서<br />
+                첫 번째 인자가 input, 두 번째가 output입니다.<br />
+                <span class="fix"
+                    >→ <code>input + " → " + output</code> 순서를
+                    확인하세요.</span
+                ><br /><br />
 
-    <b>return이 없다고 나오면</b> — <span class="why">console.log만 쓰고 return을 빠뜨렸습니다.</span><br>
-    <span class="fix">→ 함수 안에 <code>return</code> 키워드가 반드시 있어야 합니다.</span>
-  </div>
-</details>
+                <b>return이 없다고 나오면</b> —
+                <span class="why"
+                    >console.log만 쓰고 return을 빠뜨렸습니다.</span
+                ><br />
+                <span class="fix"
+                    >→ 함수 안에 <code>return</code> 키워드가 반드시 있어야
+                    합니다.</span
+                >
+            </div>
+        </details>
 
-<!-- ============================== Function 2 ============================== -->
-<h2>📋 Function 2: showNotebook</h2>
-<div id="result2" class="result">테스트 대기중...</div>
-<details>
-  <summary>테스트가 ❌이면 무슨 뜻인지 보기</summary>
-  <div class="explain-body">
-    <b>팁이 하나만 나오거나 빠지면</b> — <span class="why">for문이 tips 배열 전체를 돌지 않고 있습니다.</span><br>
-    <span class="fix">→ <code>for (let i = 0; i &lt; tips.length; i++)</code> 로 끝까지 돌아야 합니다.</span><br><br>
+        <!-- ============================== Function 2 ============================== -->
+        <h2>📋 Function 2: showNotebook</h2>
+        <div id="result2" class="result">테스트 대기중...</div>
+        <details>
+            <summary>테스트가 ❌이면 무슨 뜻인지 보기</summary>
+            <div class="explain-body">
+                <b>팁이 하나만 나오거나 빠지면</b> —
+                <span class="why"
+                    >for문이 tips 배열 전체를 돌지 않고 있습니다.</span
+                ><br />
+                <span class="fix"
+                    >→ <code>for (let i = 0; i &lt; tips.length; i++)</code> 로
+                    끝까지 돌아야 합니다.</span
+                ><br /><br />
 
-    <b>줄바꿈(\n)이 없다고 나오면</b> — <span class="why">각 줄을 그냥 <code>+</code>로 붙이거나 공백으로 이어붙이고 있습니다.</span><br>
-    <span class="fix">→ 각 항목 사이에 <code>"\n"</code>을 넣어야 합니다. 예: <code>result += line + "\n"</code></span><br><br>
+                <b>줄바꿈(\n)이 없다고 나오면</b> —
+                <span class="why"
+                    >각 줄을 그냥 <code>+</code>로 붙이거나 공백으로 이어붙이고
+                    있습니다.</span
+                ><br />
+                <span class="fix"
+                    >→ 각 항목 사이에 <code>"\n"</code>을 넣어야 합니다. 예:
+                    <code>result += line + "\n"</code></span
+                ><br /><br />
 
-    <b>순서가 뒤집혀 나오면</b> — <span class="why">for문을 뒤에서 앞으로 돌고 있습니다.</span><br>
-    <span class="fix">→ <code>i = 0</code>부터 <code>tips.length</code> 미만까지 순서대로 돌면 됩니다.</span><br><br>
+                <b>순서가 뒤집혀 나오면</b> —
+                <span class="why">for문을 뒤에서 앞으로 돌고 있습니다.</span
+                ><br />
+                <span class="fix"
+                    >→ <code>i = 0</code>부터 <code>tips.length</code> 미만까지
+                    순서대로 돌면 됩니다.</span
+                ><br /><br />
 
-    <b>formatTipLine 결과가 반영 안 되면</b> — <span class="why">showNotebook 안에서 formatTipLine을 호출하지 않고 직접 문자열을 만들고 있습니다.</span><br>
-    <span class="fix">→ 반드시 <code>formatTipLine(tips[i].input, tips[i].output)</code>을 호출해서 결과를 이어붙이세요.</span><br><br>
+                <b>formatTipLine 결과가 반영 안 되면</b> —
+                <span class="why"
+                    >showNotebook 안에서 formatTipLine을 호출하지 않고 직접
+                    문자열을 만들고 있습니다.</span
+                ><br />
+                <span class="fix"
+                    >→ 반드시
+                    <code>formatTipLine(tips[i].input, tips[i].output)</code>을
+                    호출해서 결과를 이어붙이세요.</span
+                ><br /><br />
 
-    <b>원본 tips 배열 부작용 검사가 실패하면</b> — <span class="why">tips 배열에 뭔가 추가하거나 제거하고 있습니다.</span><br>
-    <span class="fix">→ tips 배열은 읽기만 하고, 새 문자열 result에만 이어붙여야 합니다.</span>
-  </div>
-</details>
+                <b>원본 tips 배열 부작용 검사가 실패하면</b> —
+                <span class="why"
+                    >tips 배열에 뭔가 추가하거나 제거하고 있습니다.</span
+                ><br />
+                <span class="fix"
+                    >→ tips 배열은 읽기만 하고, 새 문자열 result에만 이어붙여야
+                    합니다.</span
+                >
+            </div>
+        </details>
 
-<script src="notebook.js"></script>
-<script src="notebook_tests.js"></script>
-</body>
+        <script src="../../js/notebook.js"></script>
+        <script src="tests_notebook.js"></script>
+    </body>
 </html>
