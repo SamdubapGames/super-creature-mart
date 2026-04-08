@@ -1,375 +1,468 @@
 // ============================================
-// tests_shop.js — 수정하지 마세요!
+// 테스트 파일 (이 파일은 수정하지 마세요!)
 // ============================================
 
 function showResult(elementId, passed, messages) {
   var el = document.getElementById(elementId);
   if (passed) {
     el.className = "result pass";
-    el.innerHTML = "✅ 전부 통과!<br><br>" + messages.join("<br>");
+    el.innerHTML = "✅ 통과!<br><br>" + messages.join("<br>");
   } else {
     el.className = "result fail";
-    el.innerHTML = "❌ 아직이에요! 틀린 항목을 확인하세요<br><br>" + messages.join("<br>");
+    el.innerHTML = "❌ 아직이에요!<br><br>" + messages.join("<br>");
   }
 }
 
-function testLine(passed, situation, expected, actual) {
+function testLine(passed, situation, expected, actual, hint) {
   var line = (passed ? "✅ " : "❌ ") + situation;
   line += '<div class="sub">나와야 하는 결과: ' + expected + '</div>';
   if (!passed) {
-    line += '<div class="sub">내가 쓴 결과: ' + (actual === undefined ? "(아직 없음 — return 을 써주세요!)" : JSON.stringify(actual)) + '</div>';
+    var display;
+    if (actual === undefined) {
+      display = "(아직 없음 — return을 써주세요!)";
+    } else if (Array.isArray(actual)) {
+      display = JSON.stringify(actual);
+    } else if (actual !== null && typeof actual === "object") {
+      display = JSON.stringify(actual);
+    } else {
+      display = JSON.stringify(actual);
+    }
+    line += '<div class="sub">내가 쓴 결과: ' + display + '</div>';
+    if (hint) {
+      line += '<div class="sub hint">💡 힌트: ' + hint + '</div>';
+    }
   }
   return line;
 }
 
-// 이 파일에서만 쓰는 테스트 데이터
-var SH_NAMES  = ["떡", "칼", "캣닙 담배", "레몬", "방울"];
-var SH_PRICES = [100,   75,   50,          80,     30  ];
-// 초기 재고: 캣닙 담배만 품절(0)
-var BASE_STOCK = [3, 5, 0, 2, 4];
+function arraysEqual(a, b) {
+  if (!Array.isArray(a) || !Array.isArray(b)) return false;
+  if (a.length !== b.length) return false;
+  for (var i = 0; i < a.length; i++) {
+    if (a[i] !== b[i]) return false;
+  }
+  return true;
+}
 
-// 매 테스트마다 재고를 새로 복사해서 쓴다
-// 개념: 테스트끼리 서로 영향을 주면 안 된다 — 테스트 독립성
-function freshStock() { return BASE_STOCK.slice(); }
-function freshInv()   { return []; }
-
+function freshItems() {
+  return [
+    { name: "떡",   price: 100, stock: 3 },
+    { name: "검",   price: 500, stock: 1 },
+    { name: "방패", price: 300, stock: 0 },
+    { name: "장화", price: 200, stock: 5 }
+  ];
+}
 
 // ============================================
-// showShop 테스트
+// Function 1 테스트: getStockLabel
 // ============================================
-(function testShowShop() {
+(function testGetStockLabel() {
   var messages = [];
   var passed = true;
-  var result;
 
-  try { result = showShop(SH_NAMES, SH_PRICES, freshStock()); } catch(e) {
-    document.getElementById("result-showShop").className = "result fail";
-    document.getElementById("result-showShop").innerHTML = "❌ 함수 실행 중 오류: " + e.message;
-    return;
-  }
-
-  // 1. string 을 반환한다
-  var p1 = typeof result === "string";
+  var t1 = getStockLabel(3);
+  var p1 = t1 === "(재고: 3개)";
   if (!p1) passed = false;
-  messages.push(testLine(p1, 'string 을 반환한다', '"string" 타입', typeof result));
+  messages.push(testLine(p1,
+    '🏷️ getStockLabel(3) → "(재고: 3개)"',
+    '"(재고: 3개)"', t1,
+    '"(재고: " + stock + "개)" 형태로 stock 변수를 끼워넣어야 합니다. 숫자를 직접 쓰면 안 됩니다.'));
 
-  // 2. 재고 있는 아이템 "떡" 이 포함된다
-  var p2 = !!(result && result.includes("떡"));
+  var t2 = getStockLabel(1);
+  var p2 = t2 === "(재고: 1개)";
   if (!p2) passed = false;
-  messages.push(testLine(p2, '"떡" 이 포함된다', '"떡" 포함', result));
+  messages.push(testLine(p2,
+    '🏷️ getStockLabel(1) → "(재고: 1개)"',
+    '"(재고: 1개)"', t2,
+    '"(재고: " + stock + "개)" 에서 stock 변수를 확인하세요.'));
 
-  // 3. 가격 "100" 이 포함된다 (떡 가격)
-  var p3 = !!(result && result.includes("100"));
+  var t3 = getStockLabel(0);
+  var p3 = t3 === "(품절)";
   if (!p3) passed = false;
-  messages.push(testLine(p3, '"100" (떡 가격) 이 포함된다', '"100" 포함', result));
+  messages.push(testLine(p3,
+    '🏷️ getStockLabel(0) → "(품절)"',
+    '"(품절)"', t3,
+    'if (stock === 0) return "(품절)"; 을 먼저 처리하세요. 0일 때와 아닐 때를 if/else로 나눠야 합니다.'));
 
-  // 4. 재고 0 인 아이템("캣닙 담배")에 "품절" 표시
-  var p4 = !!(result && result.includes("품절"));
+  var t4 = getStockLabel(99);
+  var p4 = t4 === "(재고: 99개)";
   if (!p4) passed = false;
-  messages.push(testLine(p4, 'stock=0 인 "캣닙 담배" 에 "품절" 이 표시된다', '"품절" 포함', result));
+  messages.push(testLine(p4,
+    '🏷️ getStockLabel(99) → "(재고: 99개)"',
+    '"(재고: 99개)"', t4,
+    '"(재고: " + stock + "개)" 에서 괄호, 콜론, 공백 위치를 정확히 확인하세요.'));
 
-  // 5. 품절 아이템에 가격(50)이 표시되지 않는다
-  //    "캣닙 담배" 줄에만 50이 없어야 함
-  //    단순 검사: "캣닙 담배 — 50" 이 없는지
-  var p5 = !(result && result.includes("캣닙 담배") && result.includes("캣닙 담배 — 50"));
+  var p5 = typeof getStockLabel(5) === "string";
   if (!p5) passed = false;
-  messages.push(testLine(p5, '품절 아이템에 가격(50)이 같이 표시되지 않는다', '"캣닙 담배 — 50" 없음', result));
+  messages.push(testLine(p5,
+    '🏷️ 반환값이 문자열(string)인지',
+    '"string"', typeof getStockLabel(5),
+    'return 키워드가 있는지, 문자열을 반환하고 있는지 확인하세요.'));
 
-  // 6. 재고 있는 아이템에 "품절" 이 붙지 않는다
-  //    "떡" 바로 뒤에 "품절" 이 오면 안 됨 — 단순하게 "떡 — 품절" 없는지 체크
-  var p6 = !(result && result.includes("떡 — 품절"));
-  if (!p6) passed = false;
-  messages.push(testLine(p6, '재고 있는 "떡" 에 "품절" 이 붙지 않는다', '"떡 — 품절" 없음', result));
-
-  // 7. 다섯 아이템 이름이 전부 포함된다
-  var allNames = SH_NAMES.every(function(n) { return result && result.includes(n); });
-  if (!allNames) passed = false;
-  messages.push(testLine(allNames, '5개 아이템 이름이 전부 표시된다', '5개 이름 포함', result));
-
-  // 8. 줄바꿈이 있다 (여러 줄)
-  var p8 = !!(result && result.includes("\n"));
-  if (!p8) passed = false;
-  messages.push(testLine(p8, '줄바꿈(\\n)이 있다 — 아이템마다 한 줄씩', '"\\n" 포함', result));
-
-  // 9. 재고 수량이 표시된다 (예: "3" 포함)
-  var p9 = !!(result && result.includes("3"));
-  if (!p9) passed = false;
-  messages.push(testLine(p9, '재고 수량이 표시된다 (예: "재고: 3")', '"3" 포함', result));
-
-  // 10. 모든 품절이 되었을 때 전부 "품절" 표시
-  var allSoldOut;
-  try { allSoldOut = showShop(["떡"], [100], [0]); } catch(e) { allSoldOut = null; }
-  var p10 = !!(allSoldOut && allSoldOut.includes("품절"));
-  if (!p10) passed = false;
-  messages.push(testLine(p10,
-    'showShop(["떡"], [100], [0]) — 재고 0 이면 품절 표시',
-    '"품절" 포함', allSoldOut));
-
-  showResult("result-showShop", passed, messages);
+  showResult("result1", passed, messages);
 })();
 
+// ============================================
+// Function 2 테스트: formatShopLine
+// ============================================
+(function testFormatShopLine() {
+  var messages = [];
+  var passed = true;
+
+  var t1 = formatShopLine(1, "떡", 100, 3);
+  var p1 = t1 === "1. 떡 — 100원 (재고: 3개)";
+  if (!p1) passed = false;
+  messages.push(testLine(p1,
+    '📝 formatShopLine(1, "떡", 100, 3)',
+    '"1. 떡 — 100원 (재고: 3개)"', t1,
+    'index + ". " + name + " — " + price + "원 " + getStockLabel(stock) 형태인지 확인하세요. 줄표(—)와 공백 위치를 주의하세요.'));
+
+  var t2 = formatShopLine(2, "방패", 300, 0);
+  var p2 = t2 === "2. 방패 — 300원 (품절)";
+  if (!p2) passed = false;
+  messages.push(testLine(p2,
+    '📝 formatShopLine(2, "방패", 300, 0) — 품절',
+    '"2. 방패 — 300원 (품절)"', t2,
+    'stock=0 일 때 getStockLabel(0) 을 호출하면 "(품절)" 이 자동으로 나옵니다. getStockLabel을 반드시 호출하세요.'));
+
+  var t3 = formatShopLine(5, "장화", 200, 1);
+  var p3 = typeof t3 === "string" && t3.indexOf("5.") !== -1;
+  if (!p3) passed = false;
+  messages.push(testLine(p3,
+    '📝 번호(5.)가 포함되는지',
+    '"5." 포함', typeof t3 === "string" ? t3 : t3,
+    'index 변수를 그대로 쓰고 뒤에 ". " 을 붙여야 합니다.'));
+
+  var t4 = formatShopLine(1, "검", 500, 1);
+  var p4 = typeof t4 === "string" && t4.indexOf("500원") !== -1;
+  if (!p4) passed = false;
+  messages.push(testLine(p4,
+    '📝 가격 뒤에 "원"이 붙는지',
+    '"500원" 포함', t4,
+    'price + "원" 으로 붙여야 합니다. 숫자만 쓰면 "원" 이 빠집니다.'));
+
+  var t5 = formatShopLine(3, "떡볶이", 150, 7);
+  var stockLabel = getStockLabel(7);
+  var p5 = typeof t5 === "string" && t5.indexOf(stockLabel) !== -1;
+  if (!p5) passed = false;
+  messages.push(testLine(p5,
+    '📝 getStockLabel 결과가 포함되는지 (연동 확인)',
+    '"' + stockLabel + '" 포함', t5,
+    'getStockLabel(stock) 을 직접 호출해서 결과를 이어붙여야 합니다. 재고 텍스트를 직접 만들지 마세요.'));
+
+  var p6 = typeof formatShopLine(1, "A", 100, 1) === "string";
+  if (!p6) passed = false;
+  messages.push(testLine(p6,
+    '📝 반환값이 문자열(string)인지',
+    '"string"', typeof formatShopLine(1, "A", 100, 1),
+    'return 키워드로 문자열을 반환하고 있는지 확인하세요.'));
+
+  showResult("result2", passed, messages);
+})();
 
 // ============================================
-// buyItem 테스트
-// 중요: 각 케이스마다 freshStock(), freshInv() 로 새 배열을 만든다
-//       테스트 독립성 — 이전 테스트 결과가 다음 테스트에 영향 주면 안 됨
+// Function 3 테스트: showShopList
+// ============================================
+(function testShowShopList() {
+  var messages = [];
+  var passed = true;
+
+  var items = freshItems();
+
+  var t1 = showShopList(items);
+  var p1 = typeof t1 === "string";
+  if (!p1) passed = false;
+  messages.push(testLine(p1,
+    '📜 반환값이 문자열(string)인지',
+    '"string"', typeof t1,
+    'let result = "" 로 빈 문자열을 만들고 이어붙인 뒤 return result 해야 합니다.'));
+
+  var p2 = typeof t1 === "string"
+    && t1.indexOf("떡") !== -1
+    && t1.indexOf("검") !== -1
+    && t1.indexOf("방패") !== -1
+    && t1.indexOf("장화") !== -1;
+  if (!p2) passed = false;
+  messages.push(testLine(p2,
+    '📜 4개 상품(떡, 검, 방패, 장화) 모두 포함되는지',
+    '전부 포함', p2 ? '전부 포함' : t1,
+    'for문이 items.length번 도는지 확인하세요. formatShopLine(i+1, items[i].name, items[i].price, items[i].stock) 결과를 이어붙여야 합니다.'));
+
+  var p3 = typeof t1 === "string" && t1.indexOf("1.") !== -1 && t1.indexOf("0.") === -1;
+  if (!p3) passed = false;
+  messages.push(testLine(p3,
+    '📜 번호가 0이 아니라 1부터 시작하는지',
+    '"1." 있고 "0." 없음', typeof t1 === "string" ? (t1.indexOf("1.") !== -1 ? '"1." 있음' : '"1." 없음') : t1,
+    'formatShopLine을 호출할 때 첫 번째 인자를 i가 아니라 i+1 로 넘겨야 합니다.'));
+
+  var p4 = typeof t1 === "string" && t1.indexOf("\n") !== -1;
+  if (!p4) passed = false;
+  messages.push(testLine(p4,
+    '📜 줄바꿈(\\n)으로 구분되는지',
+    '"\\n" 포함', typeof t1 === "string" ? (t1.indexOf("\n") !== -1 ? "\\n 있음" : "\\n 없음") : t1,
+    '각 줄 뒤에 "\\n" 을 붙여야 합니다. 예: result += formatShopLine(...) + "\\n"'));
+
+  var p5 = typeof t1 === "string" && t1.indexOf("품절") !== -1;
+  if (!p5) passed = false;
+  messages.push(testLine(p5,
+    '📜 재고 0인 "방패"에 품절 표시가 나오는지',
+    '"품절" 포함', typeof t1 === "string" ? (t1.indexOf("품절") !== -1 ? '"품절" 있음' : '"품절" 없음') : t1,
+    'formatShopLine에 items[i].stock 을 네 번째 인자로 넘기고 있는지 확인하세요.'));
+
+  var origLen = items.length;
+  showShopList(items);
+  var p6 = items.length === origLen;
+  if (!p6) passed = false;
+  messages.push(testLine(p6,
+    '🛡️ 원본 items 배열이 바뀌지 않는지 (부작용 검사)',
+    '길이 ' + origLen + ' 유지', 'length: ' + items.length,
+    'items는 읽기만 해야 합니다. push나 splice를 쓰지 않았는지 확인하세요.'));
+
+  showResult("result3", passed, messages);
+})();
+
+// ============================================
+// Function 4 테스트: isAffordable
+// ============================================
+(function testIsAffordable() {
+  var messages = [];
+  var passed = true;
+
+  var t1 = isAffordable(500, 300);
+  var p1 = t1 === true;
+  if (!p1) passed = false;
+  messages.push(testLine(p1,
+    '💰 isAffordable(500, 300) — 예산 충분 → true',
+    'true', t1,
+    'return budget >= price; 형태인지 확인하세요. 첫 번째 인자가 budget, 두 번째가 price입니다.'));
+
+  var t2 = isAffordable(300, 300);
+  var p2 = t2 === true;
+  if (!p2) passed = false;
+  messages.push(testLine(p2,
+    '💰 isAffordable(300, 300) — 딱 맞음 → true (경계값)',
+    'true', t2,
+    '>= (크거나 같음) 를 써야 합니다. > (초과) 만 쓰면 딱 맞을 때 false가 나옵니다.'));
+
+  var t3 = isAffordable(200, 300);
+  var p3 = t3 === false;
+  if (!p3) passed = false;
+  messages.push(testLine(p3,
+    '💰 isAffordable(200, 300) — 예산 부족 → false',
+    'false', t3,
+    'budget과 price 위치가 바뀌지 않았는지 확인하세요. budget >= price 순서여야 합니다.'));
+
+  var t4 = isAffordable(0, 100);
+  var p4 = t4 === false;
+  if (!p4) passed = false;
+  messages.push(testLine(p4,
+    '💰 isAffordable(0, 100) — 예산 0 → false (경계값)',
+    'false', t4,
+    '0 >= 100 은 false입니다. 별도 처리 없이 return budget >= price 만 해도 됩니다.'));
+
+  var p5 = typeof isAffordable(1000, 100) === "boolean";
+  if (!p5) passed = false;
+  messages.push(testLine(p5,
+    '💰 반환값이 boolean인지',
+    '"boolean"', typeof isAffordable(1000, 100),
+    'return budget >= price; 비교 연산 자체가 true/false를 반환합니다. 숫자나 문자열을 반환하지 않았는지 확인하세요.'));
+
+  showResult("result4", passed, messages);
+})();
+
+// ============================================
+// Function 5 테스트: buyItem
 // ============================================
 (function testBuyItem() {
   var messages = [];
   var passed = true;
 
-  // 1. 기본 구매 성공 → success: true
-  var s1 = freshStock(), i1 = freshInv();
-  var r1;
-  try { r1 = buyItem(SH_NAMES, SH_PRICES, s1, i1, 300, "떡"); } catch(e) { r1 = undefined; }
-  var p1 = !!(r1 && r1.success === true);
+  var item1 = { name: "떡", price: 100, stock: 3 };
+  var cart1 = [];
+  var budget1 = { gold: 500 };
+  var t1 = buyItem(item1, budget1, cart1);
+  var p1 = typeof t1 === "string";
   if (!p1) passed = false;
-  messages.push(testLine(p1, '"떡" 구매 — success: true 반환', '{ success: true, ... }', r1));
+  messages.push(testLine(p1,
+    '🛍️ 구매 성공 시 문자열 메시지가 반환되는지',
+    '문자열', typeof t1,
+    '구매 성공 분기에서 return "..." 으로 문자열 메시지를 반환해야 합니다.'));
 
-  // 2. newBudget 이 300 - 100 = 200
-  var p2 = !!(r1 && r1.newBudget === 200);
+  var item2 = { name: "떡", price: 100, stock: 3 };
+  var cart2 = [];
+  var budget2 = { gold: 500 };
+  buyItem(item2, budget2, cart2);
+  var p2 = cart2.length === 1;
   if (!p2) passed = false;
-  messages.push(testLine(p2, '"떡"(100원) 구매 후 newBudget 이 200', '200', r1 && r1.newBudget));
+  messages.push(testLine(p2,
+    '🛍️ 구매 후 장바구니에 1개 추가됐는지',
+    '장바구니 길이: 1', '장바구니 길이: ' + cart2.length,
+    '구매 성공 분기 안에서 cart.push(item) 을 호출해야 합니다.'));
 
-  // 3. 인벤토리에 "떡" 이 추가됨
-  var p3 = i1.includes("떡");
+  var item3 = { name: "방패", price: 300, stock: 0 };
+  var cart3 = [];
+  var budget3 = { gold: 1000 };
+  var t3 = buyItem(item3, budget3, cart3);
+  var p3 = typeof t3 === "string" && t3.indexOf("품절") !== -1;
   if (!p3) passed = false;
-  messages.push(testLine(p3, '구매 후 인벤토리에 "떡" 이 추가됨', '"떡" 포함', i1));
+  messages.push(testLine(p3,
+    '🛍️ 품절 상품 구매 시도 → "품절" 메시지',
+    '"품절" 포함', t3,
+    '가장 먼저 if (item.stock === 0) 으로 품절을 체크하고 "품절" 이 포함된 메시지를 return 하세요.'));
 
-  // 4. 재고가 3 → 2 로 줄어든다
-  var p4 = s1[0] === 2;
+  var p4 = cart3.length === 0;
   if (!p4) passed = false;
-  messages.push(testLine(p4, '"떡" 구매 후 재고가 3 → 2 로 줄어든다', '재고 2', s1[0]));
+  messages.push(testLine(p4,
+    '🛍️ 품절 시 장바구니가 바뀌지 않는지',
+    '장바구니 길이: 0', '장바구니 길이: ' + cart3.length,
+    '품절 체크에서 return 하면 그 아래 cart.push가 실행되지 않습니다. return 위치를 확인하세요.'));
 
-  // 5. 품절 아이템 구매 → success: false
-  var s5 = freshStock(), i5 = freshInv();
-  var r5;
-  try { r5 = buyItem(SH_NAMES, SH_PRICES, s5, i5, 300, "캣닙 담배"); } catch(e) { r5 = undefined; }
-  var p5 = !!(r5 && r5.success === false);
-  if (!p5) passed = false;
-  messages.push(testLine(p5, '"캣닙 담배"(품절) 구매 → success: false', '{ success: false, ... }', r5));
-
-  // 6. 품절 시 인벤토리 변화 없음
-  var p6 = i5.length === 0;
-  if (!p6) passed = false;
-  messages.push(testLine(p6, '품절 시 인벤토리 변화 없음', '빈 배열', i5));
-
-  // 7. 품절 시 재고 변화 없음
-  var p7 = s5[2] === 0;
-  if (!p7) passed = false;
-  messages.push(testLine(p7, '품절 시 재고 변화 없음', '재고 0 유지', s5[2]));
-
-  // 8. 예산 부족 → success: false
-  var s8 = freshStock(), i8 = freshInv();
-  var r8;
-  try { r8 = buyItem(SH_NAMES, SH_PRICES, s8, i8, 10, "레몬"); } catch(e) { r8 = undefined; }
-  var p8 = !!(r8 && r8.success === false);
-  if (!p8) passed = false;
-  messages.push(testLine(p8, '예산 10원으로 레몬(80원) 구매 → success: false', '{ success: false, ... }', r8));
-
-  // 9. 예산 부족 시 인벤토리 변화 없음
-  var p9 = i8.length === 0;
-  if (!p9) passed = false;
-  messages.push(testLine(p9, '예산 부족 시 인벤토리 변화 없음', '빈 배열', i8));
-
-  // 10. 예산 부족 시 newBudget 은 원래 예산 그대로
-  var p10 = !!(r8 && r8.newBudget === 10);
-  if (!p10) passed = false;
-  messages.push(testLine(p10, '예산 부족 시 newBudget 은 10 그대로', '10', r8 && r8.newBudget));
-
-  // 11. 없는 아이템 → success: false
-  var s11 = freshStock(), i11 = freshInv();
-  var r11;
-  try { r11 = buyItem(SH_NAMES, SH_PRICES, s11, i11, 300, "폭탄"); } catch(e) { r11 = undefined; }
-  var p11 = !!(r11 && r11.success === false);
-  if (!p11) passed = false;
-  messages.push(testLine(p11, '없는 아이템 "폭탄" 구매 → success: false', '{ success: false, ... }', r11));
-
-  // 12. 경계값: 예산이 정확히 가격과 같다 → 성공
-  //     방울 가격 30원, 예산 30원
-  var s12 = freshStock(), i12 = freshInv();
-  var r12;
-  try { r12 = buyItem(SH_NAMES, SH_PRICES, s12, i12, 30, "방울"); } catch(e) { r12 = undefined; }
-  var p12 = !!(r12 && r12.success === true && r12.newBudget === 0);
-  if (!p12) passed = false;
-  messages.push(testLine(p12,
-    '경계값: 예산 30원 = 방울 가격 30원 → 성공, newBudget 0',
-    '{ success: true, newBudget: 0 }', r12));
-
-  // 13. 경계값: 예산이 1원 부족 → 실패
-  var s13 = freshStock(), i13 = freshInv();
-  var r13;
-  try { r13 = buyItem(SH_NAMES, SH_PRICES, s13, i13, 29, "방울"); } catch(e) { r13 = undefined; }
-  var p13 = !!(r13 && r13.success === false);
-  if (!p13) passed = false;
-  messages.push(testLine(p13,
-    '경계값: 예산 29원으로 방울(30원) → 1원 부족, 실패',
-    '{ success: false, ... }', r13));
-
-  // 14. 반환값에 message 가 있다
-  var s14 = freshStock(), i14 = freshInv();
-  var r14;
-  try { r14 = buyItem(SH_NAMES, SH_PRICES, s14, i14, 300, "칼"); } catch(e) { r14 = undefined; }
-  var p14 = !!(r14 && typeof r14.message === "string" && r14.message.length > 0);
-  if (!p14) passed = false;
-  messages.push(testLine(p14,
-    '반환값에 message 가 있고 빈 문자열이 아니다',
-    '{ success: ..., newBudget: ..., message: "..." }', r14));
-
-  // 15. 같은 아이템 두 번 구매 → 재고 2번 감소
-  var s15 = freshStock(), i15 = freshInv();
-  try { buyItem(SH_NAMES, SH_PRICES, s15, i15, 300, "떡"); } catch(e) {}
-  var r15b;
-  try { r15b = buyItem(SH_NAMES, SH_PRICES, s15, i15, 200, "떡"); } catch(e) { r15b = undefined; }
-  var p15 = !!(r15b && r15b.success === true && s15[0] === 1 && i15.length === 2);
-  if (!p15) passed = false;
-  messages.push(testLine(p15,
-    '"떡" 두 번 구매 → 재고 3→1, 인벤토리에 떡 2개',
-    '재고 1, 인벤토리 길이 2', JSON.stringify({ stock0: s15[0], invLen: i15.length })));
-
-  showResult("result-buyItem", passed, messages);
-})();
-
-
-// ============================================
-// showInventory 테스트
-// ============================================
-(function testShowInventory() {
-  var messages = [];
-  var passed = true;
-
-  // 1. 빈 배열 → "없음"
-  var t1;
-  try { t1 = showInventory([]); } catch(e) { t1 = undefined; }
-  var p1 = t1 === "없음";
-  if (!p1) passed = false;
-  messages.push(testLine(p1, 'showInventory([]) → "없음"', '"없음"', t1));
-
-  // 2. string 을 반환한다
-  var t2;
-  try { t2 = showInventory(["떡"]); } catch(e) { t2 = undefined; }
-  var p2 = typeof t2 === "string";
-  if (!p2) passed = false;
-  messages.push(testLine(p2, 'string 을 반환한다', '"string" 타입', typeof t2));
-
-  // 3. 단일 아이템 포함 여부
-  var p3 = !!(t2 && t2.includes("떡"));
-  if (!p3) passed = false;
-  messages.push(testLine(p3, 'showInventory(["떡"]) — "떡" 이 포함된다', '"떡" 포함', t2));
-
-  // 4. 여러 아이템: 전부 포함
-  var t4;
-  try { t4 = showInventory(["떡", "레몬", "칼"]); } catch(e) { t4 = undefined; }
-  var p4 = !!(t4 && t4.includes("떡") && t4.includes("레몬") && t4.includes("칼"));
-  if (!p4) passed = false;
-  messages.push(testLine(p4, 'showInventory(["떡","레몬","칼"]) — 3개 모두 포함', '"떡","레몬","칼" 포함', t4));
-
-  // 5. 중복 아이템: 둘 다 표시된다
-  var t5;
-  try { t5 = showInventory(["떡", "레몬", "떡"]); } catch(e) { t5 = undefined; }
-  // "떡"이 두 번 나오는지 체크 — indexOf 와 lastIndexOf 가 다르면 두 번 이상 있음
-  var p5 = !!(t5 && t5.indexOf("떡") !== t5.lastIndexOf("떡"));
+  var item5 = { name: "검", price: 500, stock: 1 };
+  var cart5 = [];
+  var budget5 = { gold: 100 };
+  var t5 = buyItem(item5, budget5, cart5);
+  var p5 = typeof t5 === "string" && cart5.length === 0;
   if (!p5) passed = false;
   messages.push(testLine(p5,
-    'showInventory(["떡","레몬","떡"]) — "떡" 이 두 번 표시된다',
-    '"떡" 두 번 포함', t5));
+    '🛍️ 예산 부족 시 구매 실패 + 장바구니 변화 없는지',
+    '장바구니 길이: 0', '장바구니 길이: ' + cart5.length + ' / 메시지: ' + t5,
+    'isAffordable(budget.gold, item.price) 가 false 일 때 cart.push 없이 메시지만 return 해야 합니다.'));
 
-  // 6. "없음" 이 아니면 아이템 이름이 나온다 (undefined 아님)
-  var t6;
-  try { t6 = showInventory(["캣닙 담배"]); } catch(e) { t6 = undefined; }
-  var p6 = !!(t6 && t6.includes("캣닙 담배") && t6 !== "없음");
+  var item6 = { name: "장화", price: 200, stock: 5 };
+  var cart6 = [];
+  var budget6 = { gold: 1000 };
+  buyItem(item6, budget6, cart6);
+  var p6 = item6.stock === 4;
   if (!p6) passed = false;
   messages.push(testLine(p6,
-    'showInventory(["캣닙 담배"]) — "캣닙 담배" 포함, "없음" 아님',
-    '"캣닙 담배" 포함', t6));
+    '🛍️ 구매 후 재고가 1 감소하는지 (5 → 4)',
+    'stock: 4', 'stock: ' + item6.stock,
+    '구매 성공 분기 안에서 item.stock -= 1; 을 해야 합니다.'));
 
-  // 7. 빈 배열이 아닐 때 "없음" 이 나오지 않는다
-  var t7;
-  try { t7 = showInventory(["떡"]); } catch(e) { t7 = undefined; }
-  var p7 = !!(t7 && !t7.includes("없음"));
-  if (!p7) passed = false;
-  messages.push(testLine(p7,
-    'showInventory(["떡"]) — "없음" 이 포함되지 않는다',
-    '"없음" 없음', t7));
-
-  showResult("result-showInventory", passed, messages);
+  showResult("result5", passed, messages);
 })();
 
-
 // ============================================
-// calculateTotal 테스트
+// Function 6 테스트: calcTotal
 // ============================================
-(function testCalculateTotal() {
+(function testCalcTotal() {
   var messages = [];
   var passed = true;
 
-  // 1. 기본 합산: 떡(100) + 레몬(80) = 180
-  var t1;
-  try { t1 = calculateTotal(["떡", "레몬"], SH_PRICES, SH_NAMES); } catch(e) { t1 = undefined; }
-  var p1 = t1 === 180;
+  var cart1 = [{ name: "떡", price: 100 }, { name: "장화", price: 200 }];
+  var t1 = calcTotal(cart1);
+  var p1 = t1 === 300;
   if (!p1) passed = false;
-  messages.push(testLine(p1, 'calculateTotal(["떡","레몬"]) — 100+80=180', '180', t1));
+  messages.push(testLine(p1,
+    '🧮 calcTotal([떡 100, 장화 200]) → 300',
+    '300', t1,
+    'let total = 0; 후 for문에서 total += cart[i].price; 를 반복하고 return total; 해야 합니다.'));
 
-  // 2. 빈 장바구니 → 0
-  var t2;
-  try { t2 = calculateTotal([], SH_PRICES, SH_NAMES); } catch(e) { t2 = undefined; }
-  var p2 = t2 === 0;
+  var cart2 = [{ name: "검", price: 500 }];
+  var t2 = calcTotal(cart2);
+  var p2 = t2 === 500;
   if (!p2) passed = false;
-  messages.push(testLine(p2, 'calculateTotal([]) — 빈 장바구니는 0', '0', t2));
+  messages.push(testLine(p2,
+    '🧮 calcTotal([검 500]) → 500',
+    '500', t2,
+    'cart[i].price 를 더하고 있는지 확인하세요.'));
 
-  // 3. 단일 아이템: 방울(30)
-  var t3;
-  try { t3 = calculateTotal(["방울"], SH_PRICES, SH_NAMES); } catch(e) { t3 = undefined; }
-  var p3 = t3 === 30;
+  var t3 = calcTotal([]);
+  var p3 = t3 === 0;
   if (!p3) passed = false;
-  messages.push(testLine(p3, 'calculateTotal(["방울"]) — 방울 1개=30', '30', t3));
+  messages.push(testLine(p3,
+    '🧮 calcTotal([]) → 0 (경계값)',
+    '0', t3,
+    'let total = 0; 으로 시작하면 빈 배열일 때 for문이 안 돌아서 0이 반환됩니다. 별도 처리 불필요합니다.'));
 
-  // 4. 중복 아이템: 떡 2개 = 200
-  var t4;
-  try { t4 = calculateTotal(["떡", "떡"], SH_PRICES, SH_NAMES); } catch(e) { t4 = undefined; }
-  var p4 = t4 === 200;
+  var cart4 = [
+    { name: "떡", price: 100 },
+    { name: "검", price: 500 },
+    { name: "장화", price: 200 }
+  ];
+  var t4 = calcTotal(cart4);
+  var p4 = t4 === 800;
   if (!p4) passed = false;
-  messages.push(testLine(p4, 'calculateTotal(["떡","떡"]) — 떡 2개=200', '200', t4));
+  messages.push(testLine(p4,
+    '🧮 calcTotal([떡 100, 검 500, 장화 200]) → 800',
+    '800', t4,
+    'for문이 cart.length 번 전부 도는지 확인하세요.'));
 
-  // 5. 전체 아이템 합산: 100+75+50+80+30=335
-  var t5;
-  try { t5 = calculateTotal(["떡","칼","캣닙 담배","레몬","방울"], SH_PRICES, SH_NAMES); } catch(e) { t5 = undefined; }
-  var p5 = t5 === 335;
+  var p5 = typeof calcTotal([{ name: "A", price: 50 }]) === "number";
   if (!p5) passed = false;
-  messages.push(testLine(p5, '전체 5개 합산 100+75+50+80+30=335', '335', t5));
+  messages.push(testLine(p5,
+    '🧮 반환값이 숫자(number)인지',
+    '"number"', typeof calcTotal([{ name: "A", price: 50 }]),
+    'return total; 에서 total이 숫자인지 확인하세요. 문자열로 변환되지 않았는지 확인하세요.'));
 
-  // 6. 없는 아이템이 포함되면 0 으로 계산 (무시)
-  //    떡(100) + 폭탄(없음=0) = 100
-  var t6;
-  try { t6 = calculateTotal(["떡", "폭탄"], SH_PRICES, SH_NAMES); } catch(e) { t6 = undefined; }
-  var p6 = t6 === 100;
+  var origCart = [{ name: "떡", price: 100 }, { name: "검", price: 500 }];
+  var origLen = origCart.length;
+  calcTotal(origCart);
+  var p6 = origCart.length === origLen;
   if (!p6) passed = false;
   messages.push(testLine(p6,
-    'calculateTotal(["떡","폭탄"]) — 없는 아이템은 0으로 처리, 합계 100',
-    '100', t6));
+    '🛡️ 원본 cart 배열이 바뀌지 않는지 (부작용 검사)',
+    '길이 ' + origLen + ' 유지', 'length: ' + origCart.length,
+    'cart는 읽기만 해야 합니다. splice나 pop을 쓰지 않았는지 확인하세요.'));
 
-  // 7. 반환값이 number 타입이다
-  var t7;
-  try { t7 = calculateTotal(["떡"], SH_PRICES, SH_NAMES); } catch(e) { t7 = undefined; }
-  var p7 = typeof t7 === "number";
-  if (!p7) passed = false;
-  messages.push(testLine(p7, '반환값이 number 타입이다', '"number" 타입', typeof t7));
-
-  // 8. 공백 포함 아이템 이름도 찾는다: 캣닙 담배(50) + 방울(30) = 80
-  var t8;
-  try { t8 = calculateTotal(["캣닙 담배", "방울"], SH_PRICES, SH_NAMES); } catch(e) { t8 = undefined; }
-  var p8 = t8 === 80;
-  if (!p8) passed = false;
-  messages.push(testLine(p8,
-    'calculateTotal(["캣닙 담배","방울"]) — 공백 포함 이름도 찾는다. 50+30=80',
-    '80', t8));
-
-  // 9. 칼(75) 단일
-  var t9;
-  try { t9 = calculateTotal(["칼"], SH_PRICES, SH_NAMES); } catch(e) { t9 = undefined; }
-  var p9 = t9 === 75;
-  if (!p9) passed = false;
-  messages.push(testLine(p9, 'calculateTotal(["칼"]) — 칼 1개=75', '75', t9));
-
-  showResult("result-calculateTotal", passed, messages);
+  showResult("result6", passed, messages);
 })();
+
+// ============================================
+// Function 7 테스트: showReceipt
+// ============================================
+(function testShowReceipt() {
+  var messages = [];
+  var passed = true;
+
+  var cart1 = [
+    { name: "떡", price: 100 },
+    { name: "장화", price: 200 }
+  ];
+
+  var t1 = showReceipt(cart1);
+  var p1 = typeof t1 === "string";
+  if (!p1) passed = false;
+  messages.push(testLine(p1,
+    '🧾 반환값이 문자열(string)인지',
+    '"string"', typeof t1,
+    'return 으로 문자열을 반환해야 합니다. 객체나 배열이 아닌 문자열 하나여야 합니다.'));
+
+  var p2 = typeof t1 === "string"
+    && t1.indexOf("떡") !== -1
+    && t1.indexOf("장화") !== -1;
+  if (!p2) passed = false;
+  messages.push(testLine(p2,
+    '🧾 구매한 상품명(떡, 장화)이 포함되는지',
+    '"떡", "장화" 포함', p2 ? '포함' : t1,
+    'for문으로 cart를 순회하면서 cart[i].name 을 영수증 문자열에 이어붙여야 합니다.'));
+
+  var total = calcTotal(cart1);
+  var p3 = typeof t1 === "string" && t1.indexOf(String(total)) !== -1;
+  if (!p3) passed = false;
+  messages.push(testLine(p3,
+    '🧾 총액(' + total + ')이 영수증에 포함되는지',
+    '"' + total + '" 포함', typeof t1 === "string" ? (t1.indexOf(String(total)) !== -1 ? '"' + total + '" 있음' : '"' + total + '" 없음') : t1,
+    'let total = calcTotal(cart); 로 합계를 구하고 영수증 문자열에 포함시키세요.'));
+
+  var t4 = showReceipt([]);
+  var p4 = typeof t4 === "string";
+  if (!p4) passed = false;
+  messages.push(testLine(p4,
+    '🧾 빈 장바구니 영수증도 문자열로 반환되는지 (경계값)',
+    '문자열', typeof t4,
+    '빈 배열이어도 오류 없이 문자열을 반환해야 합니다. for문은 cart.length가 0이면 자연스럽게 안 돌아갑니다.'));
+
+  var cart5 = [{ name: "검", price: 500 }];
+  var t5 = showReceipt(cart5);
+  var p5 = typeof t5 === "string" && t5.indexOf("500") !== -1;
+  if (!p5) passed = false;
+  messages.push(testLine(p5,
+    '🧾 calcTotal 결과(500)가 영수증에 반영되는지 (연동 확인)',
+    '"500" 포함', typeof t5 === "string" ? (t5.indexOf("500") !== -1 ? '"500" 있음' : '"500" 없음') : t5,
+    'showReceipt 안에서 반드시 calcTotal(cart) 를 호출해서 합계를 구해야 합니다.'));
+
+  showResult("result7", passed, messages);
+})();
+
+console.log("=== shop.js 테스트 완료! 브라우저 화면에서 결과를 확인하세요 ===");
