@@ -1,96 +1,213 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
-    <head>
-        <meta charset="UTF-8" />
-        <title>shop.js 테스트</title>
-        <style>
-            body {
-                font-family: monospace;
-                background: #1e1e1e;
-                color: #d4d4d4;
-                padding: 20px;
-            }
-            h1 {
-                color: #569cd6;
-            }
-            h2 {
-                color: #4ec9b0;
-                margin-top: 30px;
-            }
-            p {
-                color: #ce9178;
-            }
-            .result {
-                background: #2d2d2d;
-                padding: 15px;
-                margin: 10px 0;
-                border-left: 3px solid #569cd6;
-                line-height: 1.8;
-            }
-            .pass {
-                border-left-color: #4ec9b0;
-            }
-            .fail {
-                border-left-color: #f44747;
-            }
-            .sub {
-                color: #808080;
-                margin-left: 20px;
-            }
-            .concept {
-                background: #2d2d2d;
-                padding: 15px;
-                margin: 10px 0;
-                border-left: 3px solid #dcdcaa;
-                line-height: 1.8;
-                color: #dcdcaa;
-            }
-            .section-note {
-                color: #808080;
-                font-size: 0.9em;
-                margin-bottom: 4px;
-            }
-        </style>
-    </head>
-    <body>
-        <h1>🛒 shop.js 테스트</h1>
-        <p>
-            shop.js 파일을 열어서 함수를 완성하고, 이 html 파일을 브라우저에서
-            열면 결과가 나옵니다.
-        </p>
-        <p>개발자 도구 (F12 → Console)에서도 확인할 수 있어요.</p>
+<head>
+<meta charset="UTF-8">
+<title>shop.js 테스트</title>
+<style>
+body { font-family: monospace; background: #1e1e1e; color: #d4d4d4; padding: 20px; }
+h1 { color: #569cd6; }
+h2 { color: #4ec9b0; margin-top: 30px; }
+p { color: #ce9178; }
+.result { background: #2d2d2d; padding: 15px; margin: 10px 0; border-left: 3px solid #569cd6; line-height: 1.8; }
+.pass { border-left-color: #4ec9b0; }
+.fail { border-left-color: #f44747; }
+.sub { color: #808080; margin-left: 20px; }
+.concept { background: #2d2d2d; padding: 15px; margin: 10px 0; border-left: 3px solid #dcdcaa; line-height: 1.8; color: #dcdcaa; }
 
-        <div class="concept">
-            💡 세 배열을 <b>같은 인덱스</b>로 연결한다 — names[i], prices[i],
-            stock[i] 는 한 상품<br />
-            💡 <b>push</b> 는 배열 끝에 추가. <b>splice(i,1)</b> 은 인덱스 i
-            에서 1개 제거<br />
-            💡 <b>budget 은 숫자</b>라 함수 안에서 바꿔도 밖에 반영 안 됨 →
-            newBudget 을 return 해야 한다<br />
-            💡 <b>stock 배열은 직접 수정</b>된다 (배열은 참조 전달이라 밖에
-            반영됨)
-        </div>
+details {
+  background: #252526;
+  border-left: 3px solid #3c3c3c;
+  margin: 4px 0 16px 0;
+  padding: 0;
+}
+details[open] { border-left-color: #569cd6; }
+summary {
+  padding: 8px 12px;
+  cursor: pointer;
+  color: #808080;
+  font-size: 12px;
+  list-style: none;
+  user-select: none;
+}
+summary::-webkit-details-marker { display: none; }
+summary::before { content: "▶ "; font-size: 10px; }
+details[open] summary::before { content: "▼ "; }
+summary:hover { color: #d4d4d4; }
+.explain-body {
+  padding: 10px 16px 14px 16px;
+  font-size: 12px;
+  line-height: 2;
+  color: #b0b0b0;
+}
+.explain-body b { color: #d4d4d4; }
+.explain-body code {
+  background: #1e1e1e;
+  padding: 1px 5px;
+  border-radius: 3px;
+  color: #9cdcfe;
+  font-size: 12px;
+}
+.explain-body .why { color: #f44747; }
+.explain-body .fix { color: #4ec9b0; }
+</style>
+</head>
+<body>
+<h1>🛒 shop.js 테스트</h1>
+<p>shop.js 파일을 열어서 함수를 구현하고, 이 html 파일을 브라우저에서 열면 결과가 나옵니다.</p>
+<p>개발자 도구 (F12 → Console)에서도 확인할 수 있어요.</p>
+<div class="concept">
+  💡 <b>getStockLabel(stock)</b> — "(품절)" 또는 "(재고: N개)"<br>
+  💡 <b>formatShopLine(index, name, price, stock)</b> — "1. 떡 — 100원 (재고: 3개)"<br>
+  💡 <b>showShopList(items)</b> — 전체 목록 문자열<br>
+  💡 <b>isAffordable(budget, price)</b> — 예산 확인 → true/false<br>
+  💡 <b>buyItem(item, budget, cart)</b> — 구매 처리 → 결과 메시지<br>
+  💡 <b>calcTotal(cart)</b> — 장바구니 합산 → 총액<br>
+  💡 <b>showReceipt(cart)</b> — 영수증 문자열 생성<br>
+  💡 <b>shopSession(items, budget)</b> — 전체 흐름 (완성본)
+</div>
 
-        <h2>🏪 showShop(names, prices, stock)</h2>
-        <p class="section-note">전체 목록 표시 — 재고 0 이면 "품절"</p>
-        <div id="result-showShop" class="result">테스트 대기중...</div>
+<!-- ============================== Function 1 ============================== -->
+<h2>🏷️ Function 1: getStockLabel</h2>
+<div id="result1" class="result">테스트 대기중...</div>
+<details>
+  <summary>테스트가 ❌이면 무슨 뜻인지 보기</summary>
+  <div class="explain-body">
+    <b>"(품절)"이 안 나오면</b> — <span class="why">stock이 0일 때의 분기가 없습니다.</span><br>
+    <span class="fix">→ <code>if (stock === 0) return "(품절)";</code> 을 먼저 처리하세요.</span><br><br>
 
-        <h2>💰 buyItem(names, prices, stock, inventory, budget, itemName)</h2>
-        <p class="section-note">
-            구매 전체 흐름 처리 — 이름 찾기 → 재고 확인 → 예산 확인 → 차감 →
-            추가
-        </p>
-        <div id="result-buyItem" class="result">테스트 대기중...</div>
+    <b>"(재고: 3개)"에서 숫자가 다르게 나오면</b> — <span class="why">stock 값을 문자열에 끼워넣지 않고 고정 숫자를 쓰고 있습니다.</span><br>
+    <span class="fix">→ <code>"(재고: " + stock + "개)"</code> 처럼 변수를 직접 넣어야 합니다.</span><br><br>
 
-        <h2>🎒 showInventory(inventory)</h2>
-        <p class="section-note">인벤토리 목록 표시 — 비어있으면 "없음"</p>
-        <div id="result-showInventory" class="result">테스트 대기중...</div>
+    <b>괄호나 콜론, 공백이 틀리면</b> — <span class="why">형식이 정확히 맞아야 합니다.</span><br>
+    <span class="fix">→ <code>(재고: N개)</code> — 여는 괄호, "재고", 콜론, 공백, 숫자, "개", 닫는 괄호 순서입니다.</span>
+  </div>
+</details>
 
-        <h2>🧮 calculateTotal(cartItems, prices, names)</h2>
-        <p class="section-note">장바구니 합산 금액 계산</p>
-        <div id="result-calculateTotal" class="result">테스트 대기중...</div>
+<!-- ============================== Function 2 ============================== -->
+<h2>📝 Function 2: formatShopLine</h2>
+<div id="result2" class="result">테스트 대기중...</div>
+<details>
+  <summary>테스트가 ❌이면 무슨 뜻인지 보기</summary>
+  <div class="explain-body">
+    <b>"1. 떡 — 100원 (재고: 3개)"가 안 나오면</b> — <span class="why">구분자나 공백이 다릅니다.</span><br>
+    점(<code>.</code>), 줄표(<code>—</code>), "원" 뒤 공백을 정확히 확인하세요.<br>
+    <span class="fix">→ <code>index + ". " + name + " — " + price + "원 " + getStockLabel(stock)</code></span><br><br>
 
-        <script src="../../js/shop.js"></script>
-        <script src="tests_shop.js"></script>
-    </body>
+    <b>번호가 0부터 시작하면</b> — <span class="why">index를 그대로 쓰고 있습니다. showShopList에서 i+1을 넘겨줘야 합니다.</span><br>
+    <span class="fix">→ formatShopLine을 호출할 때 첫 번째 인자를 <code>i + 1</code>로 넘기세요.</span><br><br>
+
+    <b>getStockLabel 연동이 안 되면</b> — <span class="why">재고 표시를 직접 만들고 있습니다.</span><br>
+    <span class="fix">→ 반드시 <code>getStockLabel(stock)</code>을 호출해서 그 결과를 이어붙이세요.</span><br><br>
+
+    <b>가격 뒤에 "원"이 없으면</b> — <span class="why">숫자만 붙이고 "원"을 빠뜨렸습니다.</span><br>
+    <span class="fix">→ <code>price + "원"</code> 으로 붙여야 합니다.</span>
+  </div>
+</details>
+
+<!-- ============================== Function 3 ============================== -->
+<h2>📜 Function 3: showShopList</h2>
+<div id="result3" class="result">테스트 대기중...</div>
+<details>
+  <summary>테스트가 ❌이면 무슨 뜻인지 보기</summary>
+  <div class="explain-body">
+    <b>상품이 하나만 나오거나 빠지면</b> — <span class="why">for문이 items 배열 전체를 돌지 않고 있습니다.</span><br>
+    <span class="fix">→ <code>for (let i = 0; i &lt; items.length; i++)</code> 로 끝까지 돌아야 합니다.</span><br><br>
+
+    <b>번호가 0부터 시작하면</b> — <span class="why">i를 그대로 formatShopLine에 넘기고 있습니다.</span><br>
+    <span class="fix">→ <code>formatShopLine(i + 1, ...)</code> 으로 넘기세요.</span><br><br>
+
+    <b>줄바꿈(\n)이 없다고 나오면</b> — <span class="why">항목들을 그냥 이어 붙이고 있습니다.</span><br>
+    <span class="fix">→ 각 항목 뒤에 <code>"\n"</code>을 붙여서 이어붙이세요.</span><br><br>
+
+    <b>품절 표시가 없으면</b> — <span class="why">formatShopLine이나 getStockLabel을 거치지 않고 직접 문자열을 만들고 있습니다.</span><br>
+    <span class="fix">→ formatShopLine에 stock 값을 제대로 넘겨주고 있는지 확인하세요. <code>items[i].stock</code></span><br><br>
+
+    <b>원본 items 배열 부작용 검사가 실패하면</b> — <span class="why">items 배열을 수정하고 있습니다.</span><br>
+    <span class="fix">→ items는 읽기만 해야 합니다. push나 splice를 쓰지 마세요.</span>
+  </div>
+</details>
+
+<!-- ============================== Function 4 ============================== -->
+<h2>💰 Function 4: isAffordable</h2>
+<div id="result4" class="result">테스트 대기중...</div>
+<details>
+  <summary>테스트가 ❌이면 무슨 뜻인지 보기</summary>
+  <div class="explain-body">
+    <b>딱 맞는 예산(300, 300)에서 false가 나오면</b> — <span class="why"><code>&gt;</code>를 쓰고 있습니다. 등호가 빠졌습니다.</span><br>
+    <span class="fix">→ <code>budget &gt;= price</code> 로 등호를 포함해야 합니다.</span><br><br>
+
+    <b>예산이 충분한데 false가 나오면</b> — <span class="why">인자 순서가 바뀌었습니다. budget과 price를 거꾸로 비교하고 있습니다.</span><br>
+    <span class="fix">→ 함수 선언 <code>isAffordable(budget, price)</code> — budget이 첫 번째, price가 두 번째입니다.</span><br><br>
+
+    <b>반환값이 boolean이 아니면</b> — <span class="why">숫자나 문자열을 return하고 있습니다.</span><br>
+    <span class="fix">→ <code>return budget &gt;= price;</code> 비교 연산 자체가 true/false를 반환합니다.</span>
+  </div>
+</details>
+
+<!-- ============================== Function 5 ============================== -->
+<h2>🛍️ Function 5: buyItem</h2>
+<div id="result5" class="result">테스트 대기중...</div>
+<details>
+  <summary>테스트가 ❌이면 무슨 뜻인지 보기</summary>
+  <div class="explain-body">
+    <b>구매 후 장바구니에 추가가 안 되면</b> — <span class="why">cart.push를 하지 않았거나 조건 분기 밖에서 push하고 있습니다.</span><br>
+    <span class="fix">→ 구매 성공 분기 안에서 <code>cart.push(item)</code> 을 호출하세요.</span><br><br>
+
+    <b>품절인데 "품절" 메시지가 안 나오면</b> — <span class="why">재고 확인을 하지 않고 있습니다.</span><br>
+    <span class="fix">→ 가장 먼저 <code>if (item.stock === 0)</code> 으로 품절을 체크하고 메시지를 반환하세요.</span><br><br>
+
+    <b>품절인데 장바구니가 바뀌면</b> — <span class="why">품절 체크 전에 cart.push를 하고 있습니다.</span><br>
+    <span class="fix">→ 품절 체크 → 예산 체크 → 구매 처리 순서로 작성하세요.</span><br><br>
+
+    <b>예산 부족인데 구매가 되면</b> — <span class="why">isAffordable을 호출하지 않거나 결과를 반대로 쓰고 있습니다.</span><br>
+    <span class="fix">→ <code>if (!isAffordable(budget.gold, item.price))</code> 로 예산 부족일 때 early return하세요.</span><br><br>
+
+    <b>구매 후 재고가 안 줄어들면</b> — <span class="why">item.stock을 감소시키지 않았습니다.</span><br>
+    <span class="fix">→ 구매 성공 시 <code>item.stock -= 1;</code> 을 해야 합니다.</span>
+  </div>
+</details>
+
+<!-- ============================== Function 6 ============================== -->
+<h2>🧮 Function 6: calcTotal</h2>
+<div id="result6" class="result">테스트 대기중...</div>
+<details>
+  <summary>테스트가 ❌이면 무슨 뜻인지 보기</summary>
+  <div class="explain-body">
+    <b>합계가 0으로 나오면</b> — <span class="why">total 누적을 하지 않고 있습니다.</span><br>
+    <span class="fix">→ <code>let total = 0;</code> 후 <code>total += cart[i].price;</code> 를 for문 안에서 반복하세요.</span><br><br>
+
+    <b>빈 장바구니에서 0이 안 나오면</b> — <span class="why">초기값이 0이 아닌 다른 값으로 설정되어 있습니다.</span><br>
+    <span class="fix">→ <code>let total = 0;</code> 으로 시작해야 합니다.</span><br><br>
+
+    <b>합계가 더 크거나 작게 나오면</b> — <span class="why">cart[i].price 대신 다른 필드를 더하고 있습니다.</span><br>
+    <span class="fix">→ <code>cart[i].price</code> 를 더해야 합니다. cart[i].name이나 cart[i].stock이 아닙니다.</span><br><br>
+
+    <b>원본 cart 배열 부작용 검사가 실패하면</b> — <span class="why">cart 배열을 수정하고 있습니다.</span><br>
+    <span class="fix">→ cart는 읽기만 해야 합니다. splice나 pop을 쓰지 마세요.</span>
+  </div>
+</details>
+
+<!-- ============================== Function 7 ============================== -->
+<h2>🧾 Function 7: showReceipt</h2>
+<div id="result7" class="result">테스트 대기중...</div>
+<details>
+  <summary>테스트가 ❌이면 무슨 뜻인지 보기</summary>
+  <div class="explain-body">
+    <b>문자열이 안 나오면</b> — <span class="why">return이 없거나 객체를 return하고 있습니다.</span><br>
+    <span class="fix">→ 영수증은 문자열 하나여야 합니다. <code>return "..."</code> 형태로 반환하세요.</span><br><br>
+
+    <b>상품명이 포함되지 않으면</b> — <span class="why">cart를 순회하지 않고 있습니다.</span><br>
+    <span class="fix">→ for문으로 cart를 돌면서 <code>cart[i].name</code>을 영수증 문자열에 이어붙이세요.</span><br><br>
+
+    <b>총액이 포함되지 않으면</b> — <span class="why">calcTotal을 호출하지 않았습니다.</span><br>
+    <span class="fix">→ <code>let total = calcTotal(cart);</code> 후 total을 영수증 문자열에 포함시키세요.</span><br><br>
+
+    <b>빈 장바구니 영수증에서 오류가 나면</b> — <span class="why">cart가 빈 배열일 때 처리가 없습니다.</span><br>
+    <span class="fix">→ for문은 cart.length가 0이면 자연스럽게 안 돌아가므로 별도 처리는 불필요합니다. total은 0이 됩니다.</span>
+  </div>
+</details>
+
+<script src="shop.js"></script>
+<script src="shop_tests.js"></script>
+</body>
 </html>
