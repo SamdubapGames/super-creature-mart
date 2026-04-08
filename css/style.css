@@ -1,0 +1,308 @@
+/* ─────────────────────────────────────────
+  개념: 레이어 겹치기
+  position: relative  →  자식의 absolute 기준점
+  position: absolute  →  부모 기준으로 좌표 지정
+  z-index             →  숫자 클수록 위에 그려짐
+  pointer-events: none →  클릭 이벤트를 아래 레이어로 통과시킴
+                          (canvas는 클릭 안 받아야 UI 클릭 됨)
+───────────────────────────────────────── */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: "Gothic A1", "Nanum Gothic", sans-serif;
+    color: #e0e0e0;
+}
+
+/* ── 게임 컨테이너 ── */
+#game-container {
+    position: relative;
+    width: 800px;
+    height: 600px;
+    overflow: hidden;
+    background: #111;
+}
+
+/* ── 레이어 1: 배경 이미지 ── */
+#background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 이미지 비율 유지하며 꽉 채움 */
+    z-index: 1;
+}
+
+/* 전진 시 줌인 효과 */
+#background.zoom-in {
+    animation: zoomIn 0.4s ease-out forwards;
+}
+
+@keyframes zoomIn {
+    from {
+        transform: scale(1.08);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+
+/* ── 레이어 2: 연기 ── */
+#fx {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    pointer-events: none; /* 클릭 통과 */
+}
+
+/* ── 레이어 3: 괴물 ── */
+#monster {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 3;
+    pointer-events: none; /* 클릭 통과 */
+}
+
+/* ── 레이어 4: UI ── */
+#ui-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10; /* 항상 최상단 */
+}
+
+/* ── UI 화면 공통 ── */
+.ui-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* ── 시작 화면 ── */
+#start-ui {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    background: rgba(0, 0, 0, 0.5); /* 배경 사진 위에 반투명 오버레이 */
+}
+
+.title {
+    font-size: 2.4rem;
+    letter-spacing: 0.2em;
+    color: #f0ede0;
+}
+
+.subtitle {
+    font-size: 1rem;
+    color: #aaa;
+    letter-spacing: 0.1em;
+}
+
+/* ── 버튼 공통 ── */
+.btn-main {
+    padding: 12px 32px;
+    background: #2a2a2a;
+    border: 1px solid #555;
+    color: #e0e0e0;
+    font-size: 1rem;
+    cursor: pointer;
+    letter-spacing: 0.1em;
+    transition: background 0.2s;
+}
+
+.btn-main:hover {
+    background: #3a3a3a;
+}
+
+.btn-sub {
+    padding: 6px 16px;
+    background: transparent;
+    border: 1px solid #444;
+    color: #aaa;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.btn-sub:hover {
+    border-color: #888;
+    color: #ddd;
+}
+
+/* ── 길 화면 ── */
+.hud-top-left {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    font-size: 0.9rem;
+    color: #ccc;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 4px 10px;
+}
+
+#notebook-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+}
+
+/* 공책 팝업 */
+#notebook-popup {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(20, 18, 14, 0.92);
+    border: 1px solid #555;
+    padding: 24px;
+    min-width: 240px;
+    text-align: center;
+}
+
+#notebook-content {
+    font-size: 1rem;
+    line-height: 2;
+    white-space: pre-line; /* \n을 줄바꿈으로 표시 */
+    color: #d4c9a8;
+    margin-bottom: 16px;
+}
+
+/* 인벤토리 바 (드래그 아이템) */
+#inventory-bar {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 12px;
+}
+
+.inventory-item {
+    width: 64px;
+    height: 64px;
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid #555;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    cursor: grab;
+    color: #ddd;
+    user-select: none;
+}
+
+.inventory-item:active {
+    cursor: grabbing;
+}
+
+/* 드롭 존 */
+#drop-zone {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 300px;
+    /* 개발 중에는 border 표시, 완성 후 제거 */
+    border: 2px dashed rgba(255, 255, 255, 0.15);
+}
+
+/* 메시지 */
+.message {
+    position: absolute;
+    bottom: 110px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.75);
+    padding: 6px 20px;
+    font-size: 0.9rem;
+    color: #e0e0e0;
+    white-space: nowrap;
+}
+
+/* ── 상점 화면 ── */
+#shop-ui {
+    background: rgba(10, 10, 10, 0.88);
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.shop-title {
+    font-size: 1.4rem;
+    letter-spacing: 0.15em;
+}
+
+.hud-top-right {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    font-size: 0.9rem;
+    color: #ccc;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 4px 10px;
+}
+
+.shop-layout {
+    display: flex;
+    gap: 32px;
+    flex: 1;
+}
+
+.shop-left,
+.shop-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.shop-left h3,
+.shop-right h3 {
+    font-size: 0.85rem;
+    color: #888;
+    letter-spacing: 0.1em;
+    border-bottom: 1px solid #333;
+    padding-bottom: 6px;
+}
+
+/* ── 엔딩 화면 ── */
+#ending-ui {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 32px;
+    background: rgba(0, 0, 0, 0.75);
+}
+
+.ending-text {
+    font-size: 1.1rem;
+    line-height: 2;
+    white-space: pre-line;
+    text-align: center;
+    color: #d4c9a8;
+    max-width: 500px;
+}

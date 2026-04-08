@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <title>path.js 테스트</title>
+        <style>
+            body {
+                font-family: monospace;
+                background: #1e1e1e;
+                color: #d4d4d4;
+                padding: 20px;
+            }
+            h1 {
+                color: #569cd6;
+            }
+            h2 {
+                color: #4ec9b0;
+                margin-top: 30px;
+            }
+            p {
+                color: #ce9178;
+            }
+            .result {
+                background: #2d2d2d;
+                padding: 15px;
+                margin: 10px 0;
+                border-left: 3px solid #569cd6;
+                line-height: 1.8;
+            }
+            .pass {
+                border-left-color: #4ec9b0;
+            }
+            .fail {
+                border-left-color: #f44747;
+            }
+            .sub {
+                color: #808080;
+                margin-left: 20px;
+            }
+            .concept {
+                background: #2d2d2d;
+                padding: 15px;
+                margin: 10px 0;
+                border-left: 3px solid #dcdcaa;
+                line-height: 1.8;
+                color: #dcdcaa;
+            }
+            .section-note {
+                color: #808080;
+                font-size: 0.9em;
+                margin-bottom: 4px;
+            }
+            .warn {
+                border-left-color: #ce9178;
+                color: #ce9178;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>🛤️ path.js 테스트</h1>
+        <p>
+            path.js 파일을 열어서 함수를 완성하고, 이 html 파일을 브라우저에서
+            열면 결과가 나옵니다.
+        </p>
+        <p>개발자 도구 (F12 → Console)에서도 확인할 수 있어요.</p>
+
+        <div class="concept">
+            💡 <b>Math.random()</b> 은 0 이상 1 미만의 랜덤 숫자를 준다<br />
+            💡 <b>Math.floor(Math.random() * 배열.length)</b> → 랜덤 인덱스<br />
+            💡 <b>splice(i, 1)</b> 은 인덱스 i 에서 1개 제거. 배열이 직접
+            바뀐다!<br />
+            💡 <b>playTurn</b> 은 checkMatch 와 useItem 을 안에서 호출하는
+            함수다
+        </div>
+
+        <h2>🗺️ generateRoute(parts, n)</h2>
+        <p class="section-note">랜덤으로 n개 뽑아 경로 배열 만들기</p>
+        <div id="result-generateRoute" class="result">테스트 대기중...</div>
+
+        <h2>⚔️ checkMatch(part, item, parts, items)</h2>
+        <p class="section-note">부위와 아이템이 올바른 짝인지 판정</p>
+        <div id="result-checkMatch" class="result">테스트 대기중...</div>
+
+        <h2>🎒 useItem(inventory, itemName)</h2>
+        <p class="section-note">인벤토리에서 아이템 찾아서 제거</p>
+        <div id="result-useItem" class="result">테스트 대기중...</div>
+
+        <h2>🎮 playTurn(part, chosenItem, inventory, parts, items)</h2>
+        <p class="section-note">한 턴 전체 처리 — checkMatch + useItem 조합</p>
+        <div id="result-playTurn" class="result">테스트 대기중...</div>
+
+        <script src="../../js/path.js"></script>
+        <script src="tests_path.js"></script>
+    </body>
+</html>

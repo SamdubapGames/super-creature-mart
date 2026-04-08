@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <title>notebook.js 테스트</title>
+        <style>
+            body {
+                font-family: monospace;
+                background: #1e1e1e;
+                color: #d4d4d4;
+                padding: 20px;
+            }
+            h1 {
+                color: #569cd6;
+            }
+            h2 {
+                color: #4ec9b0;
+                margin-top: 30px;
+            }
+            p {
+                color: #ce9178;
+            }
+            .result {
+                background: #2d2d2d;
+                padding: 15px;
+                margin: 10px 0;
+                border-left: 3px solid #569cd6;
+                line-height: 1.8;
+            }
+            .pass {
+                border-left-color: #4ec9b0;
+            }
+            .fail {
+                border-left-color: #f44747;
+            }
+            .sub {
+                color: #808080;
+                margin-left: 20px;
+            }
+            .concept {
+                background: #2d2d2d;
+                padding: 15px;
+                margin: 10px 0;
+                border-left: 3px solid #dcdcaa;
+                line-height: 1.8;
+                color: #dcdcaa;
+            }
+            .section-note {
+                color: #808080;
+                font-size: 0.9em;
+                margin-bottom: 4px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>📓 notebook.js 테스트</h1>
+        <p>
+            notebook.js 파일을 열어서 함수를 완성하고, 이 html 파일을
+            브라우저에서 열면 결과가 나옵니다.
+        </p>
+        <p>개발자 도구 (F12 → Console)에서도 확인할 수 있어요.</p>
+
+        <div class="concept">
+            💡 두 배열을 <b>같은 인덱스</b>로 연결한다 — parts[i] 와 items[i] 는
+            한 쌍!<br />
+            💡 <b>for 문</b>으로 배열을 순회하면서 짝을 찾는다<br />
+            💡 찾으면 <b>return</b> 으로 값을 돌려준다. 없으면 <b>null</b> 을
+            돌려준다.
+        </div>
+
+        <h2>📖 showNotebook(parts, items)</h2>
+        <p class="section-note">
+            두 배열을 동시에 순회하면서 "입 → 떡" 형태로 전부 표시
+        </p>
+        <div id="result-showNotebook" class="result">테스트 대기중...</div>
+
+        <h2>🔍 findTip(parts, items, targetPart)</h2>
+        <p class="section-note">
+            부위 이름을 받아서 대응 아이템 찾기 — 없으면 null
+        </p>
+        <div id="result-findTip" class="result">테스트 대기중...</div>
+
+        <script src="../../js/notebook.js"></script>
+        <script src="tests_notebook.js"></script>
+    </body>
+</html>
