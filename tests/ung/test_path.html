@@ -1,95 +1,177 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
-    <head>
-        <meta charset="UTF-8" />
-        <title>path.js 테스트</title>
-        <style>
-            body {
-                font-family: monospace;
-                background: #1e1e1e;
-                color: #d4d4d4;
-                padding: 20px;
-            }
-            h1 {
-                color: #569cd6;
-            }
-            h2 {
-                color: #4ec9b0;
-                margin-top: 30px;
-            }
-            p {
-                color: #ce9178;
-            }
-            .result {
-                background: #2d2d2d;
-                padding: 15px;
-                margin: 10px 0;
-                border-left: 3px solid #569cd6;
-                line-height: 1.8;
-            }
-            .pass {
-                border-left-color: #4ec9b0;
-            }
-            .fail {
-                border-left-color: #f44747;
-            }
-            .sub {
-                color: #808080;
-                margin-left: 20px;
-            }
-            .concept {
-                background: #2d2d2d;
-                padding: 15px;
-                margin: 10px 0;
-                border-left: 3px solid #dcdcaa;
-                line-height: 1.8;
-                color: #dcdcaa;
-            }
-            .section-note {
-                color: #808080;
-                font-size: 0.9em;
-                margin-bottom: 4px;
-            }
-            .warn {
-                border-left-color: #ce9178;
-                color: #ce9178;
-            }
-        </style>
-    </head>
-    <body>
-        <h1>🛤️ path.js 테스트</h1>
-        <p>
-            path.js 파일을 열어서 함수를 완성하고, 이 html 파일을 브라우저에서
-            열면 결과가 나옵니다.
-        </p>
-        <p>개발자 도구 (F12 → Console)에서도 확인할 수 있어요.</p>
+<head>
+<meta charset="UTF-8">
+<title>path.js 테스트</title>
+<style>
+body { font-family: monospace; background: #1e1e1e; color: #d4d4d4; padding: 20px; }
+h1 { color: #569cd6; }
+h2 { color: #4ec9b0; margin-top: 30px; }
+p { color: #ce9178; }
+.result { background: #2d2d2d; padding: 15px; margin: 10px 0; border-left: 3px solid #569cd6; line-height: 1.8; }
+.pass { border-left-color: #4ec9b0; }
+.fail { border-left-color: #f44747; }
+.sub { color: #808080; margin-left: 20px; }
+.concept { background: #2d2d2d; padding: 15px; margin: 10px 0; border-left: 3px solid #dcdcaa; line-height: 1.8; color: #dcdcaa; }
 
-        <div class="concept">
-            💡 <b>Math.random()</b> 은 0 이상 1 미만의 랜덤 숫자를 준다<br />
-            💡 <b>Math.floor(Math.random() * 배열.length)</b> → 랜덤 인덱스<br />
-            💡 <b>splice(i, 1)</b> 은 인덱스 i 에서 1개 제거. 배열이 직접
-            바뀐다!<br />
-            💡 <b>playTurn</b> 은 checkMatch 와 useItem 을 안에서 호출하는
-            함수다
-        </div>
+details {
+  background: #252526;
+  border-left: 3px solid #3c3c3c;
+  margin: 4px 0 16px 0;
+  padding: 0;
+}
+details[open] { border-left-color: #569cd6; }
+summary {
+  padding: 8px 12px;
+  cursor: pointer;
+  color: #808080;
+  font-size: 12px;
+  list-style: none;
+  user-select: none;
+}
+summary::-webkit-details-marker { display: none; }
+summary::before { content: "▶ "; font-size: 10px; }
+details[open] summary::before { content: "▼ "; }
+summary:hover { color: #d4d4d4; }
+.explain-body {
+  padding: 10px 16px 14px 16px;
+  font-size: 12px;
+  line-height: 2;
+  color: #b0b0b0;
+}
+.explain-body b { color: #d4d4d4; }
+.explain-body code {
+  background: #1e1e1e;
+  padding: 1px 5px;
+  border-radius: 3px;
+  color: #9cdcfe;
+  font-size: 12px;
+}
+.explain-body .why { color: #f44747; }
+.explain-body .fix { color: #4ec9b0; }
+</style>
+</head>
+<body>
+<h1>🗺️ path.js 테스트</h1>
+<p>path.js 파일을 열어서 함수를 구현하고, 이 html 파일을 브라우저에서 열면 결과가 나옵니다.</p>
+<p>개발자 도구 (F12 → Console)에서도 확인할 수 있어요.</p>
+<div class="concept">
+  💡 <b>findPartIndex(parts, part)</b> — 부위 배열에서 특정 부위의 인덱스 반환<br>
+  💡 <b>generateRoute(parts, length)</b> — 랜덤 경로 배열 생성<br>
+  💡 <b>checkMatch(part, item, pairs)</b> — 부위+아이템 짝이 맞는지 판정<br>
+  💡 <b>useItem(inventory, item)</b> — 인벤토리에서 아이템 제거<br>
+  💡 <b>playTurn(part, item, inventory, pairs)</b> — 한 턴 전체 처리 → { success, message }
+</div>
 
-        <h2>🗺️ generateRoute(parts, n)</h2>
-        <p class="section-note">랜덤으로 n개 뽑아 경로 배열 만들기</p>
-        <div id="result-generateRoute" class="result">테스트 대기중...</div>
+<!-- ============================== Function 1 ============================== -->
+<h2>🔍 Function 1: findPartIndex</h2>
+<div id="result1" class="result">테스트 대기중...</div>
+<details>
+  <summary>테스트가 ❌이면 무슨 뜻인지 보기</summary>
+  <div class="explain-body">
+    <b>인덱스가 1씩 크게 나오면</b> — <span class="why">for문이 0이 아닌 1부터 시작하고 있습니다.</span><br>
+    <span class="fix">→ <code>for (let i = 0; ...)</code> 0부터 시작해야 배열 인덱스와 일치합니다.</span><br><br>
 
-        <h2>⚔️ checkMatch(part, item, parts, items)</h2>
-        <p class="section-note">부위와 아이템이 올바른 짝인지 판정</p>
-        <div id="result-checkMatch" class="result">테스트 대기중...</div>
+    <b>없는 부위인데 -1이 안 나오면</b> — <span class="why">for문이 끝난 뒤 return이 없습니다.</span><br>
+    못 찾으면 for문 밖에서 -1을 return해야 합니다.<br>
+    <span class="fix">→ <code>return -1;</code> 이 for문 바깥(함수 맨 끝)에 있는지 확인하세요.</span><br><br>
 
-        <h2>🎒 useItem(inventory, itemName)</h2>
-        <p class="section-note">인벤토리에서 아이템 찾아서 제거</p>
-        <div id="result-useItem" class="result">테스트 대기중...</div>
+    <b>숫자가 아닌 다른 값이 나오면</b> — <span class="why">인덱스 대신 부위 이름 자체를 return하고 있습니다.</span><br>
+    <span class="fix">→ <code>return i;</code> (parts[i]가 아닙니다!)</span><br><br>
 
-        <h2>🎮 playTurn(part, chosenItem, inventory, parts, items)</h2>
-        <p class="section-note">한 턴 전체 처리 — checkMatch + useItem 조합</p>
-        <div id="result-playTurn" class="result">테스트 대기중...</div>
+    <b>원본 parts 배열 부작용 검사가 실패하면</b> — <span class="why">parts 배열을 수정하고 있습니다.</span><br>
+    <span class="fix">→ parts는 읽기만 해야 합니다. splice나 push를 쓰지 마세요.</span>
+  </div>
+</details>
 
-        <script src="../../js/path.js"></script>
-        <script src="tests_path.js"></script>
-    </body>
+<!-- ============================== Function 2 ============================== -->
+<h2>🎲 Function 2: generateRoute</h2>
+<div id="result2" class="result">테스트 대기중...</div>
+<details>
+  <summary>테스트가 ❌이면 무슨 뜻인지 보기</summary>
+  <div class="explain-body">
+    <b>길이가 틀리면</b> — <span class="why">for문이 length번 돌지 않고 있습니다.</span><br>
+    <span class="fix">→ <code>for (let i = 0; i &lt; length; i++)</code> 에서 <code>length</code>가 맞는지 확인하세요.</span><br><br>
+
+    <b>유효하지 않은 값이 나오면</b> — <span class="why">인덱스 범위가 parts 배열을 벗어나고 있습니다.</span><br>
+    <code>Math.random() * 10</code> 같은 고정 숫자를 쓰면 범위를 벗어납니다.<br>
+    <span class="fix">→ <code>Math.floor(Math.random() * parts.length)</code> 로 parts 길이에 맞춰야 합니다.</span><br><br>
+
+    <b>랜덤 확인에서 1종류만 나오면</b> — <span class="why">Math.random()을 for문 밖에서 한 번만 계산하고 재사용하고 있습니다.</span><br>
+    <span class="fix">→ <code>let idx = Math.floor(Math.random() * parts.length)</code> 이 줄이 for문 안에 있어야 합니다.</span><br><br>
+
+    <b>원본 parts 배열 부작용 검사가 실패하면</b> — <span class="why">parts 배열에서 항목을 제거하고 있습니다.</span><br>
+    경로는 같은 부위가 반복될 수 있습니다. parts는 건드리지 마세요.<br>
+    <span class="fix">→ <code>result.push(parts[idx])</code> 만 하고 parts.splice는 쓰지 않습니다.</span>
+  </div>
+</details>
+
+<!-- ============================== Function 3 ============================== -->
+<h2>🎯 Function 3: checkMatch</h2>
+<div id="result3" class="result">테스트 대기중...</div>
+<details>
+  <summary>테스트가 ❌이면 무슨 뜻인지 보기</summary>
+  <div class="explain-body">
+    <b>올바른 짝인데 false가 나오면</b> — <span class="why">pairs 배열을 제대로 순회하지 않거나 비교 방식이 틀렸습니다.</span><br>
+    <code>pairs[i].part === part</code> 와 <code>pairs[i].item === item</code> 을 둘 다 확인해야 합니다.<br>
+    <span class="fix">→ <code>if (pairs[i].part === part && pairs[i].item === item)</code></span><br><br>
+
+    <b>틀린 짝인데 true가 나오면</b> — <span class="why">부위만 확인하고 아이템은 확인하지 않고 있습니다.</span><br>
+    <span class="fix">→ <code>&&</code>로 부위와 아이템 둘 다 일치할 때만 true를 반환해야 합니다.</span><br><br>
+
+    <b>없는 부위인데 오류가 나거나 이상한 값이 나오면</b> — <span class="why">for문이 끝난 뒤 return false가 없습니다.</span><br>
+    <span class="fix">→ <code>return false;</code> 가 for문 바깥(함수 맨 끝)에 있어야 합니다.</span><br><br>
+
+    <b>원본 pairs 배열 부작용 검사가 실패하면</b> — <span class="why">pairs 배열을 수정하고 있습니다.</span><br>
+    <span class="fix">→ pairs는 읽기만 해야 합니다.</span>
+  </div>
+</details>
+
+<!-- ============================== Function 4 ============================== -->
+<h2>🎒 Function 4: useItem</h2>
+<div id="result4" class="result">테스트 대기중...</div>
+<details>
+  <summary>테스트가 ❌이면 무슨 뜻인지 보기</summary>
+  <div class="explain-body">
+    <b>꺼낸 후 배열이 안 줄어들면</b> — <span class="why">splice를 쓰지 않았거나 위치가 틀렸습니다.</span><br>
+    <span class="fix">→ <code>inventory.splice(i, 1)</code> 이 if문 안, return 바로 앞에 있어야 합니다.</span><br><br>
+
+    <b>맨 앞 항목 제거 후 나머지가 안 밀리면</b> — <span class="why">splice 대신 <code>inventory[i] = undefined</code> 같은 걸 쓰고 있습니다.</span><br>
+    splice는 그 자리를 완전히 없애고 뒤 항목을 앞으로 당겨줍니다.<br>
+    <span class="fix">→ <code>inventory.splice(i, 1)</code> 만 쓰면 됩니다.</span><br><br>
+
+    <b>없는 아이템인데 배열이 바뀌면</b> — <span class="why">splice를 if문 밖에서 무조건 호출하고 있습니다.</span><br>
+    <span class="fix">→ splice는 아이템을 찾았을 때(if문 안에서)만 호출해야 합니다.</span><br><br>
+
+    <b>같은 아이템이 2개인데 2개 다 사라지면</b> — <span class="why">splice 후에 바로 return하지 않아서 for문이 계속 돌고 있습니다.</span><br>
+    <span class="fix">→ splice와 return이 같은 if 블록 안에 있어야 합니다. splice 직후 함수를 끝내세요.</span>
+  </div>
+</details>
+
+<!-- ============================== Function 5 ============================== -->
+<h2>⚔️ Function 5: playTurn</h2>
+<div id="result5" class="result">테스트 대기중...</div>
+<details>
+  <summary>테스트가 ❌이면 무슨 뜻인지 보기</summary>
+  <div class="explain-body">
+    <b>반환값이 객체가 아니면</b> — <span class="why">문자열이나 true/false만 return하고 있습니다.</span><br>
+    <span class="fix">→ <code>return { success: true, message: "..." }</code> 처럼 객체를 반환해야 합니다.</span><br><br>
+
+    <b>success 또는 message 필드가 없으면</b> — <span class="why">반환 객체의 키 이름이 다릅니다.</span><br>
+    <span class="fix">→ 키 이름이 정확히 <code>success</code>, <code>message</code> 여야 합니다. 오타를 확인하세요.</span><br><br>
+
+    <b>성공인데 success가 false로 나오면</b> — <span class="why">checkMatch를 호출하지 않거나 결과를 반대로 쓰고 있습니다.</span><br>
+    <span class="fix">→ <code>if (checkMatch(part, item, pairs))</code> 가 true일 때 success: true를 반환하세요.</span><br><br>
+
+    <b>성공 후 아이템이 인벤토리에서 안 사라지면</b> — <span class="why">useItem을 호출하지 않았습니다.</span><br>
+    <span class="fix">→ 성공했을 때 <code>useItem(inventory, item)</code>을 반드시 호출하세요.</span><br><br>
+
+    <b>실패 시 인벤토리가 바뀌면</b> — <span class="why">useItem을 성공/실패 구분 없이 항상 호출하고 있습니다.</span><br>
+    <span class="fix">→ useItem은 checkMatch가 true일 때(성공 분기)에서만 호출해야 합니다.</span>
+  </div>
+</details>
+
+<script src="path.js"></script>
+<script src="path_tests.js"></script>
+</body>
 </html>
