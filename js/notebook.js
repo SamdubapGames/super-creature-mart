@@ -1,5 +1,5 @@
 // ============================================================
-// notebook.js ㅇ.ㅇ ...
+// notebook.js
 // 담당: 헤
 // 역할: 공책 UI에 표시할 데이터를 만드는 함수들
 //
@@ -35,11 +35,10 @@ function formatTipLine(part, item) {
 }
 
 // ✅ 함수 완성 후 아래 주석을 풀어서 확인해보세요
-/*
+
 console.log(formatTipLine("입", "떡"));          // "입 → 떡"
 console.log(formatTipLine("코", "캣닙 담배"));   // "코 → 캣닙 담배"
 console.log(formatTipLine("눈", "레몬"));        // "눈 → 레몬"
-*/
 
 // ============================================================
 // Function 2: 공책 전체 표시
@@ -66,18 +65,18 @@ console.log(formatTipLine("눈", "레몬"));        // "눈 → 레몬"
 //       또는 배열에 push 하고 마지막에 join("\n") 써도 됩니다.
 
 function showNotebook(parts, items) {
-    // 기능: parts 와 items 를 짝지어 전체 팁 목록 문자열 반환
-    // input(parameter): parts(배열), items(배열)
-    // return값 타입: string
-    // 꼭 써야 하는 것:
-    //   for 문으로 두 배열 동시 순회 (parts[i], items[i])
-    //   formatTipLine(parts[i], items[i]) 호출해서 한 줄 얻기
-    //   줄들을 \n 으로 이어붙이기
-    //   여기를 채우세요
+    let noteList = "";
+    for (let i = 0; i < parts.length; i++) {
+        if (i === 0) {
+            noteList = parts[i] + " → " + items[i];
+        } else {
+            noteList += "\n" + parts[i] + " → " + items[i];
+        }
+    } return noteList;
 }
 
 // ✅ 함수 완성 후 아래 주석을 풀어서 확인해보세요
-/*
+
 var PARTS = ["입", "꼬리", "코", "눈"];
 var ITEMS = ["떡", "칼", "캣닙 담배", "레몬"];
 
@@ -89,4 +88,4 @@ console.log(showNotebook(PARTS, ITEMS));
 
 console.log(showNotebook(["눈"], ["레몬"]));
 // 눈 → 레몬
-*/
+
