@@ -112,16 +112,60 @@
         </p>
         <p>개발자 도구 (F12 → Console)에서도 확인할 수 있어요.</p>
         <div class="concept">
+            💡 <b>findItemIndex(names, targetName)</b> — 이름 배열에서 인덱스
+            찾기<br />
             💡 <b>getStockLabel(stock)</b> — "(품절)" 또는 "(재고: N개)"<br />
-            💡 <b>formatShopLine(index, name, price, stock)</b> — "1. 떡 — 100원
-            (재고: 3개)"<br />
-            💡 <b>showShopList(items)</b> — 전체 목록 문자열<br />
-            💡 <b>isAffordable(budget, price)</b> — 예산 확인 → true/false<br />
-            💡 <b>buyItem(item, budget, cart)</b> — 구매 처리 → 결과 메시지<br />
-            💡 <b>calcTotal(cart)</b> — 장바구니 합산 → 총액<br />
-            💡 <b>showReceipt(cart)</b> — 영수증 문자열 생성<br />
-            💡 <b>shopSession(items, budget)</b> — 전체 흐름 (완성본)
+            💡 <b>formatShopLine(number, name, price, stockLabel)</b> — "1. 떡 —
+            100원 (재고: 3개)"<br />
+            💡 <b>showShopList(names, prices, stock)</b> — 전체 목록 문자열<br />
+            💡 <b>isAffordable(price, budget)</b> — 예산 확인 → true/false<br />
+            💡 <b>buyItem(name, budget, names, prices, stock)</b> — 구매 처리 →
+            결과 메시지<br />
+            💡 <b>calcTotal(cart, names, prices)</b> — 장바구니 합산 → 총액<br />
+            💡 <b>showReceipt(cart, names, prices)</b> — 영수증 문자열 생성<br />
+            💡 <b>shopSession(shoppingList, budget, names, prices, stock)</b> —
+            전체 흐름 (완성본)
         </div>
+
+        <!-- ============================== Function 0 ============================== -->
+        <h2>🔍 Function 0: findItemIndex</h2>
+        <div id="result0" class="result">테스트 대기중...</div>
+        <details>
+            <summary>테스트가 ❌이면 무슨 뜻인지 보기</summary>
+            <div class="explain-body">
+                <b>인덱스가 1씩 크게 나오면</b> —
+                <span class="why"
+                    >for문이 0이 아닌 1부터 시작하고 있습니다.</span
+                ><br />
+                <span class="fix"
+                    >→ <code>for (let i = 0; ...)</code> 0부터 시작해야 배열
+                    인덱스와 일치합니다.</span
+                ><br /><br />
+
+                <b>없는 이름인데 -1이 안 나오면</b> —
+                <span class="why">for문이 끝난 뒤 return이 없습니다.</span
+                ><br />
+                <span class="fix"
+                    >→ <code>return -1;</code> 이 for문 바깥(함수 맨 끝)에
+                    있는지 확인하세요.</span
+                ><br /><br />
+
+                <b>숫자가 아닌 다른 값이 나오면</b> —
+                <span class="why"
+                    >인덱스 대신 이름 자체를 return하고 있습니다.</span
+                ><br />
+                <span class="fix"
+                    >→ <code>return i;</code> (names[i]가 아닙니다!)</span
+                ><br /><br />
+
+                <b>원본 names 배열 부작용 검사가 실패하면</b> —
+                <span class="why">names 배열을 수정하고 있습니다.</span><br />
+                <span class="fix"
+                    >→ names는 읽기만 해야 합니다. splice나 push를 쓰지
+                    마세요.</span
+                >
+            </div>
+        </details>
 
         <!-- ============================== Function 1 ============================== -->
         <h2>🏷️ Function 1: getStockLabel</h2>
@@ -168,26 +212,20 @@
                 <span class="fix"
                     >→
                     <code
-                        >index + ". " + name + " — " + price + "원 " +
-                        getStockLabel(stock)</code
+                        >number + ". " + name + " — " + price + "원 " +
+                        stockLabel</code
                     ></span
                 ><br /><br />
 
-                <b>번호가 0부터 시작하면</b> —
+                <b>stockLabel이 이상하게 나오면</b> —
                 <span class="why"
-                    >index를 그대로 쓰고 있습니다. showShopList에서 i+1을
-                    넘겨줘야 합니다.</span
+                    >stockLabel 파라미터는 이미 getStockLabel의 결과
+                    문자열입니다.</span
                 ><br />
                 <span class="fix"
-                    >→ formatShopLine을 호출할 때 첫 번째 인자를
-                    <code>i + 1</code>로 넘기세요.</span
-                ><br /><br />
-
-                <b>getStockLabel 연동이 안 되면</b> —
-                <span class="why">재고 표시를 직접 만들고 있습니다.</span><br />
-                <span class="fix"
-                    >→ 반드시 <code>getStockLabel(stock)</code>을 호출해서 그
-                    결과를 이어붙이세요.</span
+                    >→ stockLabel을 그대로 이어붙이면 됩니다. showShopList에서
+                    getStockLabel을 호출하고 그 결과를 formatShopLine에
+                    넘깁니다.</span
                 ><br /><br />
 
                 <b>가격 뒤에 "원"이 없으면</b> —
@@ -206,11 +244,10 @@
             <summary>테스트가 ❌이면 무슨 뜻인지 보기</summary>
             <div class="explain-body">
                 <b>상품이 하나만 나오거나 빠지면</b> —
-                <span class="why"
-                    >for문이 items 배열 전체를 돌지 않고 있습니다.</span
+                <span class="why">for문이 배열 전체를 돌지 않고 있습니다.</span
                 ><br />
                 <span class="fix"
-                    >→ <code>for (let i = 0; i &lt; items.length; i++)</code> 로
+                    >→ <code>for (let i = 0; i &lt; names.length; i++)</code> 로
                     끝까지 돌아야 합니다.</span
                 ><br /><br />
 
@@ -227,24 +264,27 @@
                 <span class="why">항목들을 그냥 이어 붙이고 있습니다.</span
                 ><br />
                 <span class="fix"
-                    >→ 각 항목 뒤에 <code>"\n"</code>을 붙여서
-                    이어붙이세요.</span
+                    >→ 첫 번째 줄은 \n 없이, 나머지는 앞에 <code>"\n"</code>을
+                    붙여서 이어붙이세요.</span
                 ><br /><br />
 
                 <b>품절 표시가 없으면</b> —
-                <span class="why"
-                    >formatShopLine이나 getStockLabel을 거치지 않고 직접
-                    문자열을 만들고 있습니다.</span
+                <span class="why">getStockLabel을 호출하지 않고 있습니다.</span
                 ><br />
                 <span class="fix"
-                    >→ formatShopLine에 stock 값을 제대로 넘겨주고 있는지
-                    확인하세요. <code>items[i].stock</code></span
+                    >→ <code>getStockLabel(stock[i])</code> 를 호출해서 재고
+                    라벨을 만들고
+                    <code
+                        >formatShopLine(i+1, names[i], prices[i],
+                        stockLabel)</code
+                    >
+                    에 넘기세요.</span
                 ><br /><br />
 
-                <b>원본 items 배열 부작용 검사가 실패하면</b> —
-                <span class="why">items 배열을 수정하고 있습니다.</span><br />
+                <b>원본 배열 부작용 검사가 실패하면</b> —
+                <span class="why">배열을 수정하고 있습니다.</span><br />
                 <span class="fix"
-                    >→ items는 읽기만 해야 합니다. push나 splice를 쓰지
+                    >→ 배열은 읽기만 해야 합니다. push나 splice를 쓰지
                     마세요.</span
                 >
             </div>
@@ -256,30 +296,30 @@
         <details>
             <summary>테스트가 ❌이면 무슨 뜻인지 보기</summary>
             <div class="explain-body">
-                <b>딱 맞는 예산(300, 300)에서 false가 나오면</b> —
+                <b>딱 맞는 예산(9000, 9000)에서 false가 나오면</b> —
                 <span class="why"
-                    ><code>&gt;</code>를 쓰고 있습니다. 등호가 빠졌습니다.</span
+                    ><code>&lt;</code>를 쓰고 있습니다. 등호가 빠졌습니다.</span
                 ><br />
                 <span class="fix"
-                    >→ <code>budget &gt;= price</code> 로 등호를 포함해야
+                    >→ <code>price &lt;= budget</code> 로 등호를 포함해야
                     합니다.</span
                 ><br /><br />
 
                 <b>예산이 충분한데 false가 나오면</b> —
                 <span class="why"
-                    >인자 순서가 바뀌었습니다. budget과 price를 거꾸로 비교하고
+                    >인자 순서가 바뀌었습니다. price와 budget을 거꾸로 비교하고
                     있습니다.</span
                 ><br />
                 <span class="fix"
-                    >→ 함수 선언 <code>isAffordable(budget, price)</code> —
-                    budget이 첫 번째, price가 두 번째입니다.</span
+                    >→ 함수 선언 <code>isAffordable(price, budget)</code> —
+                    price가 첫 번째, budget이 두 번째입니다.</span
                 ><br /><br />
 
                 <b>반환값이 boolean이 아니면</b> —
                 <span class="why">숫자나 문자열을 return하고 있습니다.</span
                 ><br />
                 <span class="fix"
-                    >→ <code>return budget &gt;= price;</code> 비교 연산 자체가
+                    >→ <code>return price &lt;= budget;</code> 비교 연산 자체가
                     true/false를 반환합니다.</span
                 >
             </div>
@@ -291,30 +331,20 @@
         <details>
             <summary>테스트가 ❌이면 무슨 뜻인지 보기</summary>
             <div class="explain-body">
-                <b>구매 후 장바구니에 추가가 안 되면</b> —
+                <b>없는 아이템인데 메시지가 안 나오면</b> —
                 <span class="why"
-                    >cart.push를 하지 않았거나 조건 분기 밖에서 push하고
-                    있습니다.</span
+                    >findItemIndex 결과를 체크하지 않고 있습니다.</span
                 ><br />
                 <span class="fix"
-                    >→ 구매 성공 분기 안에서 <code>cart.push(item)</code> 을
-                    호출하세요.</span
+                    >→ <code>findItemIndex(names, name)</code> 가 -1이면
+                    <code>"없는 아이템입니다"</code> 를 return 하세요.</span
                 ><br /><br />
 
                 <b>품절인데 "품절" 메시지가 안 나오면</b> —
                 <span class="why">재고 확인을 하지 않고 있습니다.</span><br />
                 <span class="fix"
-                    >→ 가장 먼저 <code>if (item.stock === 0)</code> 으로 품절을
+                    >→ <code>if (stock[인덱스] === 0)</code> 으로 품절을
                     체크하고 메시지를 반환하세요.</span
-                ><br /><br />
-
-                <b>품절인데 장바구니가 바뀌면</b> —
-                <span class="why"
-                    >품절 체크 전에 cart.push를 하고 있습니다.</span
-                ><br />
-                <span class="fix"
-                    >→ 품절 체크 → 예산 체크 → 구매 처리 순서로
-                    작성하세요.</span
                 ><br /><br />
 
                 <b>예산 부족인데 구매가 되면</b> —
@@ -324,15 +354,15 @@
                 ><br />
                 <span class="fix"
                     >→
-                    <code>if (!isAffordable(budget.gold, item.price))</code> 로
+                    <code>if (!isAffordable(prices[인덱스], budget))</code> 로
                     예산 부족일 때 early return하세요.</span
                 ><br /><br />
 
                 <b>구매 후 재고가 안 줄어들면</b> —
-                <span class="why">item.stock을 감소시키지 않았습니다.</span
+                <span class="why">stock[인덱스]를 감소시키지 않았습니다.</span
                 ><br />
                 <span class="fix"
-                    >→ 구매 성공 시 <code>item.stock -= 1;</code> 을 해야
+                    >→ 구매 성공 시 <code>stock[인덱스]--</code> 를 해야
                     합니다.</span
                 >
             </div>
@@ -348,7 +378,8 @@
                 <span class="why">total 누적을 하지 않고 있습니다.</span><br />
                 <span class="fix"
                     >→ <code>let total = 0;</code> 후
-                    <code>total += cart[i].price;</code> 를 for문 안에서
+                    <code>findItemIndex(names, cart[i])</code> 로 인덱스를 찾고
+                    <code>total += prices[인덱스];</code> 를 for문 안에서
                     반복하세요.</span
                 ><br /><br />
 
@@ -362,11 +393,11 @@
 
                 <b>합계가 더 크거나 작게 나오면</b> —
                 <span class="why"
-                    >cart[i].price 대신 다른 필드를 더하고 있습니다.</span
+                    >findItemIndex로 찾은 인덱스가 잘못되었거나 prices를 쓰지
+                    않고 있습니다.</span
                 ><br />
                 <span class="fix"
-                    >→ <code>cart[i].price</code> 를 더해야 합니다.
-                    cart[i].name이나 cart[i].stock이 아닙니다.</span
+                    >→ <code>prices[인덱스]</code> 를 더해야 합니다.</span
                 ><br /><br />
 
                 <b>원본 cart 배열 부작용 검사가 실패하면</b> —
@@ -390,21 +421,31 @@
                 ><br />
                 <span class="fix"
                     >→ 영수증은 문자열 하나여야 합니다.
-                    <code>return "..."</code> 형태로 반환하세요.</span
+                    <code>return result;</code> 형태로 반환하세요.</span
                 ><br /><br />
 
                 <b>상품명이 포함되지 않으면</b> —
                 <span class="why">cart를 순회하지 않고 있습니다.</span><br />
                 <span class="fix"
-                    >→ for문으로 cart를 돌면서 <code>cart[i].name</code>을
-                    영수증 문자열에 이어붙이세요.</span
+                    >→ for문으로 cart를 돌면서 <code>cart[i]</code>와
+                    <code>prices[findItemIndex(names, cart[i])]</code>를 영수증
+                    문자열에 이어붙이세요.</span
                 ><br /><br />
 
                 <b>총액이 포함되지 않으면</b> —
                 <span class="why">calcTotal을 호출하지 않았습니다.</span><br />
                 <span class="fix"
-                    >→ <code>let total = calcTotal(cart);</code> 후 total을
-                    영수증 문자열에 포함시키세요.</span
+                    >→ <code>calcTotal(cart, names, prices)</code> 로 합계를
+                    구하고 영수증 문자열에 포함시키세요.</span
+                ><br /><br />
+
+                <b>RECEIPT_HEADER 나 RECEIPT_FOOTER 가 없으면</b> —
+                <span class="why">영수증 머리말/꼬리말을 빠뜨렸습니다.</span
+                ><br />
+                <span class="fix"
+                    >→ <code>result = RECEIPT_HEADER</code> 로 시작하고
+                    <code>result += "\n\n" + RECEIPT_FOOTER</code> 로
+                    끝내세요.</span
                 ><br /><br />
 
                 <b>빈 장바구니 영수증에서 오류가 나면</b> —

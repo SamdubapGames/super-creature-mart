@@ -112,10 +112,10 @@
         </p>
         <p>개발자 도구 (F12 → Console)에서도 확인할 수 있어요.</p>
         <div class="concept">
-            💡 <b>formatTipLine(input, output)</b> — "입 → 출력" 한 줄짜리
-            문자열 만들기<br />
-            💡 <b>showNotebook(tips)</b> — formatTipLine 조합, 팁 목록 전체를 한
-            문자열로 반환
+            💡 <b>formatTipLine(part, item)</b> — "입 → 떡" 한 줄짜리 문자열
+            만들기<br />
+            💡 <b>showNotebook(parts, items)</b> — formatTipLine 조합, 팁 목록
+            전체를 한 문자열로 반환
         </div>
 
         <!-- ============================== Function 1 ============================== -->
@@ -126,10 +126,10 @@
             <div class="explain-body">
                 <b>"입 → 떡"이 안 나오면</b> —
                 <span class="why">문자열 조합 방식을 확인하세요.</span><br />
-                <code>input + " → " + output</code> 처럼 화살표(<code>→</code>)
+                <code>part + " → " + item</code> 처럼 화살표(<code>→</code>)
                 양쪽에 공백이 있어야 합니다.<br />
                 <span class="fix"
-                    >→ <code>return input + " → " + output;</code> 이 한 줄로
+                    >→ <code>return part + " → " + item;</code> 이 한 줄로
                     완성됩니다.</span
                 ><br /><br />
 
@@ -143,14 +143,13 @@
                     쓰세요.</span
                 ><br /><br />
 
-                <b>input이 뒤, output이 앞에 오면</b> —
+                <b>part가 뒤, item이 앞에 오면</b> —
                 <span class="why">매개변수 순서가 바뀌었습니다.</span><br />
                 함수 선언
-                <code>function formatTipLine(input, output)</code>에서<br />
-                첫 번째 인자가 input, 두 번째가 output입니다.<br />
+                <code>function formatTipLine(part, item)</code>에서<br />
+                첫 번째 인자가 part, 두 번째가 item입니다.<br />
                 <span class="fix"
-                    >→ <code>input + " → " + output</code> 순서를
-                    확인하세요.</span
+                    >→ <code>part + " → " + item</code> 순서를 확인하세요.</span
                 ><br /><br />
 
                 <b>return이 없다고 나오면</b> —
@@ -171,11 +170,10 @@
             <summary>테스트가 ❌이면 무슨 뜻인지 보기</summary>
             <div class="explain-body">
                 <b>팁이 하나만 나오거나 빠지면</b> —
-                <span class="why"
-                    >for문이 tips 배열 전체를 돌지 않고 있습니다.</span
+                <span class="why">for문이 배열 전체를 돌지 않고 있습니다.</span
                 ><br />
                 <span class="fix"
-                    >→ <code>for (let i = 0; i &lt; tips.length; i++)</code> 로
+                    >→ <code>for (let i = 0; i &lt; parts.length; i++)</code> 로
                     끝까지 돌아야 합니다.</span
                 ><br /><br />
 
@@ -185,15 +183,16 @@
                     있습니다.</span
                 ><br />
                 <span class="fix"
-                    >→ 각 항목 사이에 <code>"\n"</code>을 넣어야 합니다. 예:
-                    <code>result += line + "\n"</code></span
+                    >→ 각 항목 사이에 <code>"\n"</code>을 넣어야 합니다. 배열에
+                    push 하고 마지막에 <code>join("\n")</code> 써도
+                    됩니다.</span
                 ><br /><br />
 
                 <b>순서가 뒤집혀 나오면</b> —
                 <span class="why">for문을 뒤에서 앞으로 돌고 있습니다.</span
                 ><br />
                 <span class="fix"
-                    >→ <code>i = 0</code>부터 <code>tips.length</code> 미만까지
+                    >→ <code>i = 0</code>부터 <code>parts.length</code> 미만까지
                     순서대로 돌면 됩니다.</span
                 ><br /><br />
 
@@ -203,17 +202,17 @@
                     문자열을 만들고 있습니다.</span
                 ><br />
                 <span class="fix"
-                    >→ 반드시
-                    <code>formatTipLine(tips[i].input, tips[i].output)</code>을
+                    >→ 반드시 <code>formatTipLine(parts[i], items[i])</code>을
                     호출해서 결과를 이어붙이세요.</span
                 ><br /><br />
 
-                <b>원본 tips 배열 부작용 검사가 실패하면</b> —
+                <b>원본 배열 부작용 검사가 실패하면</b> —
                 <span class="why"
-                    >tips 배열에 뭔가 추가하거나 제거하고 있습니다.</span
+                    >parts나 items 배열에 뭔가 추가하거나 제거하고
+                    있습니다.</span
                 ><br />
                 <span class="fix"
-                    >→ tips 배열은 읽기만 하고, 새 문자열 result에만 이어붙여야
+                    >→ 배열은 읽기만 하고, 새 문자열 result에만 이어붙여야
                     합니다.</span
                 >
             </div>
