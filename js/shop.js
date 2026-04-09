@@ -87,18 +87,19 @@ console.log(findItemIndex(SHOP_NAMES, "치킨"));           // -1
 //   → getStockLabel(30) 는 "(재고: 30개)"
 
 function getStockLabel(stock) {
-    // 기능: stock 이 0 이면 "(품절)", 아니면 "(재고: N개)" 반환
-    // input(parameter): stock(number)
-    // return값 타입: string
-    // 여기를 채우세요
+    if (stock === 0) {
+        return "(품절)";
+    } else {
+        return "(재고: " + stock + "개)";
+    }
 }
 
 // ✅ 함수 완성 후 아래 주석을 풀어서 확인해보세요
-/*
+
 console.log(getStockLabel(0));   // "(품절)"
 console.log(getStockLabel(5));   // "(재고: 5개)"
 console.log(getStockLabel(30));  // "(재고: 30개)"
-*/
+
 
 // ============================================================
 // Function 2: 상점 한 줄 포맷
@@ -120,19 +121,17 @@ console.log(getStockLabel(30));  // "(재고: 30개)"
 //      는 "3. 참치마요삼각김밥 — 12000원 (품절)"
 
 function formatShopLine(number, name, price, stockLabel) {
-    // 기능: 번호, 이름, 가격, 재고 라벨을 이어붙인 한 줄 문자열 반환
-    // input(parameter): number(number), name(string), price(number), stockLabel(string)
-    // return값 타입: string
-    // 여기를 채우세요
+    let shopList = number + ". " + name + " — " + price + "원 " + stockLabel;
+    return shopList;
 }
 
 // ✅ 함수 완성 후 아래 주석을 풀어서 확인해보세요
-/*
+
 console.log(formatShopLine(1, "진라면(순한맛)", 9000, "(재고: 10개)"));
 // "1. 진라면(순한맛) — 9000원 (재고: 10개)"
 console.log(formatShopLine(3, "참치마요삼각김밥", 12000, "(품절)"));
 // "3. 참치마요삼각김밥 — 12000원 (품절)"
-*/
+
 
 // ============================================================
 // Function 3: 상점 목록 전체 표시
@@ -150,19 +149,19 @@ console.log(formatShopLine(3, "참치마요삼각김밥", 12000, "(품절)"));
 //   → "1. 감자 — 500원 (재고: 30개)\n2. 두부 — 180000원 (재고: 7개)"
 
 function showShopList(names, prices, stock) {
-    // 기능: 세 배열을 동시에 순회하며 전체 목록 문자열 반환
-    // input(parameter): names(배열), prices(배열), stock(배열)
-    // return값 타입: string
-    // 꼭 써야 하는 것:
-    //   for 문으로 세 배열 동시 순회 (names[i], prices[i], stock[i])
-    //   getStockLabel(stock[i]) 호출해서 재고 라벨 얻기
-    //   formatShopLine(i+1, names[i], prices[i], stockLabel) 호출해서 한 줄 얻기
-    //   첫 번째 줄은 \n 없이, 나머지는 앞에 \n 붙여서 이어붙이기
-    //   여기를 채우세요
+    let shopAllList = "";
+    for (let i = 0; i < names.length; i++) {
+        let allList = i+1 + ". " + names[i] + " — " + prices[i] + "원 (재고: " + stock[i] + "개)";
+        if (i ===0) {
+            shopAllList += allList;
+        } else {
+            shopAllList += "\n" + allList;
+        }
+    } return shopAllList;
 }
 
 // ✅ 함수 완성 후 아래 주석을 풀어서 확인해보세요
-/*
+
 console.log(showShopList(SHOP_NAMES, SHOP_PRICES, SHOP_STOCK));
 // 1. 진라면(순한맛) — 9000원 (재고: 10개)
 // 2. 감자 — 500원 (재고: 30개)
@@ -172,7 +171,7 @@ console.log(showShopList(SHOP_NAMES, SHOP_PRICES, SHOP_STOCK));
 console.log(showShopList(["감자", "두부"], [500, 180000], [30, 7]));
 // 1. 감자 — 500원 (재고: 30개)
 // 2. 두부 — 180000원 (재고: 7개)
-*/
+
 
 // ============================================================
 // Function 4: 예산 확인
@@ -190,18 +189,19 @@ console.log(showShopList(["감자", "두부"], [500, 180000], [30, 7]));
 //   → isAffordable(9000, 8000)  는 false  (예산 부족)
 
 function isAffordable(price, budget) {
-    // 기능: price 가 budget 이하면 true, 초과면 false 반환
-    // input(parameter): price(number), budget(number)
-    // return값 타입: boolean
-    // 여기를 채우세요
+    if (price <= budget) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 // ✅ 함수 완성 후 아래 주석을 풀어서 확인해보세요
-/*
+
 console.log(isAffordable(9000, 10000));  // true
 console.log(isAffordable(9000, 9000));   // true
 console.log(isAffordable(9000, 8000));   // false
-*/
+
 
 // ============================================================
 // Function 5: 아이템 구매
