@@ -58,18 +58,19 @@ var RECEIPT_FOOTER =
 //   → findItemIndex(["진라면(순한맛)", "감자"], "치킨") 는 -1
 
 function findItemIndex(names, targetName) {
-    // 기능: names 배열에서 targetName 과 일치하는 인덱스를 찾아 반환. 없으면 -1.
-    // input(parameter): names(배열), targetName(string)
-    // return값 타입: number
-    // 여기를 채우세요
+    for (let i = 0; i < names.length; i++) {
+        if (names[i] === targetName) {
+            return i;
+        } 
+    } return -1;
 }
 
 // ✅ 함수 완성 후 아래 주석을 풀어서 확인해보세요
-/*
+
 console.log(findItemIndex(SHOP_NAMES, "감자"));           // 1
 console.log(findItemIndex(SHOP_NAMES, "진라면(순한맛)"));  // 0
 console.log(findItemIndex(SHOP_NAMES, "치킨"));           // -1
-*/
+
 
 // ============================================================
 // Function 1: 재고 라벨 만들기
@@ -151,8 +152,8 @@ console.log(formatShopLine(3, "참치마요삼각김밥", 12000, "(품절)"));
 function showShopList(names, prices, stock) {
     let shopAllList = "";
     for (let i = 0; i < names.length; i++) {
-        let allList = i+1 + ". " + names[i] + " — " + prices[i] + "원 (재고: " + stock[i] + "개)";
-        if (i ===0) {
+        let allList = formatShopLine(i+1, names[i], prices[i], getStockLabel(stock[i]));
+        if (i === 0) {
             shopAllList += allList;
         } else {
             shopAllList += "\n" + allList;
@@ -224,6 +225,22 @@ console.log(isAffordable(9000, 8000));   // false
 //   → 성공:        "진라면(순한맛) 구매 완료! (9000원)"
 
 function buyItem(name, budget, names, prices, stock) {
+    // findItemIndex(names, name) -> 인덱스 번호
+    // stock[findItemIndex(names, name)] === 0
+    // isAffordable(prices[findItemIndex(names, name)], budget) // 살 수 있는지, 없는지 (true, false)
+    
+    if (findItemIndex(names, name) === -1) {
+        return "없는 아이템입니다";
+    } else if (stock[findItemIndex(names, name)] === 0) {
+        return "품절이에요, 나중에 다시오세요!";
+    } else if (isAffordable(prices[findItemIndex(names, name)], budget) === false) {
+        return "예산이 부족합니다";
+    } else {
+        stock[findItemIndex(names, name)] -= 1;
+        return name + " 구매 완료! (" + prices[findItemIndex(names, name)] + "원)";
+    }
+
+
     // 기능: 아이템 찾기 → 재고 확인 → 예산 확인 → 구매 처리 → 결과 메시지 반환
     // input(parameter): name(string), budget(number), names(배열), prices(배열), stock(배열)
     // return값 타입: string
@@ -269,6 +286,13 @@ console.log(buyItem("치킨", 99999, SHOP_NAMES, SHOP_PRICES, testStock));
 //   → calcTotal([], SHOP_NAMES, SHOP_PRICES) 는 0
 
 function calcTotal(cart, names, prices) {
+    let total = 0;
+    for (let i = 0; i < cart.length; i++) {
+        getPrice = prices[findItemIndex(names, cart[i])];
+        total += getPrice;
+    } return total;
+}
+
     // 기능: cart 를 순회하며 각 아이템 가격을 찾아 합산 후 반환
     // input(parameter): cart(배열), names(배열), prices(배열)
     // return값 타입: number
@@ -276,14 +300,13 @@ function calcTotal(cart, names, prices) {
     //   total = 0 으로 시작
     //   findItemIndex(names, cart[i]) 호출해서 인덱스 찾기
     //   여기를 채우세요
-}
 
 // ✅ 함수 완성 후 아래 주석을 풀어서 확인해보세요
-/*
+
 console.log(calcTotal(["감자", "팬돌이 음료"], SHOP_NAMES, SHOP_PRICES));  // 600
 console.log(calcTotal(["아아"], SHOP_NAMES, SHOP_PRICES));                 // 10000
 console.log(calcTotal([], SHOP_NAMES, SHOP_PRICES));                       // 0
-*/
+
 
 // ============================================================
 // Function 7: 영수증 만들기
@@ -316,6 +339,15 @@ console.log(calcTotal([], SHOP_NAMES, SHOP_PRICES));                       // 0
 //   =====================================
 
 function showReceipt(cart, names, prices) {
+    let RECEIPT_LINE = "   -----------------------------------\n";
+    let RECEIPT_LIST = "";
+    let RECEIPT_ITEM = "";
+    for (let i = 0; i < cart.length; i++) {
+        //prices[findItemIndex(names, cart[i])];
+        let RECEIPT_ITEM = "\n  " + cart[i] + " — " + prices[findItemIndex(names, cart[i])] + "원";
+        RECEIPT_LIST += RECEIPT_ITEM;
+    } return RECEIPT_HEADER + RECEIPT_LIST + "\n" + RECEIPT_LINE + "  합계: " + calcTotal(cart, names, prices) + "원\n" + RECEIPT_FOOTER;
+
     // 기능: RECEIPT_HEADER + 아이템 목록 + 합계 + RECEIPT_FOOTER 를 이어붙여 반환
     // input(parameter): cart(배열), names(배열), prices(배열)
     // return값 타입: string
