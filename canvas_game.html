@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <title>괴물 마트</title>
+        <link rel="stylesheet" href="canvas_game.css" />
+    </head>
+    <body>
+
+        <!-- ─────────────────────────────────────
+             게임 컨테이너 — 모든 레이어가 여기 안에서 겹침
+             ───────────────────────────────────── -->
+        <div id="game-container">
+
+            <!-- 레이어 1: 배경 사진 -->
+            <img id="background" src="" alt="" />
+
+            <!-- 레이어 2: 연기 효과 -->
+            <canvas id="fx" width="960" height="540"></canvas>
+
+            <!-- 레이어 3: 괴물 부위 -->
+            <canvas id="monster" width="960" height="540"></canvas>
+
+            <!-- 레이어 4: UI -->
+            <div id="ui-layer">
+
+                <!-- ── 시작 화면 ── -->
+                <div id="start-ui" class="ui-screen active">
+                    <h1 class="title">괴물 마트</h1>
+                    <p class="subtitle">먹고 살기 위해 나가야 한다</p>
+                    <button id="start-btn" class="btn-main">나가기</button>
+                </div>
+
+                <!-- ── 길 화면 ── -->
+                <div id="path-ui" class="ui-screen">
+                    <div id="hp-display" class="hud-top-left"></div>
+
+                    <button id="notebook-btn" class="btn-sub" style="position:absolute; top:16px; right:16px;">공책 보기</button>
+
+                    <div id="notebook-popup" class="popup hidden">
+                        <div id="notebook-content"></div>
+                        <button id="notebook-close" class="btn-sub">닫기</button>
+                    </div>
+
+                    <div id="drop-zone" class="hidden"></div>
+
+                    <div id="path-message-display" class="path-message" style="position:absolute; bottom:80px; left:50%; transform:translateX(-50%);"></div>
+
+                    <div id="inventory-bar" style="position:absolute; bottom:20px; left:50%; transform:translateX(-50%);"></div>
+                </div>
+
+                <!-- ── 상점 화면 ── -->
+                <div id="shop-ui" class="ui-screen">
+                    <h2 class="shop-title">마트</h2>
+                    <div id="budget-display" class="hud-top-right"></div>
+
+                    <div class="shop-layout">
+                        <div class="shop-left">
+                            <h3>상품 목록</h3>
+                            <div id="shop-list"></div>
+                            <div class="shop-buttons" id="shop-buy-buttons"></div>
+                        </div>
+                        <div class="shop-right">
+                            <h3>인벤토리</h3>
+                            <div id="inventory-display"></div>
+                        </div>
+                    </div>
+
+                    <div id="shop-message-canvas"></div>
+                    <button id="leave-btn" class="btn-main" style="position:absolute; bottom:20px; right:20px;">마트 떠나기</button>
+                </div>
+
+                <!-- ── 엔딩 화면 ── -->
+                <div id="ending-ui" class="ui-screen">
+                    <p id="ending-text" class="ending-text"></p>
+                    <button id="restart-btn" class="btn-main">다시 하기</button>
+                </div>
+
+            </div>
+            <!-- /ui-layer -->
+        </div>
+        <!-- /game-container -->
+
+        <!-- 디버그 메뉴 -->
+        <div id="debug-menu">
+            <span>🛠 DEV</span>
+            <button class="debug-btn btn-main" onclick="debugCanvasJump('start')" style="font-size:12px;padding:4px 10px;">시작</button>
+            <button class="debug-btn btn-sub" onclick="debugCanvasJump('path')" style="font-size:12px;padding:4px 10px;">길</button>
+            <button class="debug-btn" onclick="debugCanvasJump('shop')" style="font-size:12px;padding:4px 10px;background:#dcdcaa;color:#000;">상점</button>
+            <button class="debug-btn" onclick="debugCanvasJump('ending')" style="font-size:12px;padding:4px 10px;background:#ce9178;color:#fff;">엔딩</button>
+        </div>
+
+        <!-- 스크립트 로드 순서 -->
+        <script src="js/data.js"></script>
+        <script src="js/state.js"></script>
+        <script src="js/layers.js"></script>
+        <script src="js/notebook.js"></script>
+        <script src="js/path.js"></script>
+        <script src="js/shop.js"></script>
+        <script src="canvas_game.js"></script>
+    </body>
+</html>
