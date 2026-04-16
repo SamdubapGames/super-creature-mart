@@ -58,18 +58,19 @@ var RECEIPT_FOOTER =
 //   → findItemIndex(["진라면(순한맛)", "감자"], "치킨") 는 -1
 
 function findItemIndex(names, targetName) {
-    // 기능: names 배열에서 targetName 과 일치하는 인덱스를 찾아 반환. 없으면 -1.
-    // input(parameter): names(배열), targetName(string)
-    // return값 타입: number
-    // 여기를 채우세요
+    for (let i = 0; i < names.length; i++) {
+        if (names[i] === targetName) {
+            return i;
+        } 
+    } return -1;
 }
 
 // ✅ 함수 완성 후 아래 주석을 풀어서 확인해보세요
-/*
+
 console.log(findItemIndex(SHOP_NAMES, "감자"));           // 1
 console.log(findItemIndex(SHOP_NAMES, "진라면(순한맛)"));  // 0
 console.log(findItemIndex(SHOP_NAMES, "치킨"));           // -1
-*/
+
 
 // ============================================================
 // Function 1: 재고 라벨 만들기
@@ -87,18 +88,19 @@ console.log(findItemIndex(SHOP_NAMES, "치킨"));           // -1
 //   → getStockLabel(30) 는 "(재고: 30개)"
 
 function getStockLabel(stock) {
-    // 기능: stock 이 0 이면 "(품절)", 아니면 "(재고: N개)" 반환
-    // input(parameter): stock(number)
-    // return값 타입: string
-    // 여기를 채우세요
+    if (stock === 0) {
+        return "(품절)";
+    } else {
+        return "(재고: " + stock + "개)";
+    }
 }
 
 // ✅ 함수 완성 후 아래 주석을 풀어서 확인해보세요
-/*
+
 console.log(getStockLabel(0));   // "(품절)"
 console.log(getStockLabel(5));   // "(재고: 5개)"
 console.log(getStockLabel(30));  // "(재고: 30개)"
-*/
+
 
 // ============================================================
 // Function 2: 상점 한 줄 포맷
@@ -120,19 +122,17 @@ console.log(getStockLabel(30));  // "(재고: 30개)"
 //      는 "3. 참치마요삼각김밥 — 12000원 (품절)"
 
 function formatShopLine(number, name, price, stockLabel) {
-    // 기능: 번호, 이름, 가격, 재고 라벨을 이어붙인 한 줄 문자열 반환
-    // input(parameter): number(number), name(string), price(number), stockLabel(string)
-    // return값 타입: string
-    // 여기를 채우세요
+    let shopList = number + ". " + name + " — " + price + "원 " + stockLabel;
+    return shopList;
 }
 
 // ✅ 함수 완성 후 아래 주석을 풀어서 확인해보세요
-/*
+
 console.log(formatShopLine(1, "진라면(순한맛)", 9000, "(재고: 10개)"));
 // "1. 진라면(순한맛) — 9000원 (재고: 10개)"
 console.log(formatShopLine(3, "참치마요삼각김밥", 12000, "(품절)"));
 // "3. 참치마요삼각김밥 — 12000원 (품절)"
-*/
+
 
 // ============================================================
 // Function 3: 상점 목록 전체 표시
@@ -150,19 +150,19 @@ console.log(formatShopLine(3, "참치마요삼각김밥", 12000, "(품절)"));
 //   → "1. 감자 — 500원 (재고: 30개)\n2. 두부 — 180000원 (재고: 7개)"
 
 function showShopList(names, prices, stock) {
-    // 기능: 세 배열을 동시에 순회하며 전체 목록 문자열 반환
-    // input(parameter): names(배열), prices(배열), stock(배열)
-    // return값 타입: string
-    // 꼭 써야 하는 것:
-    //   for 문으로 세 배열 동시 순회 (names[i], prices[i], stock[i])
-    //   getStockLabel(stock[i]) 호출해서 재고 라벨 얻기
-    //   formatShopLine(i+1, names[i], prices[i], stockLabel) 호출해서 한 줄 얻기
-    //   첫 번째 줄은 \n 없이, 나머지는 앞에 \n 붙여서 이어붙이기
-    //   여기를 채우세요
+    let shopAllList = "";
+    for (let i = 0; i < names.length; i++) {
+        let allList = formatShopLine(i+1, names[i], prices[i], getStockLabel(stock[i]));
+        if (i === 0) {
+            shopAllList += allList;
+        } else {
+            shopAllList += "\n" + allList;
+        }
+    } return shopAllList;
 }
 
 // ✅ 함수 완성 후 아래 주석을 풀어서 확인해보세요
-/*
+
 console.log(showShopList(SHOP_NAMES, SHOP_PRICES, SHOP_STOCK));
 // 1. 진라면(순한맛) — 9000원 (재고: 10개)
 // 2. 감자 — 500원 (재고: 30개)
@@ -172,7 +172,7 @@ console.log(showShopList(SHOP_NAMES, SHOP_PRICES, SHOP_STOCK));
 console.log(showShopList(["감자", "두부"], [500, 180000], [30, 7]));
 // 1. 감자 — 500원 (재고: 30개)
 // 2. 두부 — 180000원 (재고: 7개)
-*/
+
 
 // ============================================================
 // Function 4: 예산 확인
@@ -190,18 +190,19 @@ console.log(showShopList(["감자", "두부"], [500, 180000], [30, 7]));
 //   → isAffordable(9000, 8000)  는 false  (예산 부족)
 
 function isAffordable(price, budget) {
-    // 기능: price 가 budget 이하면 true, 초과면 false 반환
-    // input(parameter): price(number), budget(number)
-    // return값 타입: boolean
-    // 여기를 채우세요
+    if (price <= budget) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 // ✅ 함수 완성 후 아래 주석을 풀어서 확인해보세요
-/*
+
 console.log(isAffordable(9000, 10000));  // true
 console.log(isAffordable(9000, 9000));   // true
 console.log(isAffordable(9000, 8000));   // false
-*/
+
 
 // ============================================================
 // Function 5: 아이템 구매
@@ -224,6 +225,22 @@ console.log(isAffordable(9000, 8000));   // false
 //   → 성공:        "진라면(순한맛) 구매 완료! (9000원)"
 
 function buyItem(name, budget, names, prices, stock) {
+    // findItemIndex(names, name) -> 인덱스 번호
+    // stock[findItemIndex(names, name)] === 0
+    // isAffordable(prices[findItemIndex(names, name)], budget) // 살 수 있는지, 없는지 (true, false)
+    
+    if (findItemIndex(names, name) === -1) {
+        return "없는 아이템입니다";
+    } else if (stock[findItemIndex(names, name)] === 0) {
+        return "품절이에요, 나중에 다시오세요!";
+    } else if (isAffordable(prices[findItemIndex(names, name)], budget) === false) {
+        return "예산이 부족합니다";
+    } else {
+        stock[findItemIndex(names, name)] -= 1;
+        return name + " 구매 완료! (" + prices[findItemIndex(names, name)] + "원)";
+    }
+
+
     // 기능: 아이템 찾기 → 재고 확인 → 예산 확인 → 구매 처리 → 결과 메시지 반환
     // input(parameter): name(string), budget(number), names(배열), prices(배열), stock(배열)
     // return값 타입: string
@@ -269,6 +286,13 @@ console.log(buyItem("치킨", 99999, SHOP_NAMES, SHOP_PRICES, testStock));
 //   → calcTotal([], SHOP_NAMES, SHOP_PRICES) 는 0
 
 function calcTotal(cart, names, prices) {
+    let total = 0;
+    for (let i = 0; i < cart.length; i++) {
+        getPrice = prices[findItemIndex(names, cart[i])];
+        total += getPrice;
+    } return total;
+}
+
     // 기능: cart 를 순회하며 각 아이템 가격을 찾아 합산 후 반환
     // input(parameter): cart(배열), names(배열), prices(배열)
     // return값 타입: number
@@ -276,14 +300,13 @@ function calcTotal(cart, names, prices) {
     //   total = 0 으로 시작
     //   findItemIndex(names, cart[i]) 호출해서 인덱스 찾기
     //   여기를 채우세요
-}
 
 // ✅ 함수 완성 후 아래 주석을 풀어서 확인해보세요
-/*
+
 console.log(calcTotal(["감자", "팬돌이 음료"], SHOP_NAMES, SHOP_PRICES));  // 600
 console.log(calcTotal(["아아"], SHOP_NAMES, SHOP_PRICES));                 // 10000
 console.log(calcTotal([], SHOP_NAMES, SHOP_PRICES));                       // 0
-*/
+
 
 // ============================================================
 // Function 7: 영수증 만들기
@@ -316,6 +339,15 @@ console.log(calcTotal([], SHOP_NAMES, SHOP_PRICES));                       // 0
 //   =====================================
 
 function showReceipt(cart, names, prices) {
+    let RECEIPT_LINE = "   -----------------------------------\n";
+    let RECEIPT_LIST = "";
+    let RECEIPT_ITEM = "";
+    for (let i = 0; i < cart.length; i++) {
+        //prices[findItemIndex(names, cart[i])];
+        let RECEIPT_ITEM = "\n  " + cart[i] + " — " + prices[findItemIndex(names, cart[i])] + "원";
+        RECEIPT_LIST += RECEIPT_ITEM;
+    } return RECEIPT_HEADER + RECEIPT_LIST + "\n" + RECEIPT_LINE + "  합계: " + calcTotal(cart, names, prices) + "원\n" + RECEIPT_FOOTER;
+
     // 기능: RECEIPT_HEADER + 아이템 목록 + 합계 + RECEIPT_FOOTER 를 이어붙여 반환
     // input(parameter): cart(배열), names(배열), prices(배열)
     // return값 타입: string
