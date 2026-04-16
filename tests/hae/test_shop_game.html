@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <title>🧃 상점</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            body {
+                font-family: monospace;
+                background: #1e1e1e;
+                color: #d4d4d4;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 30px 20px;
+            }
+
+            h1.title {
+                color: #569cd6;
+                font-size: 20px;
+                margin-bottom: 8px;
+            }
+            p.subtitle {
+                color: #808080;
+                font-size: 12px;
+                margin-bottom: 24px;
+            }
+
+            /* ── 예산 영역 ── */
+            .budget-area {
+                width: 100%;
+                max-width: 600px;
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 16px;
+            }
+            .budget-area h3 {
+                color: #4ec9b0;
+                font-size: 16px;
+            }
+            #shop-remaining-display {
+                color: #dcdcaa;
+            }
+
+            /* ── 메뉴판 ── */
+            #shop-menu-display {
+                background: #2d2d2d;
+                border: 1px solid #3c3c3c;
+                border-radius: 8px;
+                padding: 16px 24px;
+                font-size: 14px;
+                color: #9cdcfe;
+                min-height: 28px;
+                width: 100%;
+                max-width: 600px;
+                white-space: pre-line;
+                margin-bottom: 12px;
+            }
+
+            /* ── 담기 버튼 영역 ── */
+            .item-buttons {
+                display: flex;
+                gap: 8px;
+                justify-content: center;
+                flex-wrap: wrap;
+                width: 100%;
+                max-width: 600px;
+                margin-bottom: 20px;
+            }
+
+            /* ── 메시지 영역 ── */
+            #shop-message {
+                background: #2d2d2d;
+                border-left: 3px solid #dcdcaa;
+                padding: 12px 20px;
+                font-size: 14px;
+                color: #dcdcaa;
+                min-height: 20px;
+                width: 100%;
+                max-width: 600px;
+                margin-bottom: 16px;
+            }
+
+            /* ── 장바구니 영역 ── */
+            #shop-cart-display {
+                background: #2d2d2d;
+                border-left: 3px solid #4ec9b0;
+                padding: 12px 20px;
+                font-size: 14px;
+                color: #4ec9b0;
+                min-height: 20px;
+                width: 100%;
+                max-width: 600px;
+                margin-bottom: 12px;
+            }
+
+            /* ── 영수증 영역 ── */
+            #shop-receipt-display {
+                background: #2d2d2d;
+                border: 1px solid #569cd6;
+                border-radius: 8px;
+                padding: 16px 24px;
+                font-size: 13px;
+                color: #ce9178;
+                min-height: 20px;
+                width: 100%;
+                max-width: 600px;
+                white-space: pre-line;
+                margin-bottom: 16px;
+            }
+
+            /* ── 버튼 스타일 ── */
+            .button-bar {
+                display: flex;
+                gap: 10px;
+                justify-content: center;
+                flex-wrap: wrap;
+                width: 100%;
+                max-width: 600px;
+                margin-bottom: 12px;
+            }
+
+            button {
+                font-family: monospace;
+                font-size: 14px;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 6px;
+                cursor: pointer;
+                transition:
+                    opacity 0.2s,
+                    transform 0.1s;
+            }
+            button:hover:not(:disabled) {
+                transform: translateY(-1px);
+            }
+            button:active:not(:disabled) {
+                transform: translateY(1px);
+            }
+            button:disabled {
+                opacity: 0.3;
+                cursor: not-allowed;
+            }
+
+            #shop-btn-show-menu {
+                background: #569cd6;
+                color: #fff;
+                font-size: 16px;
+                padding: 12px 24px;
+                margin-bottom: 16px;
+            }
+
+            .item-btn {
+                background: #4ec9b0;
+                color: #1e1e1e;
+                font-weight: bold;
+            }
+
+            #shop-btn-checkout {
+                background: #dcdcaa;
+                color: #1e1e1e;
+                font-weight: bold;
+            }
+
+            #shop-btn-reset {
+                background: #ce9178;
+                color: #fff;
+                display: none;
+            }
+
+            /* ── 하단 안내 ── */
+            .info {
+                margin-top: 30px;
+                color: #555;
+                font-size: 11px;
+                text-align: center;
+                line-height: 1.8;
+            }
+            .info code {
+                background: #2d2d2d;
+                padding: 1px 5px;
+                border-radius: 3px;
+                color: #9cdcfe;
+            }
+        </style>
+    </head>
+    <body>
+        <h1 class="title">🧃 삼두밥 마트</h1>
+        <p class="subtitle">
+            shop.js 함수들이 실제로 동작하는지 확인하는 텍스트 버전 게임
+        </p>
+
+        <!-- 예산 -->
+        <div class="budget-area">
+            <h3>예산: 300원</h3>
+            <h3 id="shop-remaining-display"></h3>
+        </div>
+
+        <!-- 메뉴 보기 버튼 -->
+        <button id="shop-btn-show-menu">마트 물건 리스트 보기</button>
+
+        <!-- 메뉴판 -->
+        <div id="shop-menu-display"></div>
+
+        <!-- 담기 버튼들 -->
+        <div class="item-buttons" id="shop-item-buttons">
+            <!-- <button id="shop-bt-떡" class="item-btn" disabled>떡 담기</button>
+            <button id="btn-칼" class="item-btn" disabled>칼 담기</button>
+            <button id="shop-btn-캣닙 담배" class="item-btn" disabled>
+                캣닙 담배 담기
+            </button>
+            <button id="shop-btn-레몬" class="item-btn" disabled>레몬 담기</button>
+            <button id="shop-btn-방울" class="item-btn" disabled>방울 담기</button> -->
+
+            <!-- JS가 data.js의 SHOP_NAMES를 읽어서 버튼을 자동 생성합니다 -->
+        </div>
+
+        <!-- 메시지 -->
+        <p id="shop-message"></p>
+
+        <!-- 장바구니 -->
+        <p id="shop-cart-display"></p>
+
+        <!-- 구매하기 / 다시하기 -->
+        <div class="button-bar">
+            <button id="shop-btn-checkout" disabled>구매하기</button>
+            <button id="shop-btn-reset">다시 하기</button>
+        </div>
+
+        <!-- 영수증 -->
+        <pre id="shop-receipt-display"></pre>
+
+        <div class="info">
+            이 페이지는 <code>shop.js</code> + <code>clickShopScene.js</code> 로
+            동작합니다.<br />
+            <code>clickShopScene.js</code> 의 빈 함수를 채우면 게임이
+            작동합니다!<br />
+            개발자 도구 (F12 → Console) 에서 오류를 확인할 수 있어요.
+        </div>
+
+        <!-- 스크립트 로드 순서 -->
+        <script src="../../js/data.js"></script>
+        <script src="../../js/shop.js"></script>
+        <script src="../../js/scenes/clickShopScene.js"></script>
+    </body>
+</html>

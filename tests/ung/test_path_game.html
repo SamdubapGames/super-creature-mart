@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <title>😈 길</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            body {
+                font-family: monospace;
+                background: #1e1e1e;
+                color: #d4d4d4;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 30px 20px;
+            }
+
+            h1.title {
+                color: #569cd6;
+                font-size: 20px;
+                margin-bottom: 8px;
+            }
+            p.subtitle {
+                color: #808080;
+                font-size: 12px;
+                margin-bottom: 30px;
+            }
+
+            /* ── 경로 표시 영역 ── */
+            #path-route-display {
+                background: #2d2d2d;
+                border: 1px solid #3c3c3c;
+                border-radius: 8px;
+                padding: 16px 24px;
+                font-size: 18px;
+                letter-spacing: 2px;
+                color: #9cdcfe;
+                min-height: 28px;
+                width: 100%;
+                max-width: 600px;
+                text-align: center;
+                margin-bottom: 40px;
+            }
+
+            /* ── 현재 부위 (크게) ── */
+            #path-current-part {
+                font-size: 80px;
+                color: #f44747;
+                min-height: 120px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 30px;
+            }
+
+            /* ── 메시지 영역 ── */
+            #path-message {
+                background: #2d2d2d;
+                border-left: 3px solid #dcdcaa;
+                padding: 12px 20px;
+                font-size: 14px;
+                color: #dcdcaa;
+                min-height: 20px;
+                width: 100%;
+                max-width: 600px;
+                margin-bottom: 20px;
+            }
+
+            /* ── 버튼 영역 ── */
+            .button-bar {
+                display: flex;
+                gap: 10px;
+                justify-content: center;
+                flex-wrap: wrap;
+                width: 100%;
+                max-width: 600px;
+            }
+
+            button {
+                font-family: monospace;
+                font-size: 16px;
+                padding: 12px 24px;
+                border: none;
+                border-radius: 6px;
+                cursor: pointer;
+                transition:
+                    opacity 0.2s,
+                    transform 0.1s;
+            }
+            button:hover:not(:disabled) {
+                transform: translateY(-1px);
+            }
+            button:active:not(:disabled) {
+                transform: translateY(1px);
+            }
+            button:disabled {
+                opacity: 0.3;
+                cursor: not-allowed;
+            }
+
+            /* 전진 버튼 */
+            #path-btn-advance {
+                background: #4ec9b0;
+                color: #1e1e1e;
+                font-weight: bold;
+            }
+
+            /* 아이템 버튼들 */
+            .item-btn {
+                background: #569cd6;
+                color: #fff;
+            }
+
+            /* 다시하기 버튼 */
+            #path-btn-reset {
+                background: #ce9178;
+                color: #fff;
+                display: none;
+            }
+
+            /* ── 하단 안내 ── */
+            .info {
+                margin-top: 40px;
+                color: #555;
+                font-size: 11px;
+                text-align: center;
+                line-height: 1.8;
+            }
+            .info code {
+                background: #2d2d2d;
+                padding: 1px 5px;
+                border-radius: 3px;
+                color: #9cdcfe;
+            }
+        </style>
+    </head>
+    <body>
+        <h1 class="title">😈 길에서 일어나는 일</h1>
+        <p class="subtitle">
+            path.js 함수들이 실제로 동작하는지 확인하는 텍스트 버전 게임
+        </p>
+
+        <!-- 경로 표시 -->
+        <p id="path-route-display">경로 로딩중...</p>
+
+        <!-- 현재 부위 (크게) -->
+        <h1 id="path-current-part"></h1>
+
+        <!-- 메시지 -->
+        <p id="path-message"></p>
+
+        <!-- 버튼들 -->
+        <div class="button-bar" id="path-item-buttons">
+            <!-- JS가 버튼을 자동 생성합니다 -->
+            <!-- <button id="path-btn-떡" class="item-btn">떡</button>
+            <button id="path-btn-칼" class="item-btn">칼</button>
+            <button id="path-btn-캣닙 담배" class="item-btn">캣닙 담배</button>
+            <button id="path-btn-레몬" class="item-btn">레몬</button> -->
+        </div>
+        <button id="path-btn-advance">전진 →</button>
+        <button id="path-btn-reset">다시 하기</button>
+
+        <div class="info">
+            이 페이지는 <code>path.js</code> + <code>clickPathScene.js</code> 로
+            동작합니다.<br />
+            <code>clickPathScene.js</code> 의 빈 함수를 채우면 게임이
+            작동합니다!<br />
+            개발자 도구 (F12 → Console) 에서 오류를 확인할 수 있어요.
+        </div>
+
+        <!-- 스크립트 로드 순서 -->
+        <script src="../../js/data.js"></script>
+        <script src="../../js/path.js"></script>
+        <script src="../../js/scenes/clickPathScene.js"></script>
+    </body>
+</html>
