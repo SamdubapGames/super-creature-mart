@@ -16,15 +16,18 @@ const shopScene = {
 
     _renderShop() {
         // 팀원 헤의 함수 호출 → 결과를 UI에 표시
-        const shopText = showShop(
+        // showShopList(names, prices, stock) → 문자열
+        const shopText = showShopList(
             DATA.SHOP_NAMES,
             DATA.SHOP_PRICES,
             DATA.SHOP_STOCK,
         );
         document.getElementById("shop-list").innerText = shopText;
 
-        const invText = showInventory(gameState.player.inventory);
-        document.getElementById("inventory-display").innerText = invText;
+        // 인벤토리 표시 (간단히 이름만 나열)
+        const inv = gameState.player.inventory;
+        document.getElementById("inventory-display").innerText =
+            inv.length > 0 ? inv.join(", ") : "(비어 있음)";
 
         document.getElementById("budget-display").innerText =
             `예산: ${gameState.player.budget}원`;
@@ -32,20 +35,23 @@ const shopScene = {
 
     onBuyClick(itemName) {
         // 팀원 헤의 함수 호출
-        const result = buyItem(
+        // buyItem(name, budget, names, prices, stock) → 문자열 메시지
+        const message = buyItem(
+            itemName,
+            gameState.player.budget,
             DATA.SHOP_NAMES,
             DATA.SHOP_PRICES,
             DATA.SHOP_STOCK,
-            gameState.player.inventory,
-            gameState.player.budget,
-            itemName,
         );
 
-        if (result.success) {
-            gameState.player.budget = result.newBudget;
+        // 구매 성공 시 예산 차감 + 인벤토리 추가
+        if (message.indexOf("구매 완료") !== -1) {
+            const idx = findItemIndex(DATA.SHOP_NAMES, itemName);
+            gameState.player.budget -= DATA.SHOP_PRICES[idx];
+            gameState.player.inventory.push(itemName);
         }
 
-        document.getElementById("shop-message").innerText = result.message;
+        document.getElementById("shop-message").innerText = message;
         this._renderShop(); // UI 다시 그리기
     },
 

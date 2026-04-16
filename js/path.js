@@ -10,7 +10,6 @@
 // comment: 야호! 테스트 파일을 얻었다!
 // ============================================================
 
-
 // ============================================================
 // Function 1: 부위 인덱스 찾기
 // ============================================================
@@ -32,20 +31,19 @@ function findPartIndex(parts, targetPart) {
     // 기능: parts 배열에서 targetPart 와 일치하는 인덱스를 찾아 반환. 없으면 -1.
     // input(parameter): parts(배열), targetPart(string)
     // return값 타입: number
-    for(let i = 0; i<parts.length; i++){
-         if(parts[i] === targetPart){
+    for (let i = 0; i < parts.length; i++) {
+        if (parts[i] === targetPart) {
             return i;
-         }
-    } return -1;
+        }
+    }
+    return -1;
 }
 
 // ✅ 함수 완성 후 아래 주석을 풀어서 확인해보세요
 
-console.log(findPartIndex(["입", "꼬리", "코", "눈"], "코"));  // 2
-console.log(findPartIndex(["입", "꼬리", "코", "눈"], "입"));  // 0
-console.log(findPartIndex(["입", "꼬리", "코", "눈"], "발"));  // -1
-
-
+console.log(findPartIndex(["입", "꼬리", "코", "눈"], "코")); // 2
+console.log(findPartIndex(["입", "꼬리", "코", "눈"], "입")); // 0
+console.log(findPartIndex(["입", "꼬리", "코", "눈"], "발")); // -1
 
 // ============================================================
 // Function 2: 경로 생성
@@ -74,18 +72,16 @@ function generateRoute(parts, n) {
     // 꼭 써야 하는 것:
     //   빈 배열 route 만들어서 거기에 채우기
     let randomParts = [];
-    for (let i=0; i<n; i++){
-        randomParts.push(parts[Math.floor(Math.random()*parts.length)]);
+    for (let i = 0; i < n; i++) {
+        randomParts.push(parts[Math.floor(Math.random() * parts.length)]);
     }
     return randomParts;
 }
 
 // ✅ 함수 완성 후 아래 주석을 풀어서 확인해보세요
 
-console.log(generateRoute(["입", "꼬리", "코", "눈"], 5));  // 예: ["꼬리", "입", "눈", "입", "코"]
-console.log(generateRoute(["입", "꼬리", "코", "눈"], 3));  // 예: ["코", "코", "입"]
-
-
+console.log(generateRoute(["입", "꼬리", "코", "눈"], 5)); // 예: ["꼬리", "입", "눈", "입", "코"]
+console.log(generateRoute(["입", "꼬리", "코", "눈"], 3)); // 예: ["코", "코", "입"]
 
 // ============================================================
 // Function 3: 짝 확인
@@ -114,27 +110,24 @@ function checkMatch(part, item, parts, items) {
     //   findPartIndex(parts, part) 호출해서 인덱스 찾기
     //   인덱스가 -1 이면 → false 반환
     //   items[인덱스] === item 이면 → true, 아니면 → false
-    
-    let i = findPartIndex(parts,part);
-    if(i>-1 && items[i]===item){
+
+    let i = findPartIndex(parts, part);
+    if (i > -1 && items[i] === item) {
         return true;
-    }
-    else {
+    } else {
         return false;
     }
 }
 
-// ✅ 함수 완성 후 아래 주석을 풀어서 확인해보세요
+// // ✅ 함수 완성 후 아래 주석을 풀어서 확인해보세요
 
-var PARTS = ["입", "꼬리", "코", "눈"];
-var ITEMS = ["떡", "칼", "캣닙 담배", "레몬"];
+// var PARTS = ["입", "꼬리", "코", "눈"];
+// var ITEMS = ["떡", "칼", "캣닙 담배", "레몬"];
 
-console.log(checkMatch("입",  "떡",   PARTS, ITEMS));  // true
-console.log(checkMatch("입",  "칼",   PARTS, ITEMS));  // false
-console.log(checkMatch("발",  "떡",   PARTS, ITEMS));  // false
-console.log(checkMatch("눈",  "레몬", PARTS, ITEMS));  // true
-
-
+// console.log(checkMatch("입", "떡", PARTS, ITEMS)); // true
+// console.log(checkMatch("입", "칼", PARTS, ITEMS)); // false
+// console.log(checkMatch("발", "떡", PARTS, ITEMS)); // false
+// console.log(checkMatch("눈", "레몬", PARTS, ITEMS)); // true
 
 // ============================================================
 // Function 4: 아이템 사용
@@ -163,23 +156,22 @@ function useItem(inventory, itemName) {
     //   for 문으로 inventory 순회
     //   inventory[i] === itemName 이면 → splice(i, 1) 로 제거 → true 반환
     //   끝까지 못 찾으면 → false 반환
-    for(let i=0; i<inventory.length; i++){
-        if(inventory[i]===itemName){
-            inventory.splice(i,1);
+    for (let i = 0; i < inventory.length; i++) {
+        if (inventory[i] === itemName) {
+            inventory.splice(i, 1);
             return true;
         }
-    } return false;
+    }
+    return false;
 }
 
 // ✅ 함수 완성 후 아래 주석을 풀어서 확인해보세요
 
-var inv = ["떡", "레몬", "칼"];
-console.log(useItem(inv, "레몬"));   // true
-console.log(inv);                    // ["떡", "칼"] — 레몬이 사라짐
-console.log(useItem(inv, "폭탄"));  // false
-console.log(inv);                    // ["떡", "칼"] — 변화 없음
-
-
+// var inv = ["떡", "레몬", "칼"];
+// console.log(useItem(inv, "레몬")); // true
+// console.log(inv); // ["떡", "칼"] — 레몬이 사라짐
+// console.log(useItem(inv, "폭탄")); // false
+// console.log(inv); // ["떡", "칼"] — 변화 없음
 
 // ============================================================
 // Function 5: 한 턴 처리 (아래 완성된 예시를 읽고 참고하세요!)
@@ -206,8 +198,11 @@ console.log(inv);                    // ["떡", "칼"] — 변화 없음
 function playTurnExample(part, chosenItem, inventory, parts, items) {
     let matched = checkMatch(part, chosenItem, parts, items); // 짝 확인
     if (matched) {
-        useItem(inventory, chosenItem);                       // 인벤토리에서 제거
-        return { success: true, message: part + "에 " + chosenItem + " 사용 성공!" };
+        useItem(inventory, chosenItem); // 인벤토리에서 제거
+        return {
+            success: true,
+            message: part + "에 " + chosenItem + " 사용 성공!",
+        };
     } else {
         return { success: false, message: "효과가 없었다..." };
     }
@@ -224,8 +219,11 @@ function playTurn(part, chosenItem, inventory, parts, items) {
     //   틀리면 → { success: false, message: ... } 반환
     let matched = checkMatch(part, chosenItem, parts, items); // 짝 확인
     if (matched) {
-        useItem(inventory, chosenItem);                       // 인벤토리에서 제거
-        return { success: true, message: part + "에 " + chosenItem + " 사용 성공!" };
+        useItem(inventory, chosenItem); // 인벤토리에서 제거
+        return {
+            success: true,
+            message: part + "에 " + chosenItem + " 사용 성공!",
+        };
     } else {
         return { success: false, message: "효과가 없었다..." };
     }
@@ -233,14 +231,13 @@ function playTurn(part, chosenItem, inventory, parts, items) {
 
 // ✅ 함수 완성 후 아래 주석을 풀어서 확인해보세요
 
-var PARTS = ["입", "꼬리", "코", "눈"];
-var ITEMS = ["떡", "칼", "캣닙 담배", "레몬"];
+// var PARTS = ["입", "꼬리", "코", "눈"];
+// var ITEMS = ["떡", "칼", "캣닙 담배", "레몬"];
 
-var inv2 = ["떡", "레몬"];
-console.log(playTurn("입", "떡", inv2, PARTS, ITEMS));  // { success: true, message: "입에 떡 사용 성공!" }
-console.log(inv2);                                       // ["레몬"] — 떡이 사라짐
+// var inv2 = ["떡", "레몬"];
+// console.log(playTurn("입", "떡", inv2, PARTS, ITEMS));  // { success: true, message: "입에 떡 사용 성공!" }
+// console.log(inv2);                                       // ["레몬"] — 떡이 사라짐
 
-var inv3 = ["칼", "레몬"];
-console.log(playTurn("입", "칼", inv3, PARTS, ITEMS));  // { success: false, message: "효과가 없었다..." }
-console.log(inv3);                                       // ["칼", "레몬"] — 변화 없음
-
+// var inv3 = ["칼", "레몬"];
+// console.log(playTurn("입", "칼", inv3, PARTS, ITEMS));  // { success: false, message: "효과가 없었다..." }
+// console.log(inv3);                                       // ["칼", "레몬"] — 변화 없음
