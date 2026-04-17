@@ -106,7 +106,7 @@ js/
 | `showShopList`   | `getStockLabel` + `formatShopLine` 조합, 전체 목록 |
 | `isAffordable`   | 예산 확인                                          |
 | `buyItem`        | `getStockLabel` + `isAffordable` 조합, 구매 처리   |
-| `calcTotal`      | 장바구니 합산                                      |
+| `calcTotal`      | 내가 구매한 합산                                   |
 | `showReceipt`    | `calcTotal` 조합, 영수증 생성 _(stub)_             |
 | `shopSession`    | 완성본, 전체 흐름                                  |
 

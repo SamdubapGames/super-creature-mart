@@ -18,7 +18,7 @@ const shopScene = {
         // 팀원 헤의 함수 호출 → 결과를 UI에 표시
         // showShopList(names, prices, stock) → 문자열
         const shopText = showShopList(
-            DATA.SHOP_NAMES,
+            DATA.SHOP_ITEMS,
             DATA.SHOP_PRICES,
             DATA.SHOP_STOCK,
         );
@@ -39,14 +39,14 @@ const shopScene = {
         const message = buyItem(
             itemName,
             gameState.player.budget,
-            DATA.SHOP_NAMES,
+            DATA.SHOP_ITEMS,
             DATA.SHOP_PRICES,
             DATA.SHOP_STOCK,
         );
 
         // 구매 성공 시 예산 차감 + 인벤토리 추가
         if (message.indexOf("구매 완료") !== -1) {
-            const idx = findItemIndex(DATA.SHOP_NAMES, itemName);
+            const idx = findItemIndex(DATA.SHOP_ITEMS, itemName);
             gameState.player.budget -= DATA.SHOP_PRICES[idx];
             gameState.player.inventory.push(itemName);
         }

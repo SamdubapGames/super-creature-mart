@@ -121,7 +121,8 @@
             💡 <b>isAffordable(price, budget)</b> — 예산 확인 → true/false<br />
             💡 <b>buyItem(name, budget, names, prices, stock)</b> — 구매 처리 →
             결과 메시지<br />
-            💡 <b>calcTotal(cart, names, prices)</b> — 장바구니 합산 → 총액<br />
+            💡 <b>calcTotal(cart, names, prices)</b> — 내가 구매한 합산 →
+            총액<br />
             💡 <b>showReceipt(cart, names, prices)</b> — 영수증 문자열 생성<br />
             💡 <b>shopSession(shoppingList, budget, names, prices, stock)</b> —
             전체 흐름 (완성본)
@@ -383,7 +384,7 @@
                     반복하세요.</span
                 ><br /><br />
 
-                <b>빈 장바구니에서 0이 안 나오면</b> —
+                <b>빈 내가 구매한에서 0이 안 나오면</b> —
                 <span class="why"
                     >초기값이 0이 아닌 다른 값으로 설정되어 있습니다.</span
                 ><br />
@@ -448,7 +449,7 @@
                     끝내세요.</span
                 ><br /><br />
 
-                <b>빈 장바구니 영수증에서 오류가 나면</b> —
+                <b>빈 내가 구매한 영수증에서 오류가 나면</b> —
                 <span class="why">cart가 빈 배열일 때 처리가 없습니다.</span
                 ><br />
                 <span class="fix"

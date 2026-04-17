@@ -13,10 +13,10 @@
 // 공용 데이터 안내 — 수정하지 마세요!
 // ============================================================
 // 이 파일의 함수들은 아래 데이터를 파라미터로 받아서 씁니다.
-// 실제 게임에서는 data.js 의 DATA.SHOP_NAMES 등이 들어옵니다.
+// 실제 게임에서는 data.js 의 DATA.SHOP_ITEMS 등이 들어옵니다.
 // 여기서는 테스트용으로 아래 변수를 씁니다.
 
-var SHOP_NAMES = [
+var SHOP_ITEMS = [
     "진라면(순한맛)",
     "감자",
     "참치마요삼각김밥",
@@ -61,16 +61,17 @@ function findItemIndex(names, targetName) {
     for (let i = 0; i < names.length; i++) {
         if (names[i] === targetName) {
             return i;
-        } 
-    } return -1;
+        }
+    }
+    return -1;
 }
 
 // ✅ 함수 완성 후 아래 주석을 풀어서 확인해보세요
-
-console.log(findItemIndex(SHOP_NAMES, "감자"));           // 1
-console.log(findItemIndex(SHOP_NAMES, "진라면(순한맛)"));  // 0
-console.log(findItemIndex(SHOP_NAMES, "치킨"));           // -1
-
+/*
+console.log(findItemIndex(SHOP_ITEMS, "감자"));           // 1
+console.log(findItemIndex(SHOP_ITEMS, "진라면(순한맛)"));  // 0
+console.log(findItemIndex(SHOP_ITEMS, "치킨"));           // -1
+*/
 
 // ============================================================
 // Function 1: 재고 라벨 만들기
@@ -97,10 +98,9 @@ function getStockLabel(stock) {
 
 // ✅ 함수 완성 후 아래 주석을 풀어서 확인해보세요
 
-console.log(getStockLabel(0));   // "(품절)"
-console.log(getStockLabel(5));   // "(재고: 5개)"
-console.log(getStockLabel(30));  // "(재고: 30개)"
-
+console.log(getStockLabel(0)); // "(품절)"
+console.log(getStockLabel(5)); // "(재고: 5개)"
+console.log(getStockLabel(30)); // "(재고: 30개)"
 
 // ============================================================
 // Function 2: 상점 한 줄 포맷
@@ -133,7 +133,6 @@ console.log(formatShopLine(1, "진라면(순한맛)", 9000, "(재고: 10개)"));
 console.log(formatShopLine(3, "참치마요삼각김밥", 12000, "(품절)"));
 // "3. 참치마요삼각김밥 — 12000원 (품절)"
 
-
 // ============================================================
 // Function 3: 상점 목록 전체 표시
 // ============================================================
@@ -152,18 +151,24 @@ console.log(formatShopLine(3, "참치마요삼각김밥", 12000, "(품절)"));
 function showShopList(names, prices, stock) {
     let shopAllList = "";
     for (let i = 0; i < names.length; i++) {
-        let allList = formatShopLine(i+1, names[i], prices[i], getStockLabel(stock[i]));
+        let allList = formatShopLine(
+            i + 1,
+            names[i],
+            prices[i],
+            getStockLabel(stock[i]),
+        );
         if (i === 0) {
             shopAllList += allList;
         } else {
             shopAllList += "\n" + allList;
         }
-    } return shopAllList;
+    }
+    return shopAllList;
 }
 
 // ✅ 함수 완성 후 아래 주석을 풀어서 확인해보세요
-
-console.log(showShopList(SHOP_NAMES, SHOP_PRICES, SHOP_STOCK));
+/*
+console.log(showShopList(SHOP_ITEMS, SHOP_PRICES, SHOP_STOCK));
 // 1. 진라면(순한맛) — 9000원 (재고: 10개)
 // 2. 감자 — 500원 (재고: 30개)
 // 3. 참치마요삼각김밥 — 12000원 (품절)
@@ -172,7 +177,7 @@ console.log(showShopList(SHOP_NAMES, SHOP_PRICES, SHOP_STOCK));
 console.log(showShopList(["감자", "두부"], [500, 180000], [30, 7]));
 // 1. 감자 — 500원 (재고: 30개)
 // 2. 두부 — 180000원 (재고: 7개)
-
+*/
 
 // ============================================================
 // Function 4: 예산 확인
@@ -199,10 +204,9 @@ function isAffordable(price, budget) {
 
 // ✅ 함수 완성 후 아래 주석을 풀어서 확인해보세요
 
-console.log(isAffordable(9000, 10000));  // true
-console.log(isAffordable(9000, 9000));   // true
-console.log(isAffordable(9000, 8000));   // false
-
+console.log(isAffordable(9000, 10000)); // true
+console.log(isAffordable(9000, 9000)); // true
+console.log(isAffordable(9000, 8000)); // false
 
 // ============================================================
 // Function 5: 아이템 구매
@@ -228,18 +232,21 @@ function buyItem(name, budget, names, prices, stock) {
     // findItemIndex(names, name) -> 인덱스 번호
     // stock[findItemIndex(names, name)] === 0
     // isAffordable(prices[findItemIndex(names, name)], budget) // 살 수 있는지, 없는지 (true, false)
-    
+
     if (findItemIndex(names, name) === -1) {
         return "없는 아이템입니다";
     } else if (stock[findItemIndex(names, name)] === 0) {
         return "품절이에요, 나중에 다시오세요!";
-    } else if (isAffordable(prices[findItemIndex(names, name)], budget) === false) {
+    } else if (
+        isAffordable(prices[findItemIndex(names, name)], budget) === false
+    ) {
         return "예산이 부족합니다";
     } else {
         stock[findItemIndex(names, name)] -= 1;
-        return name + " 구매 완료! (" + prices[findItemIndex(names, name)] + "원)";
+        return (
+            name + " 구매 완료! (" + prices[findItemIndex(names, name)] + "원)"
+        );
     }
-
 
     // 기능: 아이템 찾기 → 재고 확인 → 예산 확인 → 구매 처리 → 결과 메시지 반환
     // input(parameter): name(string), budget(number), names(배열), prices(배열), stock(배열)
@@ -259,20 +266,20 @@ function buyItem(name, budget, names, prices, stock) {
 /*
 var testStock = SHOP_STOCK.slice();  // 원본 보호용 복사
 
-console.log(buyItem("진라면(순한맛)", 10000, SHOP_NAMES, SHOP_PRICES, testStock));
+console.log(buyItem("진라면(순한맛)", 10000, SHOP_ITEMS, SHOP_PRICES, testStock));
 // "진라면(순한맛) 구매 완료! (9000원)"
-console.log(buyItem("참치마요삼각김밥", 50000, SHOP_NAMES, SHOP_PRICES, testStock));
+console.log(buyItem("참치마요삼각김밥", 50000, SHOP_ITEMS, SHOP_PRICES, testStock));
 // "품절이에요, 나중에 다시오세요!"
-console.log(buyItem("두부", 5000, SHOP_NAMES, SHOP_PRICES, testStock));
+console.log(buyItem("두부", 5000, SHOP_ITEMS, SHOP_PRICES, testStock));
 // "예산이 부족합니다"
-console.log(buyItem("치킨", 99999, SHOP_NAMES, SHOP_PRICES, testStock));
+console.log(buyItem("치킨", 99999, SHOP_ITEMS, SHOP_PRICES, testStock));
 // "없는 아이템입니다"
 */
 
 // ============================================================
-// Function 6: 장바구니 합계 계산
+// Function 6: 내가 구매한 합계 계산
 // ============================================================
-// 장바구니 배열을 받아서 전체 금액을 합산해 반환합니다.
+// 내가 구매한 배열을 받아서 전체 금액을 합산해 반환합니다.
 //
 // 인풋(파라미터):
 // - cart:   배열(string[]). 구매한 아이템 이름 목록.
@@ -282,36 +289,37 @@ console.log(buyItem("치킨", 99999, SHOP_NAMES, SHOP_PRICES, testStock));
 //
 // 리턴(반환값):
 // - 숫자(number). 합계 금액.
-//   → calcTotal(["감자", "팬돌이 음료"], SHOP_NAMES, SHOP_PRICES) 는 600
-//   → calcTotal([], SHOP_NAMES, SHOP_PRICES) 는 0
+//   → calcTotal(["감자", "팬돌이 음료"], SHOP_ITEMS, SHOP_PRICES) 는 600
+//   → calcTotal([], SHOP_ITEMS, SHOP_PRICES) 는 0
 
 function calcTotal(cart, names, prices) {
     let total = 0;
     for (let i = 0; i < cart.length; i++) {
         getPrice = prices[findItemIndex(names, cart[i])];
         total += getPrice;
-    } return total;
+    }
+    return total;
 }
 
-    // 기능: cart 를 순회하며 각 아이템 가격을 찾아 합산 후 반환
-    // input(parameter): cart(배열), names(배열), prices(배열)
-    // return값 타입: number
-    // 꼭 써야 하는 것:
-    //   total = 0 으로 시작
-    //   findItemIndex(names, cart[i]) 호출해서 인덱스 찾기
-    //   여기를 채우세요
+// 기능: cart 를 순회하며 각 아이템 가격을 찾아 합산 후 반환
+// input(parameter): cart(배열), names(배열), prices(배열)
+// return값 타입: number
+// 꼭 써야 하는 것:
+//   total = 0 으로 시작
+//   findItemIndex(names, cart[i]) 호출해서 인덱스 찾기
+//   여기를 채우세요
 
 // ✅ 함수 완성 후 아래 주석을 풀어서 확인해보세요
-
-console.log(calcTotal(["감자", "팬돌이 음료"], SHOP_NAMES, SHOP_PRICES));  // 600
-console.log(calcTotal(["아아"], SHOP_NAMES, SHOP_PRICES));                 // 10000
-console.log(calcTotal([], SHOP_NAMES, SHOP_PRICES));                       // 0
-
+/*
+console.log(calcTotal(["감자", "팬돌이 음료"], SHOP_ITEMS, SHOP_PRICES));  // 600
+console.log(calcTotal(["아아"], SHOP_ITEMS, SHOP_PRICES));                 // 10000
+console.log(calcTotal([], SHOP_ITEMS, SHOP_PRICES));                       // 0
+*/
 
 // ============================================================
 // Function 7: 영수증 만들기
 // ============================================================
-// 장바구니를 받아서 영수증 문자열을 만들어 반환합니다.
+// 내가 구매한를 받아서 영수증 문자열을 만들어 반환합니다.
 // 이 함수가 반환한 문자열이 화면에 표시됩니다.
 // 플레이어가 영수증을 클릭하면 마트를 나가는 것은 engine.js 가 처리합니다.
 //
@@ -344,9 +352,24 @@ function showReceipt(cart, names, prices) {
     let RECEIPT_ITEM = "";
     for (let i = 0; i < cart.length; i++) {
         //prices[findItemIndex(names, cart[i])];
-        let RECEIPT_ITEM = "\n  " + cart[i] + " — " + prices[findItemIndex(names, cart[i])] + "원";
+        let RECEIPT_ITEM =
+            "\n  " +
+            cart[i] +
+            " — " +
+            prices[findItemIndex(names, cart[i])] +
+            "원";
         RECEIPT_LIST += RECEIPT_ITEM;
-    } return RECEIPT_HEADER + RECEIPT_LIST + "\n" + RECEIPT_LINE + "  합계: " + calcTotal(cart, names, prices) + "원\n" + RECEIPT_FOOTER;
+    }
+    return (
+        RECEIPT_HEADER +
+        RECEIPT_LIST +
+        "\n" +
+        RECEIPT_LINE +
+        "  합계: " +
+        calcTotal(cart, names, prices) +
+        "원\n" +
+        RECEIPT_FOOTER
+    );
 
     // 기능: RECEIPT_HEADER + 아이템 목록 + 합계 + RECEIPT_FOOTER 를 이어붙여 반환
     // input(parameter): cart(배열), names(배열), prices(배열)
@@ -366,7 +389,7 @@ function showReceipt(cart, names, prices) {
 
 // ✅ 함수 완성 후 아래 주석을 풀어서 확인해보세요
 /*
-console.log(showReceipt(["아아", "바나나우유"], SHOP_NAMES, SHOP_PRICES));
+console.log(showReceipt(["아아", "바나나우유"], SHOP_ITEMS, SHOP_PRICES));
 // =====================================
 //       똥고양이 마트 영수증
 // =====================================
@@ -436,7 +459,7 @@ var testStock2 = SHOP_STOCK.slice();
 console.log(shopSession(
     ["진라면(순한맛)", "감자", "치킨", "참치마요삼각김밥"],
     10000,
-    SHOP_NAMES, SHOP_PRICES, testStock2
+    SHOP_ITEMS, SHOP_PRICES, testStock2
 ));
 // 진라면(순한맛) 구매 완료, 감자 구매 완료
 // 치킨은 없는 아이템, 참치마요삼각김밥은 품절

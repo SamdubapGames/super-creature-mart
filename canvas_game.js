@@ -5,7 +5,6 @@
 //       path.js, shop.js, notebook.js 의 함수 사용
 // ============================================================
 
-
 // ============================================================
 // UI 씬 전환
 // ============================================================
@@ -17,7 +16,6 @@ function showUI(screenId) {
     document.getElementById(screenId).classList.add("active");
 }
 
-
 // ============================================================
 // 시작 씬
 // ============================================================
@@ -28,7 +26,6 @@ function enterStart() {
     showUI("start-ui");
 }
 
-
 // ============================================================
 // 길 씬
 // ============================================================
@@ -36,14 +33,12 @@ let pathRoute = [];
 let pathStep = 0;
 
 function enterPath() {
-    pathRoute = generateRoute(
-        DATA.MONSTER_PARTS,
-        DATA.CONFIG.ROUTE_LENGTH
-    );
+    pathRoute = generateRoute(DATA.MONSTER_PARTS, DATA.CONFIG.ROUTE_LENGTH);
     pathStep = 0;
-    gameState.player.inventory = gameState.player.inventory.length > 0
-        ? gameState.player.inventory
-        : [...DATA.CONFIG.START_INVENTORY];
+    gameState.player.inventory =
+        gameState.player.inventory.length > 0
+            ? gameState.player.inventory
+            : [...DATA.CONFIG.START_INVENTORY];
 
     SmokeLayer.start();
     showUI("path-ui");
@@ -60,7 +55,9 @@ function showPathStep() {
         if (gameState.scene.direction === "go") {
             setTimeout(enterShop, 1000);
         } else {
-            setTimeout(function () { enterEnding("alive"); }, 1000);
+            setTimeout(function () {
+                enterEnding("alive");
+            }, 1000);
         }
         return;
     }
@@ -74,7 +71,7 @@ function showPathStep() {
     let part = pathRoute[pathStep];
     MonsterLayer.spawn(DATA.PART_IMAGES[part]);
     document.getElementById("path-message-display").innerText =
-        (pathStep + 1) + "/" + pathRoute.length + " — " + part + " 등장!";
+        pathStep + 1 + "/" + pathRoute.length + " — " + part + " 등장!";
 }
 
 function renderInventoryBar() {
@@ -104,7 +101,7 @@ function onPathItemUse(itemName) {
         itemName,
         gameState.player.inventory,
         DATA.MONSTER_PARTS,
-        DATA.MONSTER_ITEMS
+        DATA.MONSTER_ITEMS,
     );
 
     document.getElementById("path-message-display").innerText = result.message;
@@ -116,7 +113,6 @@ function onPathItemUse(itemName) {
         setTimeout(showPathStep, 600);
     }
 }
-
 
 // ============================================================
 // 상점 씬
@@ -135,18 +131,18 @@ function enterShop() {
 
 function renderShopUI() {
     // 상품 목록
-    let listText = showShopList(DATA.SHOP_NAMES, DATA.SHOP_PRICES, shopStock);
+    let listText = showShopList(DATA.SHOP_ITEMS, DATA.SHOP_PRICES, shopStock);
     document.getElementById("shop-list").innerText = listText;
 
     // 구매 버튼들
     let btnContainer = document.getElementById("shop-buy-buttons");
     btnContainer.innerHTML = "";
-    for (let i = 0; i < DATA.SHOP_NAMES.length; i++) {
+    for (let i = 0; i < DATA.SHOP_ITEMS.length; i++) {
         let btn = document.createElement("button");
         btn.className = "btn-sub";
-        btn.innerText = DATA.SHOP_NAMES[i] + " 구매";
+        btn.innerText = DATA.SHOP_ITEMS[i] + " 구매";
         btn.addEventListener("click", function () {
-            onShopBuy(DATA.SHOP_NAMES[i]);
+            onShopBuy(DATA.SHOP_ITEMS[i]);
         });
         btnContainer.appendChild(btn);
     }
@@ -168,15 +164,15 @@ function onShopBuy(itemName) {
     let message = buyItem(
         itemName,
         gameState.player.budget,
-        DATA.SHOP_NAMES,
+        DATA.SHOP_ITEMS,
         DATA.SHOP_PRICES,
-        shopStock
+        shopStock,
     );
 
     document.getElementById("shop-message-canvas").innerText = message;
 
     if (message.indexOf("구매 완료") !== -1) {
-        let idx = findItemIndex(DATA.SHOP_NAMES, itemName);
+        let idx = findItemIndex(DATA.SHOP_ITEMS, itemName);
         gameState.player.budget -= DATA.SHOP_PRICES[idx];
         gameState.player.inventory.push(itemName);
         renderShopUI();
@@ -187,7 +183,6 @@ function onShopLeaveCanvas() {
     gameState.scene.direction = "back";
     enterPath();
 }
-
 
 // ============================================================
 // 엔딩 씬
@@ -207,7 +202,6 @@ function enterEnding(type) {
     showUI("ending-ui");
 }
 
-
 // ============================================================
 // 디버그 점프
 // ============================================================
@@ -222,7 +216,6 @@ function debugCanvasJump(scene) {
     else if (scene === "shop") enterShop();
     else if (scene === "ending") enterEnding("alive");
 }
-
 
 // ============================================================
 // 게임 루프
@@ -241,7 +234,6 @@ function gameLoop(timestamp) {
 
     requestAnimationFrame(gameLoop);
 }
-
 
 // ============================================================
 // 초기화
@@ -264,26 +256,37 @@ window.addEventListener("DOMContentLoaded", function () {
         enterPath();
     });
 
-    document.getElementById("leave-btn").addEventListener("click", onShopLeaveCanvas);
+    document
+        .getElementById("leave-btn")
+        .addEventListener("click", onShopLeaveCanvas);
 
-    document.getElementById("restart-btn").addEventListener("click", function () {
-        gameState.player.hp = DATA.CONFIG.STARTING_HP;
-        gameState.player.inventory = [...DATA.CONFIG.START_INVENTORY];
-        gameState.player.budget = DATA.CONFIG.STARTING_BUDGET;
-        gameState.scene.direction = "go";
-        DATA.SHOP_STOCK = [3, 5, 0, 2, 4];
-        enterStart();
-    });
+    document
+        .getElementById("restart-btn")
+        .addEventListener("click", function () {
+            gameState.player.hp = DATA.CONFIG.STARTING_HP;
+            gameState.player.inventory = [...DATA.CONFIG.START_INVENTORY];
+            gameState.player.budget = DATA.CONFIG.STARTING_BUDGET;
+            gameState.scene.direction = "go";
+            DATA.SHOP_STOCK = [3, 5, 0, 2, 4];
+            enterStart();
+        });
 
-    document.getElementById("notebook-btn").addEventListener("click", function () {
-        let text = showNotebook(DATA.MONSTER_PARTS, DATA.MONSTER_ITEMS);
-        document.getElementById("notebook-content").innerText = text || "[미완성] showNotebook";
-        document.getElementById("notebook-popup").classList.remove("hidden");
-    });
+    document
+        .getElementById("notebook-btn")
+        .addEventListener("click", function () {
+            let text = showNotebook(DATA.MONSTER_PARTS, DATA.MONSTER_ITEMS);
+            document.getElementById("notebook-content").innerText =
+                text || "[미완성] showNotebook";
+            document
+                .getElementById("notebook-popup")
+                .classList.remove("hidden");
+        });
 
-    document.getElementById("notebook-close").addEventListener("click", function () {
-        document.getElementById("notebook-popup").classList.add("hidden");
-    });
+    document
+        .getElementById("notebook-close")
+        .addEventListener("click", function () {
+            document.getElementById("notebook-popup").classList.add("hidden");
+        });
 
     // 시작
     enterStart();
