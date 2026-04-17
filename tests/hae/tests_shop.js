@@ -58,59 +58,59 @@ var TEST_STOCK = [3, 1, 0, 5];
     var messages = [];
     var passed = true;
 
-    var t1 = findItemIndex(SHOP_NAMES, "감자");
+    var t1 = findItemIndex(SHOP_ITEMS, "감자");
     var p1 = t1 === 1;
     if (!p1) passed = false;
     messages.push(
         testLine(
             p1,
-            '🔍 findItemIndex(SHOP_NAMES, "감자") — 인덱스 1',
+            '🔍 findItemIndex(SHOP_ITEMS, "감자") — 인덱스 1',
             "1",
             t1,
             "for문이 i=0부터 시작하는지 확인하세요. names[i] === targetName 일 때 i를 return해야 합니다.",
         ),
     );
 
-    var t2 = findItemIndex(SHOP_NAMES, "진라면(순한맛)");
+    var t2 = findItemIndex(SHOP_ITEMS, "진라면(순한맛)");
     var p2 = t2 === 0;
     if (!p2) passed = false;
     messages.push(
         testLine(
             p2,
-            '🔍 findItemIndex(SHOP_NAMES, "진라면(순한맛)") — 인덱스 0',
+            '🔍 findItemIndex(SHOP_ITEMS, "진라면(순한맛)") — 인덱스 0',
             "0",
             t2,
             "return i 를 하고 있는지 확인하세요. names[i] (값) 가 아니라 i (인덱스) 를 반환해야 합니다.",
         ),
     );
 
-    var t3 = findItemIndex(SHOP_NAMES, "아아");
+    var t3 = findItemIndex(SHOP_ITEMS, "아아");
     var p3 = t3 === 9;
     if (!p3) passed = false;
     messages.push(
         testLine(
             p3,
-            '🔍 findItemIndex(SHOP_NAMES, "아아") — 마지막 인덱스 9',
+            '🔍 findItemIndex(SHOP_ITEMS, "아아") — 마지막 인덱스 9',
             "9",
             t3,
             "for문이 names.length 미만까지 도는지 확인하세요.",
         ),
     );
 
-    var t4 = findItemIndex(SHOP_NAMES, "치킨");
+    var t4 = findItemIndex(SHOP_ITEMS, "치킨");
     var p4 = t4 === -1;
     if (!p4) passed = false;
     messages.push(
         testLine(
             p4,
-            '🔍 findItemIndex(SHOP_NAMES, "치킨") — 없으면 -1',
+            '🔍 findItemIndex(SHOP_ITEMS, "치킨") — 없으면 -1',
             "-1",
             t4,
             "for문이 끝난 뒤(바깥)에 return -1; 이 있어야 합니다. 들여쓰기를 확인하세요.",
         ),
     );
 
-    var t5 = findItemIndex(SHOP_NAMES, "두부");
+    var t5 = findItemIndex(SHOP_ITEMS, "두부");
     var p5 = typeof t5 === "number";
     if (!p5) passed = false;
     messages.push(
@@ -123,17 +123,17 @@ var TEST_STOCK = [3, 1, 0, 5];
         ),
     );
 
-    var origLen = SHOP_NAMES.length;
-    findItemIndex(SHOP_NAMES, "감자");
-    var p6 = SHOP_NAMES.length === origLen;
+    var origLen = SHOP_ITEMS.length;
+    findItemIndex(SHOP_ITEMS, "감자");
+    var p6 = SHOP_ITEMS.length === origLen;
     if (!p6) passed = false;
     messages.push(
         testLine(
             p6,
-            "🛡️ 원본 SHOP_NAMES 배열이 바뀌지 않는지 (부작용 검사)",
+            "🛡️ 원본 SHOP_ITEMS 배열이 바뀌지 않는지 (부작용 검사)",
             "길이 " + origLen + " 유지",
-            "length: " + SHOP_NAMES.length,
-            "SHOP_NAMES는 읽기만 해야 합니다. splice나 push를 쓰지 않았는지 확인하세요.",
+            "length: " + SHOP_ITEMS.length,
+            "SHOP_ITEMS는 읽기만 해야 합니다. splice나 push를 쓰지 않았는지 확인하세요.",
         ),
     );
 
@@ -601,7 +601,7 @@ var TEST_STOCK = [3, 1, 0, 5];
     var messages = [];
     var passed = true;
 
-    var t1 = calcTotal(["감자", "팬돌이 음료"], SHOP_NAMES, SHOP_PRICES);
+    var t1 = calcTotal(["감자", "팬돌이 음료"], SHOP_ITEMS, SHOP_PRICES);
     var p1 = t1 === 600;
     if (!p1) passed = false;
     messages.push(
@@ -614,7 +614,7 @@ var TEST_STOCK = [3, 1, 0, 5];
         ),
     );
 
-    var t2 = calcTotal(["아아"], SHOP_NAMES, SHOP_PRICES);
+    var t2 = calcTotal(["아아"], SHOP_ITEMS, SHOP_PRICES);
     var p2 = t2 === 10000;
     if (!p2) passed = false;
     messages.push(
@@ -627,7 +627,7 @@ var TEST_STOCK = [3, 1, 0, 5];
         ),
     );
 
-    var t3 = calcTotal([], SHOP_NAMES, SHOP_PRICES);
+    var t3 = calcTotal([], SHOP_ITEMS, SHOP_PRICES);
     var p3 = t3 === 0;
     if (!p3) passed = false;
     messages.push(
@@ -640,7 +640,7 @@ var TEST_STOCK = [3, 1, 0, 5];
         ),
     );
 
-    var t4 = calcTotal(["감자", "아아", "바나나우유"], SHOP_NAMES, SHOP_PRICES);
+    var t4 = calcTotal(["감자", "아아", "바나나우유"], SHOP_ITEMS, SHOP_PRICES);
     var p4 = t4 === 20500;
     if (!p4) passed = false;
     messages.push(
@@ -653,21 +653,21 @@ var TEST_STOCK = [3, 1, 0, 5];
         ),
     );
 
-    var p5 = typeof calcTotal(["감자"], SHOP_NAMES, SHOP_PRICES) === "number";
+    var p5 = typeof calcTotal(["감자"], SHOP_ITEMS, SHOP_PRICES) === "number";
     if (!p5) passed = false;
     messages.push(
         testLine(
             p5,
             "🧮 반환값이 숫자(number)인지",
             '"number"',
-            typeof calcTotal(["감자"], SHOP_NAMES, SHOP_PRICES),
+            typeof calcTotal(["감자"], SHOP_ITEMS, SHOP_PRICES),
             "return total; 에서 total이 숫자인지 확인하세요. 문자열로 변환되지 않았는지 확인하세요.",
         ),
     );
 
     var origCartLen = 2;
     var origCart = ["감자", "아아"];
-    calcTotal(origCart, SHOP_NAMES, SHOP_PRICES);
+    calcTotal(origCart, SHOP_ITEMS, SHOP_PRICES);
     var p6 = origCart.length === origCartLen;
     if (!p6) passed = false;
     messages.push(
@@ -692,7 +692,7 @@ var TEST_STOCK = [3, 1, 0, 5];
 
     var cart1 = ["아아", "바나나우유"];
 
-    var t1 = showReceipt(cart1, SHOP_NAMES, SHOP_PRICES);
+    var t1 = showReceipt(cart1, SHOP_ITEMS, SHOP_PRICES);
     var p1 = typeof t1 === "string";
     if (!p1) passed = false;
     messages.push(
@@ -720,7 +720,7 @@ var TEST_STOCK = [3, 1, 0, 5];
         ),
     );
 
-    var total = calcTotal(cart1, SHOP_NAMES, SHOP_PRICES);
+    var total = calcTotal(cart1, SHOP_ITEMS, SHOP_PRICES);
     var p3 = typeof t1 === "string" && t1.indexOf(String(total)) !== -1;
     if (!p3) passed = false;
     messages.push(
@@ -761,13 +761,13 @@ var TEST_STOCK = [3, 1, 0, 5];
         ),
     );
 
-    var t4 = showReceipt([], SHOP_NAMES, SHOP_PRICES);
+    var t4 = showReceipt([], SHOP_ITEMS, SHOP_PRICES);
     var p4 = typeof t4 === "string";
     if (!p4) passed = false;
     messages.push(
         testLine(
             p4,
-            "🧾 빈 장바구니 영수증도 문자열로 반환되는지 (경계값)",
+            "🧾 빈 내가 구매한 영수증도 문자열로 반환되는지 (경계값)",
             "문자열",
             typeof t4,
             "빈 배열이어도 오류 없이 문자열을 반환해야 합니다. for문은 cart.length가 0이면 자연스럽게 안 돌아갑니다.",

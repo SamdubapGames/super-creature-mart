@@ -86,8 +86,8 @@
                 margin-bottom: 16px;
             }
 
-            /* ── 장바구니 영역 ── */
-            #shop-cart-display {
+            /* ── 내가 구매한 영역 ── */
+            #shop-purchased-display {
                 background: #2d2d2d;
                 border-left: 3px solid #4ec9b0;
                 padding: 12px 20px;
@@ -197,7 +197,7 @@
 
         <!-- 예산 -->
         <div class="budget-area">
-            <h3>예산: 300원</h3>
+            <h3>예산: 30,000원</h3>
             <h3 id="shop-remaining-display"></h3>
         </div>
 
@@ -208,7 +208,7 @@
         <div id="shop-menu-display"></div>
 
         <!-- 담기 버튼들 -->
-        <div class="item-buttons" id="shop-item-buttons">
+        <div class="item-buttons" id="shop-item-buttons-container">
             <!-- <button id="shop-bt-떡" class="item-btn" disabled>떡 담기</button>
             <button id="btn-칼" class="item-btn" disabled>칼 담기</button>
             <button id="shop-btn-캣닙 담배" class="item-btn" disabled>
@@ -217,18 +217,18 @@
             <button id="shop-btn-레몬" class="item-btn" disabled>레몬 담기</button>
             <button id="shop-btn-방울" class="item-btn" disabled>방울 담기</button> -->
 
-            <!-- JS가 data.js의 SHOP_NAMES를 읽어서 버튼을 자동 생성합니다 -->
+            <!-- JS가 data.js의 SHOP_ITEMS를 읽어서 버튼을 자동 생성합니다 -->
         </div>
 
         <!-- 메시지 -->
         <p id="shop-message"></p>
 
-        <!-- 장바구니 -->
-        <p id="shop-cart-display"></p>
+        <!-- 내가 구매한 -->
+        <p id="shop-purchased-display"></p>
 
-        <!-- 구매하기 / 다시하기 -->
+        <!-- 구매 완료 / 다시하기 -->
         <div class="button-bar">
-            <button id="shop-btn-checkout" disabled>구매하기</button>
+            <button id="shop-btn-checkout" disabled>구매 완료</button>
             <button id="shop-btn-reset">다시 하기</button>
         </div>
 

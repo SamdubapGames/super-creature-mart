@@ -219,7 +219,7 @@ function playTurn(part, chosenItem, inventory, parts, items) {
     //   틀리면 → { success: false, message: ... } 반환
     let matched = checkMatch(part, chosenItem, parts, items); // 짝 확인
     if (matched) {
-        useItem(inventory, chosenItem); // 인벤토리에서 제거
+        //useItem(inventory, chosenItem); // 인벤토리에서 제거
         return {
             success: true,
             message: part + "에 " + chosenItem + " 사용 성공!",

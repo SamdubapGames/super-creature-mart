@@ -48,7 +48,7 @@ function onStartClick() {
 // ============================================================
 // 길 씬 → 다음 씬 (길 클리어 시 호출됨)
 // ============================================================
-// clickPathScene.js 의 onAdvanceClick 에서 경로 끝나면 이 함수를 호출하세요.
+// clickPathScene.js 의 onWalkClick 에서 경로 끝나면 이 함수를 호출하세요.
 function onPathClear() {
     if (direction === "go") {
         initShopGame();
@@ -124,9 +124,9 @@ window.addEventListener("DOMContentLoaded", function () {
 
     // ── 길 씬 ──
     document
-        .getElementById("path-btn-advance")
+        .getElementById("path-btn-walk")
         .addEventListener("click", function () {
-            onAdvanceClick();
+            onWalkClick();
         });
     document
         .getElementById("path-btn-skip")
@@ -139,7 +139,7 @@ window.addEventListener("DOMContentLoaded", function () {
         .getElementById("shop-btn-show-menu")
         .addEventListener("click", function () {
             var menuText = showShopList(
-                DATA.SHOP_NAMES,
+                DATA.SHOP_ITEMS,
                 DATA.SHOP_PRICES,
                 stock,
             );

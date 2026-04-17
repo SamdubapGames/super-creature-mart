@@ -8,6 +8,11 @@
 //   - 함수 안의 로직만 채울 것
 //   - path.js 의 함수를 호출해서 씁니다!
 //
+// 채우기 전에:
+//   → "길 씬 설계 문서 (path_scene_design.md)" 를 먼저 읽어주세요.
+//   → 특히 5번 섹션 "버튼이 언제 켜지고 꺼지는지" 표가
+//     onItemClick / onWalkClick 안에 뭘 써야 하는지 알려줍니다.
+//
 // 함수를 채우는 법:
 //   1. 이 함수는 뭘 해야 하는가? (한 문장)
 //   2. 그러려면 어떤 정보가 필요한가? (재료 나열)
@@ -19,19 +24,20 @@
 //
 // 새로 배우는 것:
 //   document.getElementById("아이디")  — HTML 요소를 가져온다
-//   요소.innerText = "텍스트"          — 요소 안의 글자를 바꾼다
-//   버튼.disabled = true / false       — 버튼을 비활성화/활성화
-//   요소.style.display = "none"        — 요소를 숨긴다
+//   요소.innerText = "텍스트"           — 요소 안의 글자를 바꾼다
+//   버튼.disabled = true  → disabled (꺼짐)
+//   버튼.disabled = false → enabled (켜짐)
+//   요소.style.display = "none"         — 요소를 숨긴다
 //   요소.style.display = "inline-block" — 요소를 다시 보여준다
 //
 // HTML 요소 아이디 목록:
 //   "path-route-display"    — 경로 배열 표시하는 곳
 //   "path-current-part"     — 현재 부위 크게 표시하는 곳
 //   "path-message"          — 결과 메시지 표시하는 곳
-//   "path-btn-advance"      — 전진 버튼
+//   "path-btn-walk"         — 걸어가기 버튼
 //   "path-btn-떡"           — 아이템 버튼
 //   "path-btn-칼"           — 아이템 버튼
-//   "path-btn-캣닙 담배"    — 아이템 버튼
+//   "path-btn-담배"         — 아이템 버튼
 //   "path-btn-레몬"         — 아이템 버튼
 //   "path-btn-reset"        — 다시하기 버튼
 // ============================================================
@@ -39,10 +45,13 @@
 // ============================================================
 // 게임 데이터 — data.js 에서 가져오는 것들
 // ============================================================
-// let PARTS = DATA.MONSTER_PARTS; // ["입", "꼬리", "코", "눈"]
-// let ITEMS = DATA.MONSTER_ITEMS; // ["떡", "칼", "캣닙 담배", "레몬"]
-// let ROUTE_LENGTH = DATA.CONFIG.ROUTE_LENGTH; // 5
-// let START_INVENTORY = DATA.CONFIG.START_INVENTORY; // ["떡", "칼", "레몬"]
+// DATA.MONSTER_PARTS          // ["입", "꼬리", "코", "눈"]
+// DATA.MONSTER_ITEMS          // ["떡", "칼", "담배", "레몬"]
+// DATA.CONFIG.ROUTE_LENGTH    // 5
+// DATA.CONFIG.START_INVENTORY // ["떡", "칼", "담배", "레몬"]
+//
+// 부위 ↔ 아이템 짝 (같은 인덱스끼리):
+//   입 ↔ 떡, 꼬리 ↔ 칼, 코 ↔ 담배, 눈 ↔ 레몬
 
 // ============================================================
 // 게임 상태 변수 — 게임 진행 중에 바뀌는 값들
@@ -50,17 +59,19 @@
 let route = []; // generateRoute()가 만든 경로 배열
 let currentStep = 0; // 현재 몇 번째 구간인지 (0부터 시작)
 let inventory = []; // 플레이어가 가진 아이템들
-let pathGameOver = false; // 게임이 끝났는지
+let isPathCleared = false; // 길 씬을 클리어했는지 (true/false)
 
 // ============================================================
 // initPathGame — 게임 시작 (이미 완성됨!)
 // ============================================================
 function initPathGame() {
+    // 시작 값들 초기화
     route = generateRoute(DATA.MONSTER_PARTS, DATA.CONFIG.ROUTE_LENGTH);
     currentStep = 0;
     inventory = DATA.CONFIG.START_INVENTORY.slice();
-    pathGameOver = false;
+    isPathCleared = false;
 
+    // 화면에 보여주기
     showRoute();
     showCurrentPart();
     showMessageText("아이템 버튼을 눌러서 부위에 맞는 아이템을 사용하세요!");
@@ -81,8 +92,11 @@ function initPathGame() {
         }
     }
 
-    setPathItemButtons(false);
-    document.getElementById("path-btn-advance").disabled = true;
+    // 시작 상태: 아이템 버튼 enabled(켜짐), 걸어가기 버튼 disabled(꺼짐)
+    setItemButtonsEnabled(true);
+    document.getElementById("path-btn-walk").disabled = true;
+
+    // 다시하기 버튼은 숨김 (클리어하면 다시 보임)
     let resetBtn = document.getElementById("path-btn-reset");
     if (resetBtn) resetBtn.style.display = "none";
 }
@@ -95,12 +109,14 @@ function resetPathGame() {
 }
 
 // ============================================================
-// setPathItemButtons — 아이템 버튼 전체 활성화/비활성화 (이미 완성됨!)
+// setItemButtonsEnabled — 아이템 버튼 전체 켜기/끄기 (이미 완성됨!)
 // ============================================================
-function setPathItemButtons(disabled) {
+// isEnabled 가 true  → 모든 아이템 버튼 enabled (클릭 가능)
+// isEnabled 가 false → 모든 아이템 버튼 disabled (클릭 불가)
+function setItemButtonsEnabled(isEnabled) {
     for (let i = 0; i < DATA.MONSTER_ITEMS.length; i++) {
         document.getElementById("path-btn-" + DATA.MONSTER_ITEMS[i]).disabled =
-            disabled;
+            !isEnabled;
     }
 }
 
@@ -110,7 +126,7 @@ function setPathItemButtons(disabled) {
 // 하는 것: 전달받은 텍스트를 메시지 영역에 보여준다.
 //
 // 인풋: text (문자열)
-// 필요한 재료: document.getElementById("message"), .innerText
+// 필요한 재료: document.getElementById("path-message"), .innerText
 // 리턴: 없음
 
 function showMessageText(text) {
@@ -157,7 +173,7 @@ function showRouteText(text) {
 }
 
 // ✅ 확인법: F12 → Console 에서 직접 테스트:
-//      showRouteText("입  꼬리  눈")  → 상단 파란 박스에 텍스트가 뜨면 성공!
+//      showRouteText("입\t꼬리\t눈")  → 상단 파란 박스에 텍스트가 뜨면 성공!
 
 // ============================================================
 // Function 4: 현재 부위 보여주기
@@ -182,12 +198,24 @@ function showCurrentPart() {
 // ============================================================
 // 하는 것: route 배열을 텍스트로 만들어서 화면 상단에 보여준다.
 //          현재 위치에는 ▼ 를 붙여서 어디까지 왔는지 표시한다.
+//          부위 사이는 탭("\t")으로 구분한다.
 //
 // 예시: route = ["입", "꼬리", "눈", "입", "코"], currentStep = 2
-//       → "입  꼬리  ▼눈  입  코"
+//       → "입\t꼬리\t▼눈\t입\t코"
 //
 // 필요한 재료: route 배열, currentStep, showRouteText(함수)
 // 리턴: 없음
+//
+// 꼭 써야 하는 것:
+//   빈 문자열로 시작해서, for 문으로 route 를 돌면서 한 조각씩 이어붙이기
+//   현재 위치(currentStep)에는 "▼" 를 붙일 것
+//   마지막 부위 뒤에는 "\t" 가 붙지 않도록 할 것
+//
+// 생각해볼 것:
+//   - "▼" 는 언제 어떻게 붙이지?
+//   - "\t" 를 붙이면 안 되는 건 언제지? (힌트: 마지막 인덱스는 route.length - 1)
+//
+// 참고: "\t" 는 탭 문자.
 
 function showRoute() {
     // 여기를 채우세요
@@ -202,51 +230,78 @@ function showRoute() {
 // ============================================================
 // Function 6: 아이템 버튼 클릭 처리
 // ============================================================
-// 하는 것: 아이템 버튼을 눌렀을 때,
-//          지금 부위에 이 아이템이 맞는지 확인하고,
-//          맞으면 → 메시지 보여주고, 아이템 버튼 끄고, 전진 버튼 켜기
-//          틀리면 → 메시지만 보여주기 (다시 시도 가능)
+// 하는 것: 아이템 버튼이 클릭됐을 때 호출된다.
+//          playTurn 으로 짝을 확인하고, 결과 메시지를 화면에 띄우고,
+//          성공이면 아이템 버튼들을 끄고 걸어가기 버튼을 켠다.
+//          실패면 메시지만 바꾸고 버튼 상태는 그대로 둔다 (다시 시도 가능).
 //
 // 인풋: itemName (문자열 — 어떤 아이템 버튼을 눌렀는지)
-// 필요한 재료: route[currentStep], inventory, PARTS, DATA.MONSTER_ITEMS,
-//             playTurn(함수, path.js), showMessageText(함수), setPathItemButtons(함수)
-// playTurn 이 돌려주는 값: .success (true/false), .message (문자열)
-// HTML 요소: "path-btn-advance"
+// 필요한 재료: route[currentStep], inventory, DATA.MONSTER_PARTS, DATA.MONSTER_ITEMS,
+//             playTurn(함수, path.js), showMessageText(함수), setItemButtonsEnabled(함수)
+// playTurn 이 돌려주는 값: { success: true/false, message: "..." }
+// HTML 요소: "path-btn-walk"
 // 리턴: 없음
+//
+// 꼭 써야 하는 것:
+//   1. playTurn(...) 호출해서 결과 저장
+//      → 리턴값은 { success, message } 형태 (path.js 참고)
+//
+//   2. 결과 메시지를 showMessageText 로 띄우기
+//
+//   3. 성공이면:
+//      → 아이템 버튼들 disabled (setItemButtonsEnabled 사용)
+//      → 걸어가기 버튼 enabled
+//
+//   4. 실패면 추가 동작 없음 (버튼 상태 그대로)
 
 function onItemClick(itemName) {
     // 여기를 채우세요
 }
 
 // ✅ 확인법: 브라우저에서 화면 가운데 부위를 보고 맞는 아이템 버튼을 누르세요.
-//    (입→떡, 꼬리→칼, 코→캣닙 담배, 눈→레몬)
+//    (입→떡, 꼬리→칼, 코→담배, 눈→레몬)
 //    → 맞는 버튼 클릭: 메시지에 "사용 성공!" 이 뜨고,
 //      아이템 버튼들이 회색으로 비활성화되고,
-//      전진 버튼이 클릭 가능해지면 성공!
+//      걸어가기 버튼이 클릭 가능해지면 성공!
 //    → 틀린 버튼 클릭: "효과가 없었다..." 메시지가 뜨고,
 //      아이템 버튼이 여전히 눌리면 성공!
 //    → 아무 반응이 없으면 playTurn 호출 부분을 확인하세요.
 
 // ============================================================
-// Function 7: 전진 버튼 클릭 처리
+// Function 7: 걸어가기 버튼 클릭 처리
 // ============================================================
 // 하는 것: 다음 구간으로 이동한다.
 //          경로가 끝났으면 → 클리어 처리 (부위 비우기, 메시지, 버튼 끄기,
-//                           다시하기 버튼 보여주기, pathGameOver = true)
+//                           다시하기 버튼 보여주기, isPathCleared = true)
 //          아직 남았으면   → 경로 표시 업데이트, 다음 부위 보여주기,
-//                           아이템 버튼 다시 켜기, 전진 버튼 끄기
+//                           아이템 버튼 다시 켜기, 걸어가기 버튼 끄기
 //
 // 필요한 재료: currentStep, route.length,
 //             showRoute(함수), showCurrentPart(함수),
-//             showMessageText(함수), setPathItemButtons(함수)
-// HTML 요소: "path-btn-advance", "path-btn-reset"
+//             showMessageText(함수), setItemButtonsEnabled(함수)
+// HTML 요소: "path-btn-walk", "path-btn-reset"
 // 리턴: 없음
+//
+// 꼭 써야 하는 것:
+//   1. currentStep 을 1 증가
+//
+//   2. if (currentStep < route.length) — 아직 남음:
+//        → 경로 / 부위 다시 그리기
+//      등.. 문서를 보고 채워봐욥
+//
+//   3. else — 마지막 걸음이었음 (클리어):
+//        // 문서를 보고 채워보세욥
+//
+//        // LATER: 풀게임 연동은 점이 채움. 여기는 무시하세욥
+//        //   if (typeof onPathClear === "function") {
+//        //       document.getElementById("path-btn-enter-shop").style.display = "inline-block";
+//        //   }
 
-function onAdvanceClick() {
+function onWalkClick() {
     // 여기를 채우세요
 }
 
-// ✅ 확인법: Function 6까지 성공한 상태에서 전진 버튼을 누르세요.
+// ✅ 확인법: Function 6까지 성공한 상태에서 걸어가기 버튼을 누르세요.
 //    → 상단 경로에서 ▼ 가 다음 부위로 이동하고,
 //      화면 가운데에 새로운 부위가 나타나고,
 //      아이템 버튼이 다시 활성화되면 성공!
@@ -259,12 +314,12 @@ function onAdvanceClick() {
 // ============================================================
 window.addEventListener("DOMContentLoaded", function () {
     if (document.getElementById("path-btn-reset") === null) return;
-    if (document.getElementById("path-btn-advance") === null) return;
+    if (document.getElementById("path-btn-walk") === null) return;
 
     document
-        .getElementById("path-btn-advance")
+        .getElementById("path-btn-walk")
         .addEventListener("click", function () {
-            onAdvanceClick();
+            onWalkClick();
         });
 
     document
