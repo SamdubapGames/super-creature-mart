@@ -79,7 +79,7 @@ function initShopGame() {
         let btn = document.createElement("button");
         btn.id = "shop-btn-" + DATA.SHOP_ITEMS[i];
         btn.className = "item-btn";
-        btn.innerText = DATA.SHOP_ITEMS[i] + " 사기";
+        btn.innerText = DATA.SHOP_ITEMS[i] + " 구매";
         btn.addEventListener("click", function () {
             onBuyItem(DATA.SHOP_ITEMS[i]);
         });
@@ -92,7 +92,9 @@ function initShopGame() {
     // 3. 화면 그리기
     showBudget();
     showPurchased();
-    showShopMessageText("마트에 오신 걸 환영합니다! 물건 리스트를 확인하세요.");
+    showShopMessageText(
+        "마트에 오신 걸 환영합니다! 물건 리스트를 확인하세요. (환불x)",
+    );
 
     // 4. 나머지 초기화
     document.getElementById("shop-menu-display").innerText = "";
