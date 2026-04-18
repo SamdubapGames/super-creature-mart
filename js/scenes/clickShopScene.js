@@ -73,7 +73,7 @@ function initShopGame() {
     isShopCheckedOut = false;
 
     // 1. 구매 버튼 동적 생성 (제일 먼저!)
-    let btnContainer = document.getElementById("shop-item-buttons");
+    let btnContainer = document.getElementById("shop-item-buttons-container");
     btnContainer.innerHTML = "";
     for (let i = 0; i < DATA.SHOP_ITEMS.length; i++) {
         let btn = document.createElement("button");
