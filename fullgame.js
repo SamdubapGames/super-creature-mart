@@ -144,7 +144,7 @@ window.addEventListener("DOMContentLoaded", function () {
                 stock,
             );
             document.getElementById("shop-menu-display").innerText = menuText;
-            setShopItemButtons(false);
+            setShopItemButtonsEnabled(false);
             showShopMessageText("물건을 골라서 [담기] 버튼을 누르세요!");
         });
     document

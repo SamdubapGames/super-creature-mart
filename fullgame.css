@@ -132,7 +132,7 @@ button:disabled {
 }
 
 /* ── 카트 박스 (초록 왼쪽 줄) ── */
-.cart-box {
+.purchased-box {
     background: #2d2d2d;
     border-left: 3px solid #4ec9b0;
     padding: 12px 20px;
