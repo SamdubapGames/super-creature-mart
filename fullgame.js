@@ -24,6 +24,14 @@ function switchScene(sceneName) {
     document.getElementById("scene-" + sceneName).classList.add("active");
     currentScene = sceneName;
     console.log("씬 전환 →", sceneName);
+
+    // ─── 배경 이미지 교체 ───
+    // 길 씬은 step 별이라 별도 처리. 여기서는 길 씬 진입 시 첫 구간(0) 으로.
+    if (sceneName === "path") {
+        visualLayer.setBackground("path", 0);
+    } else {
+        visualLayer.setBackground(sceneName);
+    }
 }
 
 // ============================================================
@@ -44,6 +52,13 @@ function onStartClick() {
     initPathGame();
     switchScene("path");
 }
+
+function updateOnWalkClick() {
+    onWalkClick();
+    if (currentStep < DATA.CONFIG.ROUTE_LENGTH) {
+        visualLayer.setBackground("path", currentStep);
+    }
+} //TODO: update fullgame.html to use this function for walking
 
 // ============================================================
 // 길 씬 → 다음 씬 (길 클리어 시 호출됨)
@@ -113,6 +128,18 @@ function debugJump(sceneName) {
     }
 }
 
+// (DEV 전용, Phase 1 테스트 끝나면 삭제)
+document
+    .getElementById("path-btn-dev-next-bg")
+    .addEventListener("click", function () {
+        currentStep++;
+        if (currentStep < DATA.CONFIG.ROUTE_LENGTH) {
+            visualLayer.setBackground("path", currentStep);
+            console.log("배경 테스트 → step", currentStep);
+        } else {
+            console.log("마지막 배경까지 확인 완료");
+        }
+    });
 // ============================================================
 // 이벤트 연결
 // ============================================================

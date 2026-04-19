@@ -19,6 +19,11 @@ body {
     padding: 30px 20px;
 }
 
+#bg-layer {
+    position: fixed;
+    z-index: -1;
+}
+
 /* ── 공통 ── */
 .scene {
     display: none;

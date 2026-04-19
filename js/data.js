@@ -12,9 +12,11 @@ const DATA = {
     BG_IMAGES: {
         start: "assets/bg/start.png", // 벙커 문
         path: [
-            "assets/bg/path_01.png", // 출발 직후
-            "assets/bg/path_02.png", // 중간
-            "assets/bg/path_03.png", // 마트 근처
+            "assets/bg/path001.png", // 출발 직후
+            "assets/bg/path002.png", // 중간
+            "assets/bg/path003.png", // 중간
+            "assets/bg/path004.png", // 중간
+            "assets/bg/path005.png", // 마트 근처
         ],
         shop: "assets/bg/shop.png", // 마트 내부
         ending: "assets/bg/ending.png", // 엔딩

@@ -6,6 +6,7 @@
         <link rel="stylesheet" href="fullgame.css" />
     </head>
     <body>
+        <img id="bg-layer" />
         <!-- ════════════════════════════════════
              씬 1: 시작 화면
              ════════════════════════════════════ -->
@@ -41,6 +42,10 @@
             <!-- 디버그: 스킵 -->
             <button id="path-btn-skip" class="debug-skip">
                 [DEV] 길 스킵 →
+            </button>
+            <!-- 디버그: 길다음스텝으로 스킵 -->
+            <button id="path-btn-dev-next-bg" class="debug-skip">
+                [DEV] 배경만 다음 →
             </button>
         </div>
 
@@ -152,6 +157,7 @@
         <script src="js/notebook.js"></script>
         <script src="js/scenes/clickPathScene.js"></script>
         <script src="js/scenes/clickShopScene.js"></script>
+        <script src="js/visualLayer.js"></script>
         <script src="fullgame.js"></script>
     </body>
 </html>
