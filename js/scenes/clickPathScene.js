@@ -188,7 +188,7 @@ function showRouteText(text) {
 // 리턴: 없음
 
 function showCurrentPart() {
-   if (route && currentStep < route.length) {
+   if (currentStep < route.length) {
         let partName = route[currentStep]; 
         showPartText(partName);
     } else {
@@ -227,7 +227,17 @@ function showCurrentPart() {
 // 참고: "\t" 는 탭 문자.
 
 function showRoute() {
-    // 여기를 채우세요
+    let routeName = "" ;
+    for (let i=0; i<route.length; i++){
+        if(i===currentStep){
+             routeName+= "▼";
+        }
+        routeName += i;
+        if(i<route.length-1){
+            routeName += "\t";
+        }
+    } 
+    showRouteText(routeName);
 }
 
 // ✅ 확인법: 브라우저를 새로고침하세요.
