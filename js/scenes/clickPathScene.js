@@ -326,9 +326,29 @@ function onItemClick(itemName) {
 //        //   }
 
 function onWalkClick() {
-    // 여기를 채우세요
-}
+    currentStep++;
 
+    if (currentStep < route.length) {
+        showRoute();
+        showCurrentPart();
+        
+        setItemButtonsEnabled(true);
+        document.getElementById("path-btn-walk").disabled = true;
+
+    } else {
+        isPathCleared = true;
+
+        showRoute();
+        showPartText("");
+        showMessageText("클리어!");
+
+        setItemButtonsEnabled(false);
+        document.getElementById("path-btn-walk").disabled = true;
+        
+        let resetBtn = document.getElementById("path-btn-reset");
+        if (resetBtn) resetBtn.style.display = "inline-block";
+    }
+}
 // ✅ 확인법: Function 6까지 성공한 상태에서 걸어가기 버튼을 누르세요.
 //    → 상단 경로에서 ▼ 가 다음 부위로 이동하고,
 //      화면 가운데에 새로운 부위가 나타나고,
