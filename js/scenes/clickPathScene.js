@@ -130,7 +130,7 @@ function setItemButtonsEnabled(isEnabled) {
 // 리턴: 없음
 
 function showMessageText(text) {
-    // 여기를 채우세요
+    // document.getElementById("path-message").innerText = text;
     document.getElementById("path-message").innerText = text;
 }
 
@@ -139,6 +139,7 @@ function showMessageText(text) {
 //      "아이템 버튼을 눌러서 부위에 맞는 아이템을 사용하세요!"
 //      가 보이면 성공!
 //    → 빈칸이면 아직 안 된 것.
+
 
 // ============================================================
 // Function 2: 부위 텍스트 표시
@@ -151,12 +152,13 @@ function showMessageText(text) {
 // 리턴: 없음
 
 function showPartText(text) {
-    // 여기를 채우세요
+    document.getElementById("path-current-part").innerText = text;
 }
 
 // ✅ 확인법: F12 → Console 에서 직접 테스트:
-//      showPartText("테스트")  → 화면 가운데에 "테스트"가 크게 뜨면 성공!
+//      showPartText("테스트")  //→ 화면 가운데에 "테스트"가 크게 뜨면 성공!
 //      showPartText("")        → 글자가 사라지면 성공!
+
 
 // ============================================================
 // Function 3: 경로 텍스트 표시
@@ -169,11 +171,12 @@ function showPartText(text) {
 // 리턴: 없음
 
 function showRouteText(text) {
-    // 여기를 채우세요
+    document.getElementById("path-route-display").innerText = text;
 }
 
 // ✅ 확인법: F12 → Console 에서 직접 테스트:
-//      showRouteText("입\t꼬리\t눈")  → 상단 파란 박스에 텍스트가 뜨면 성공!
+//      showRouteText("입\t꼬리\t눈")  //→ 상단 파란 박스에 텍스트가 뜨면 성공!
+
 
 // ============================================================
 // Function 4: 현재 부위 보여주기
@@ -185,13 +188,19 @@ function showRouteText(text) {
 // 리턴: 없음
 
 function showCurrentPart() {
-    // 여기를 채우세요
+   if (currentStep < route.length) {
+        let partName = route[currentStep]; 
+        showPartText(partName);
+    } else {
+        showPartText("");
+    }
 }
 
 // ✅ 확인법: 브라우저를 새로고침하세요.
 //    → 화면 가운데에 빨간 글씨로 부위 이름 (입/꼬리/코/눈 중 하나)이
 //      크게 보이면 성공!
 //    → 아무것도 안 보이면 아직 안 된 것.
+
 
 // ============================================================
 // Function 5: 경로 보여주기
@@ -218,7 +227,17 @@ function showCurrentPart() {
 // 참고: "\t" 는 탭 문자.
 
 function showRoute() {
-    // 여기를 채우세요
+    let routeName = "" ;
+    for (let i=0; i<route.length; i++){
+        if(i===currentStep){
+             routeName+= "▼";
+        }
+        routeName += route[i];
+        if(i<route.length-1){
+            routeName += "\t";
+        }
+    } 
+    showRouteText(routeName);
 }
 
 // ✅ 확인법: 브라우저를 새로고침하세요.
@@ -226,6 +245,7 @@ function showRoute() {
 //      첫 번째 부위 앞에 ▼ 가 붙어있으면 성공!
 //    → "경로 로딩중..." 이 그대로이면 아직 안 된 것.
 //    → ▼ 없이 부위만 나열되면 currentStep 비교 부분을 확인하세요.
+
 
 // ============================================================
 // Function 6: 아이템 버튼 클릭 처리
@@ -255,7 +275,15 @@ function showRoute() {
 //   4. 실패면 추가 동작 없음 (버튼 상태 그대로)
 
 function onItemClick(itemName) {
-    // 여기를 채우세요
+    let currentPart = route[currentStep];
+    let { success, message } = playTurn(currentPart, itemName, inventory, DATA.MONSTER_PARTS, DATA.MONSTER_ITEMS);
+    
+    showMessageText(message);
+
+    if (success === true) {
+        setItemButtonsEnabled(false);
+        document.getElementById("path-btn-walk").disabled = false;
+    }
 }
 
 // ✅ 확인법: 브라우저에서 화면 가운데 부위를 보고 맞는 아이템 버튼을 누르세요.
@@ -298,9 +326,29 @@ function onItemClick(itemName) {
 //        //   }
 
 function onWalkClick() {
-    // 여기를 채우세요
-}
+    currentStep++;
 
+    if (currentStep < route.length) {
+        showRoute();
+        showCurrentPart();
+        
+        setItemButtonsEnabled(true);
+        document.getElementById("path-btn-walk").disabled = true;
+
+    } else {
+        isPathCleared = true;
+
+        showRoute();
+        showPartText("");
+        showMessageText("클리어!");
+
+        setItemButtonsEnabled(false);
+        document.getElementById("path-btn-walk").disabled = true;
+        
+        let resetBtn = document.getElementById("path-btn-reset");
+        if (resetBtn) resetBtn.style.display = "inline-block";
+    }
+}
 // ✅ 확인법: Function 6까지 성공한 상태에서 걸어가기 버튼을 누르세요.
 //    → 상단 경로에서 ▼ 가 다음 부위로 이동하고,
 //      화면 가운데에 새로운 부위가 나타나고,
