@@ -53,13 +53,6 @@ function onStartClick() {
     switchScene("path");
 }
 
-function updateOnWalkClick() {
-    onWalkClick();
-    if (currentStep < DATA.CONFIG.ROUTE_LENGTH) {
-        visualLayer.setBackground("path", currentStep);
-    }
-} //TODO: update fullgame.html to use this function for walking
-
 // ============================================================
 // 길 씬 → 다음 씬 (길 클리어 시 호출됨)
 // ============================================================
@@ -139,6 +132,23 @@ document
         } else {
             console.log("마지막 배경까지 확인 완료");
         }
+    });
+
+// ─── DEV 전용: 부위 이미지 순환 테스트 ───
+// PHASE6TODO: Phase 2 테스트 끝나면 이 블록 + HTML 버튼 삭제
+let _devPartIndex = 0;
+document
+    .getElementById("path-btn-dev-next-part")
+    .addEventListener("click", function () {
+        const parts = DATA.MONSTER_PARTS;
+        const part = parts[_devPartIndex];
+
+        // 원본 showCurrentPart 를 건너뛰고 직접 텍스트 세팅
+        document.getElementById("path-current-part").innerText = part;
+        updateMonsterImage(); // ← 이미지만 갱신
+
+        console.log("부위 테스트 →", part);
+        _devPartIndex = (_devPartIndex + 1) % parts.length;
     });
 // ============================================================
 // 이벤트 연결
