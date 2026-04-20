@@ -130,7 +130,7 @@ function setItemButtonsEnabled(isEnabled) {
 // 리턴: 없음
 
 function showMessageText(text) {
-    // 여기를 채우세요
+    // document.getElementById("path-message").innerText = text;
     document.getElementById("path-message").innerText = text;
 }
 
@@ -151,11 +151,11 @@ function showMessageText(text) {
 // 리턴: 없음
 
 function showPartText(text) {
-    // 여기를 채우세요
+    document.getElementById("path-current-part").innerText = text;
 }
 
 // ✅ 확인법: F12 → Console 에서 직접 테스트:
-//      showPartText("테스트")  → 화면 가운데에 "테스트"가 크게 뜨면 성공!
+//      showPartText("테스트")  //→ 화면 가운데에 "테스트"가 크게 뜨면 성공!
 //      showPartText("")        → 글자가 사라지면 성공!
 
 // ============================================================
@@ -169,11 +169,11 @@ function showPartText(text) {
 // 리턴: 없음
 
 function showRouteText(text) {
-    // 여기를 채우세요
+    document.getElementById("path-route-display").innerText = text;
 }
 
 // ✅ 확인법: F12 → Console 에서 직접 테스트:
-//      showRouteText("입\t꼬리\t눈")  → 상단 파란 박스에 텍스트가 뜨면 성공!
+//      showRouteText("입\t꼬리\t눈")  //→ 상단 파란 박스에 텍스트가 뜨면 성공!
 
 // ============================================================
 // Function 4: 현재 부위 보여주기
