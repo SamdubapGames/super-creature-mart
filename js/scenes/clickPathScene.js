@@ -232,7 +232,7 @@ function showRoute() {
         if(i===currentStep){
              routeName+= "▼";
         }
-        routeName += i;
+        routeName += route[i];
         if(i<route.length-1){
             routeName += "\t";
         }
