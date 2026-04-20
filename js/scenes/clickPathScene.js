@@ -246,6 +246,7 @@ function showRoute() {
 //    → "경로 로딩중..." 이 그대로이면 아직 안 된 것.
 //    → ▼ 없이 부위만 나열되면 currentStep 비교 부분을 확인하세요.
 
+
 // ============================================================
 // Function 6: 아이템 버튼 클릭 처리
 // ============================================================
@@ -274,7 +275,15 @@ function showRoute() {
 //   4. 실패면 추가 동작 없음 (버튼 상태 그대로)
 
 function onItemClick(itemName) {
-    // 여기를 채우세요
+    let currentPart = route[currentStep];
+    let { success, message } = playTurn(currentPart, itemName, inventory, DATA.MONSTER_PARTS, DATA.MONSTER_ITEMS);
+    
+    showMessageText(message);
+
+    if (success === true) {
+        setItemButtonsEnabled(false);
+        document.getElementById("path-btn-walk").disabled = false;
+    }
 }
 
 // ✅ 확인법: 브라우저에서 화면 가운데 부위를 보고 맞는 아이템 버튼을 누르세요.
