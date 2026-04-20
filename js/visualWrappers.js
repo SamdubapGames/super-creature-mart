@@ -42,3 +42,28 @@ function updateMonsterImage() {
         img.style.display = "none";
     }
 }
+
+// ============================================================
+// Phase 3: 아이템 이미지 버튼
+// PHASE6TODO: 팀원 작업 완료 후 이 래핑 제거 →
+//             clickPathScene.js 의 initPathGame 안에서
+//             버튼 생성 직후 injectItemImages() 호출
+// ============================================================
+
+const _originalInitPathGame = initPathGame;
+initPathGame = function () {
+    _originalInitPathGame(); // 팀원 코드가 버튼들 생성
+    injectItemImages(); // 그 다음에 이미지 주입
+};
+
+function injectItemImages() {
+    DATA.MONSTER_ITEMS.forEach(function (itemName) {
+        const btn = document.getElementById("path-btn-" + itemName);
+        if (!btn) {
+            console.warn("아이템 버튼 없음:", itemName);
+            return;
+        }
+        const src = DATA.ITEM_IMAGES[itemName];
+        btn.innerHTML = `<img src="${src}" alt="${itemName}">`;
+    });
+}

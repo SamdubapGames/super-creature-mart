@@ -150,6 +150,31 @@ document
         console.log("부위 테스트 →", part);
         _devPartIndex = (_devPartIndex + 1) % parts.length;
     });
+
+// ─── DEV: 입-떡 매칭 테스트 ───
+// PHASE6TODO: Phase 3/4 테스트 끝나면 삭제
+document
+    .getElementById("path-btn-dev-match-test")
+    .addEventListener("click", function () {
+        // 현재 부위를 "입"으로 강제 세팅
+        document.getElementById("path-current-part").innerText = "입";
+        updateMonsterImage();
+        console.log("테스트 시작: 부위는 '입'. 아이템 버튼을 눌러보세요.");
+
+        // 아이템 버튼 4개에 테스트 핸들러 붙이기
+        DATA.MONSTER_ITEMS.forEach(function (itemName) {
+            const btn = document.getElementById("path-btn-" + itemName);
+            if (!btn) return;
+            btn.disabled = false; // 혹시 disabled 면 풀기
+            btn.onclick = function () {
+                if (itemName === "떡") {
+                    console.log("✅ 확인! 입 - 떡 매칭 성공");
+                } else {
+                    console.log("❌ 실패. '" + itemName + "' 은 입에 안 맞음");
+                }
+            };
+        });
+    });
 // ============================================================
 // 이벤트 연결
 // ============================================================

@@ -7,10 +7,10 @@ const DATA = {
     // 나중에 object 단계 오면 → [{part:"입", item:"떡"}, ...] 로 합쳐짐
 
     ITEM_IMAGES: {
-        lemon: "assets/items/lemon.png",
-        tteok: "assets/items/tteok.png",
-        knief: "assets/items/knief.png",
-        cigar: "assets/items/cigar.png",
+        레몬: "assets/items/lemon.png",
+        떡: "assets/items/tteok.png",
+        칼: "assets/items/knief.png",
+        담배: "assets/items/cigar.png",
     },
     // ─────────────────────────────
     // 배경 이미지 경로
