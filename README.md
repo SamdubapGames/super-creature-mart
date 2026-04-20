@@ -132,7 +132,7 @@ path.js playTurn() 수정
 
 ---
 
-## 전체 흐름 한눈에
+### 깃 커밋 전체 흐름 한눈에
 
 ```
 VSCode: 파일 + 추가 → 커밋 메시지 작성 → Commit
@@ -157,7 +157,8 @@ Create Pull Request
 ```
 ---
 
-### 파일 구조
+
+### 괴물마트 파일 구조 (업데이트 해야함)
 
 ```
 js/
@@ -186,25 +187,4 @@ js/
         part_tail.png    ← 꼬리
         part_nose.png    ← 코
         part_eye.png     ← 눈
-```
-
----
-
-### 전체 흐름
-
-```
-init()
-  └─ SceneManager.switchTo("start")
-       └─ startScene.enter()
-            └─ 시작버튼 클릭 → SceneManager.switchTo("path")
-                 └─ pathScene.enter()
-                      └─ generateRoute() 호출 (팀원 응)
-                      └─ 스텝마다 onItemDrop() → playTurn() (팀원 응)
-                      └─ 경로 끝 → SceneManager.switchTo("shop")
-                           └─ shopScene.enter()
-                                └─ buyItem() 호출 (팀원 헤)
-                                └─ 구매완료 → direction = "back"
-                                           → SceneManager.switchTo("path")
-                                                └─ 같은 pathScene 재사용
-                                                     └─ 끝 → "ending"
 ```
