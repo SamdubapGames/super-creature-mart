@@ -6,6 +6,12 @@ const DATA = {
     //   입 ↔ 떡, 꼬리 ↔ 칼, 코 ↔ 담배, 눈 ↔ 레몬
     // 나중에 object 단계 오면 → [{part:"입", item:"떡"}, ...] 로 합쳐짐
 
+    ITEM_IMAGES: {
+        lemon: "assets/items/lemon.png",
+        tteok: "assets/items/tteok.png",
+        knief: "assets/items/knief.png",
+        cigar: "assets/items/cigar.png",
+    },
     // ─────────────────────────────
     // 배경 이미지 경로
     // ─────────────────────────────
