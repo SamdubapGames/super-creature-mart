@@ -244,7 +244,7 @@ function buyItem(name, budget, names, prices, stock) {
     } else {
         stock[findItemIndex(names, name)] -= 1;
         return (
-            name + " 구매 완료! (" + prices[findItemIndex(names, name)] + "원)"
+            name + " 구매 완료! (" + prices[findItemIndex(names, name)] + "원) 환불은 불가합니다. "
         );
     }
 

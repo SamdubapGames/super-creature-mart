@@ -149,7 +149,7 @@ function showShopMessageText(text) {
 // 리턴: 없음
 
 function showBudgetText(text) {
-    // 여기를 채우세요
+    document.getElementById("shop-remaining-display").innerText = text;
 }
 
 // ✅ 확인법: F12 → Console 에서 직접 테스트:
@@ -166,7 +166,7 @@ function showBudgetText(text) {
 // 리턴: 없음
 
 function showPurchasedText(text) {
-    // 여기를 채우세요
+    document.getElementById("shop-purchased-display").innerText = text;
 }
 
 // ✅ 확인법: F12 → Console 에서 직접 테스트:
@@ -181,7 +181,7 @@ function showPurchasedText(text) {
 // 리턴: 없음
 
 function showBudget() {
-    // 여기를 채우세요
+    showBudgetText("남은 예산:" + remainingBudget + "원");
 }
 
 // ✅ 확인법: 브라우저를 새로고침하세요.
@@ -208,7 +208,13 @@ function showBudget() {
 //       - 또는 그냥 purchased 를 문자열에 쓰면 ,(공백없는 콤마)로 자동 변환됨
 
 function showPurchased() {
-    // 여기를 채우세요
+    if(purchased.length === 0) {
+        showPurchasedText("구매한 목록: (비어있음)");
+        document.getElementById("shop-btn-checkout").disabled = true;
+    } else {
+        showPurchasedText("구매한 목록: " + purchased.join(", "));
+        document.getElementById("shop-btn-checkout").disabled = false;
+    }
 }
 
 // ✅ 확인법: 브라우저를 새로고침하세요.
@@ -251,8 +257,20 @@ function showPurchased() {
 //   4. 실패면 메시지만 그대로 띄우기:
 //      → showShopMessageText(result)
 
+
 function onBuyItem(itemName) {
-    // 여기를 채우세요
+    let result = buyItem(itemName, remainingBudget, DATA.SHOP_ITEMS, DATA.SHOP_PRICES, DATA.SHOP_STOCK);
+    if(result.indexOf("구매 완료!") !== -1) {
+        let itemIndex = findItemIndex(DATA.SHOP_ITEMS, itemName);
+        remainingBudget -= DATA.SHOP_PRICES[itemIndex];
+        showBudget();
+        showShopList(DATA.SHOP_ITEMS, DATA.SHOP_PRICES, DATA.SHOP_STOCK);
+        purchased.push(itemName);
+        showPurchased(itemName);
+        showShopMessageText(result);
+    } else {
+    showShopMessageText(result);
+    }
 }
 
 // ✅ 확인법: [마트 물건 리스트 보기]를 누른 뒤 [점라면(낱개) 사기] 버튼을 누르세요.
@@ -300,7 +318,16 @@ function onBuyItem(itemName) {
 //        //   }
 
 function onCheckout() {
-    // 여기를 채우세요
+    if (purchased.length === 0) {
+        return showShopMessageText("구매한 물건이 없습니다");
+    } else {
+        let receipt = showReceipt(purchased, DATA.SHOP_ITEMS, DATA.SHOP_PRICES);
+        document.getElementById("shop-receipt-display").innerText = receipt;
+        document.getElementById("shop-btn-checkout").disabled = true;
+        document.getElementById("shop-btn-show-menu").disabled = true;
+        document.getElementById("shop-btn-reset").style.display = "inline-block";
+        document.getElementById("shop-btn-reset").disabled = false;
+    }
 }
 
 // ✅ 확인법: 물건을 몇 개 산 뒤 [구매 완료] 버튼을 누르세요.
