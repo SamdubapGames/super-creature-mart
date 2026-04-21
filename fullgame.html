@@ -11,10 +11,13 @@
              씬 1: 시작 화면
              ════════════════════════════════════ -->
         <div id="scene-start" class="scene active">
-            <h1 class="title">괴물 마트</h1>
-            <p class="subtitle">먹고 살기 위해 나가야 한다</p>
-            <button id="btn-start" class="btn-main">나가기</button>
-            <audio id="openDoorSound" src="assets/soundEffect/openDoor.wav"></audio>
+            <!-- <h1 class="title">괴물 마트</h1> -->
+            <p class="subtitle">
+                밖은.. 먼지 지옥이다.. 하지만 나는 배가 고프다...
+            </p>
+            <p class="subtitle">.... 마트에 가야겠다</p>
+
+            <button id="btn-start" class="btn-main">밖으로 나가기</button>
         </div>
 
         <!-- ════════════════════════════════════
@@ -42,7 +45,10 @@
             <!-- 전진 버튼 -->
             <div class="button-bar">
                 <button id="path-btn-walk" class="btn-action">
-                <audio id="walkSound" src="assets/soundEffect/walk.wav"></audio>
+                    <audio
+                        id="walkSound"
+                        src="assets/soundEffect/walk.wav"
+                    ></audio>
                     걸어가기 →
                 </button>
             </div>
@@ -104,11 +110,17 @@
             <!-- 구매 완료 / 떠나기 -->
             <div class="button-bar">
                 <button id="shop-btn-checkout" class="btn-checkout">
-                <audio id="shopCheckoutSound" src="assets/soundEffect/receipt.wav"></audio>
+                    <audio
+                        id="shopCheckoutSound"
+                        src="assets/soundEffect/receipt.wav"
+                    ></audio>
                     구매 완료
                 </button>
                 <button id="shop-btn-leave" class="btn-action">
-                <audio id="shopLeaveSound" src="assets/soundEffect/openDoor.wav"></audio>
+                    <audio
+                        id="shopLeaveSound"
+                        src="assets/soundEffect/openDoor.wav"
+                    ></audio>
                     마트 떠나기
                 </button>
             </div>

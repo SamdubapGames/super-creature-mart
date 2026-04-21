@@ -66,7 +66,9 @@ let isPathCleared = false; // 길 씬을 클리어했는지 (true/false)
 // ============================================================
 function initPathGame() {
     // 시작 값들 초기화
-    route = generateRoute(DATA.MONSTER_PARTS, DATA.CONFIG.ROUTE_LENGTH);
+    DATA.ROUTE = generateRoute(DATA.MONSTER_PARTS, DATA.CONFIG.ROUTE_LENGTH);
+    route = DATA.ROUTE;
+    console.log("dasfalkdsjf" + DATA.ROUTE);
     currentStep = 0;
     inventory = DATA.CONFIG.START_INVENTORY.slice();
     isPathCleared = false;
@@ -187,6 +189,7 @@ function showRouteText(text) {
 function showCurrentPart() {
     if (currentStep < route.length) {
         let partName = route[currentStep];
+        DATA.PARTNAME = route[currentStep];
         showPartText(partName);
     } else {
         showPartText("");
@@ -284,6 +287,7 @@ function onItemClick(itemName) {
     if (success === true) {
         setItemButtonsEnabled(false);
         document.getElementById("path-btn-walk").disabled = false;
+        document.getElementById("monster-layer").style.display = "none";
     }
 }
 
@@ -337,7 +341,7 @@ function onWalkClick() {
         // ─── 여기가 "마지막 걸음 = 클리어" 처리 ───
         isPathCleared = true;
         showRoute();
-        showPartText("");
+        // showPartText("");
         setItemButtonsEnabled(false);
         document.getElementById("path-btn-walk").disabled = true;
 
@@ -368,6 +372,7 @@ function onWalkClick() {
 window.addEventListener("DOMContentLoaded", function () {
     if (document.getElementById("path-btn-reset") === null) return;
     if (document.getElementById("path-btn-walk") === null) return;
+    if (document.getElementById("path-current-part") === null) return;
 
     document
         .getElementById("path-btn-walk")
