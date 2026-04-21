@@ -140,7 +140,6 @@ function showMessageText(text) {
 //      가 보이면 성공!
 //    → 빈칸이면 아직 안 된 것.
 
-
 // ============================================================
 // Function 2: 부위 텍스트 표시
 // ============================================================
@@ -159,7 +158,6 @@ function showPartText(text) {
 //      showPartText("테스트")  //→ 화면 가운데에 "테스트"가 크게 뜨면 성공!
 //      showPartText("")        → 글자가 사라지면 성공!
 
-
 // ============================================================
 // Function 3: 경로 텍스트 표시
 // ============================================================
@@ -177,7 +175,6 @@ function showRouteText(text) {
 // ✅ 확인법: F12 → Console 에서 직접 테스트:
 //      showRouteText("입\t꼬리\t눈")  //→ 상단 파란 박스에 텍스트가 뜨면 성공!
 
-
 // ============================================================
 // Function 4: 현재 부위 보여주기
 // ============================================================
@@ -188,8 +185,8 @@ function showRouteText(text) {
 // 리턴: 없음
 
 function showCurrentPart() {
-   if (currentStep < route.length) {
-        let partName = route[currentStep]; 
+    if (currentStep < route.length) {
+        let partName = route[currentStep];
         showPartText(partName);
     } else {
         showPartText("");
@@ -200,7 +197,6 @@ function showCurrentPart() {
 //    → 화면 가운데에 빨간 글씨로 부위 이름 (입/꼬리/코/눈 중 하나)이
 //      크게 보이면 성공!
 //    → 아무것도 안 보이면 아직 안 된 것.
-
 
 // ============================================================
 // Function 5: 경로 보여주기
@@ -227,16 +223,16 @@ function showCurrentPart() {
 // 참고: "\t" 는 탭 문자.
 
 function showRoute() {
-    let routeName = "" ;
-    for (let i=0; i<route.length; i++){
-        if(i===currentStep){
-             routeName+= "▼";
+    let routeName = "";
+    for (let i = 0; i < route.length; i++) {
+        if (i === currentStep) {
+            routeName += "▼";
         }
         routeName += route[i];
-        if(i<route.length-1){
+        if (i < route.length - 1) {
             routeName += "\t";
         }
-    } 
+    }
     showRouteText(routeName);
 }
 
@@ -245,7 +241,6 @@ function showRoute() {
 //      첫 번째 부위 앞에 ▼ 가 붙어있으면 성공!
 //    → "경로 로딩중..." 이 그대로이면 아직 안 된 것.
 //    → ▼ 없이 부위만 나열되면 currentStep 비교 부분을 확인하세요.
-
 
 // ============================================================
 // Function 6: 아이템 버튼 클릭 처리
@@ -276,8 +271,14 @@ function showRoute() {
 
 function onItemClick(itemName) {
     let currentPart = route[currentStep];
-    let { success, message } = playTurn(currentPart, itemName, inventory, DATA.MONSTER_PARTS, DATA.MONSTER_ITEMS);
-    
+    let { success, message } = playTurn(
+        currentPart,
+        itemName,
+        inventory,
+        DATA.MONSTER_PARTS,
+        DATA.MONSTER_ITEMS,
+    );
+
     showMessageText(message);
 
     if (success === true) {
@@ -327,26 +328,30 @@ function onItemClick(itemName) {
 
 function onWalkClick() {
     currentStep++;
-
     if (currentStep < route.length) {
         showRoute();
         showCurrentPart();
-        
         setItemButtonsEnabled(true);
         document.getElementById("path-btn-walk").disabled = true;
-
     } else {
+        // ─── 여기가 "마지막 걸음 = 클리어" 처리 ───
         isPathCleared = true;
-
         showRoute();
         showPartText("");
-        showMessageText("클리어!");
-
         setItemButtonsEnabled(false);
         document.getElementById("path-btn-walk").disabled = true;
-        
-        let resetBtn = document.getElementById("path-btn-reset");
-        if (resetBtn) resetBtn.style.display = "inline-block";
+
+        // 풀게임 vs 독립 미니게임 분기
+        if (typeof onPathClear === "function") {
+            // 풀게임: fullgame.js 가 씬 전환 담당
+            showMessageText("마트 도착!");
+            onPathClear();
+        } else {
+            // 독립 미니게임: 다시하기 버튼 표시
+            showMessageText("클리어!");
+            let resetBtn = document.getElementById("path-btn-reset");
+            if (resetBtn) resetBtn.style.display = "inline-block";
+        }
     }
 }
 // ✅ 확인법: Function 6까지 성공한 상태에서 걸어가기 버튼을 누르세요.

@@ -208,7 +208,7 @@ function showBudget() {
 //       - 또는 그냥 purchased 를 문자열에 쓰면 ,(공백없는 콤마)로 자동 변환됨
 
 function showPurchased() {
-    if(purchased.length === 0) {
+    if (purchased.length === 0) {
         showPurchasedText("구매한 목록: (비어있음)");
         document.getElementById("shop-btn-checkout").disabled = true;
     } else {
@@ -257,10 +257,15 @@ function showPurchased() {
 //   4. 실패면 메시지만 그대로 띄우기:
 //      → showShopMessageText(result)
 
-
 function onBuyItem(itemName) {
-    let result = buyItem(itemName, remainingBudget, DATA.SHOP_ITEMS, DATA.SHOP_PRICES, DATA.SHOP_STOCK);
-    if(result.indexOf("구매 완료!") !== -1) {
+    let result = buyItem(
+        itemName,
+        remainingBudget,
+        DATA.SHOP_ITEMS,
+        DATA.SHOP_PRICES,
+        DATA.SHOP_STOCK,
+    );
+    if (result.indexOf("구매 완료!") !== -1) {
         let itemIndex = findItemIndex(DATA.SHOP_ITEMS, itemName);
         remainingBudget -= DATA.SHOP_PRICES[itemIndex];
         showBudget();
@@ -269,7 +274,7 @@ function onBuyItem(itemName) {
         showPurchased(itemName);
         showShopMessageText(result);
     } else {
-    showShopMessageText(result);
+        showShopMessageText(result);
     }
 }
 
@@ -325,8 +330,18 @@ function onCheckout() {
         document.getElementById("shop-receipt-display").innerText = receipt;
         document.getElementById("shop-btn-checkout").disabled = true;
         document.getElementById("shop-btn-show-menu").disabled = true;
-        document.getElementById("shop-btn-reset").style.display = "inline-block";
+        document.getElementById("shop-btn-reset").style.display =
+            "inline-block";
         document.getElementById("shop-btn-reset").disabled = false;
+    }
+    // 풀게임 vs 독립 미니게임 분기
+    if (typeof onShopCheckout === "function") {
+        // 풀게임: 마트에서 나가기 버튼 활성화
+        onShopCheckout();
+    } else {
+        // 독립 미니게임: 다시하기 버튼 표시
+        document.getElementById("shop-btn-reset").style.display =
+            "inline-block";
     }
 }
 
