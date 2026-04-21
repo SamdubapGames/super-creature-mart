@@ -14,6 +14,7 @@
             <h1 class="title">괴물 마트</h1>
             <p class="subtitle">먹고 살기 위해 나가야 한다</p>
             <button id="btn-start" class="btn-main">나가기</button>
+            <audio id="openDoorSound" src="assets/soundEffect/openDoor.wav"></audio>
         </div>
 
         <!-- ════════════════════════════════════
@@ -34,10 +35,14 @@
 
             <!-- 아이템 버튼들 (동적 생성) -->
             <div class="button-bar" id="path-item-buttons"></div>
+            <audio id="칼" src="assets/soundEffect/knife.wav"></audio>
+            <audio id="담배" src="assets/soundEffect/cigar.mp3"></audio>
+            <audio id="레몬" src="assets/soundEffect/lemonSqueeze.MP3"></audio>
 
             <!-- 전진 버튼 -->
             <div class="button-bar">
                 <button id="path-btn-walk" class="btn-action">
+                <audio id="walkSound" src="assets/soundEffect/walk.wav"></audio>
                     걸어가기 →
                 </button>
             </div>
@@ -88,6 +93,7 @@
 
             <!-- 담기 버튼들 (동적 생성) -->
             <div class="item-buttons" id="shop-item-buttons-container"></div>
+            <audio id="shopItemSound" src="assets/soundEffect/coin.wav"></audio>
 
             <!-- 메시지 -->
             <p id="shop-message" class="message-box"></p>
@@ -98,9 +104,11 @@
             <!-- 구매 완료 / 떠나기 -->
             <div class="button-bar">
                 <button id="shop-btn-checkout" class="btn-checkout">
+                <audio id="shopCheckoutSound" src="assets/soundEffect/receipt.wav"></audio>
                     구매 완료
                 </button>
                 <button id="shop-btn-leave" class="btn-action">
+                <audio id="shopLeaveSound" src="assets/soundEffect/openDoor.wav"></audio>
                     마트 떠나기
                 </button>
             </div>
