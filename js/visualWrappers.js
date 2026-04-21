@@ -54,6 +54,7 @@ const _originalInitPathGame = initPathGame;
 initPathGame = function () {
     _originalInitPathGame(); // 팀원 코드가 버튼들 생성
     injectItemImages(); // 그 다음에 이미지 주입
+    enableDragDrop(); // 드래그&드롭 활성화
 };
 
 function injectItemImages() {

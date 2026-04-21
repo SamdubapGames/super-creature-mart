@@ -135,6 +135,7 @@ button:disabled {
     padding: 8px; /* 이미지 주변 여백 */
     background: transparent; /* 기존 파란 버튼 배경 제거 원하면 */
     border: 2px solid transparent;
+    cursor: grab;
 }
 
 #path-item-buttons button:hover:not(:disabled) {
@@ -143,6 +144,23 @@ button:disabled {
 
 #path-item-buttons button:disabled img {
     opacity: 0.3;
+}
+
+#path-item-buttons button:active {
+    cursor: grabbing;
+}
+
+/* ─── Phase 4: 드래그&드롭 시각 피드백 ─── */
+/* 드래그 중인 아이템 버튼 */
+.dragging {
+    opacity: 0.5;
+    cursor: grabbing;
+}
+/* 드롭 타겟 위에 드래그 중일 때 */
+#path-current-part.drop-active {
+    outline: 3px dashed #4ec9b0;
+    outline-offset: 8px;
+    border-radius: 8px;
 }
 
 /* ── 메시지 박스 (노란색 왼쪽 줄) ── */
