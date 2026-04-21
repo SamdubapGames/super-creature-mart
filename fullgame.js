@@ -188,14 +188,39 @@ window.addEventListener("DOMContentLoaded", function () {
     // ── 시작 씬 ──
     document
         .getElementById("btn-start")
-        .addEventListener("click", onStartClick);
+        .addEventListener("click", function() {
+            const audio = document.getElementById('openDoorSound');
+
+            if (audio) {
+                audio.volume = 0.3;
+                audio.currentTime = 0;
+                audio.play();
+                audio.onended = function() {
+                    onStartClick();
+                };
+            } else {
+                onStartClick();
+            }
+        });
 
     // ── 길 씬 ──
     document
         .getElementById("path-btn-walk")
         .addEventListener("click", function () {
-            onWalkClick();
+            const audio = document.getElementById('walkSound');
+
+            if (audio) {
+                audio.currentTime = 0;
+                audio.play();
+                setTimeout(() => {
+                    audio.pause();
+                    onWalkClick();
+                }, 2000);
+            } else {
+                onWalkClick();
+            }
         });
+
     document
         .getElementById("path-btn-skip")
         .addEventListener("click", function () {
@@ -215,15 +240,51 @@ window.addEventListener("DOMContentLoaded", function () {
             // setShopItemButtonsEnabled(false);
             showShopMessageText("물건을 골라서 [담기] 버튼을 누르세요!");
         });
+
+    const container = document.getElementById('shop-item-buttons-container'); // 상점 아이템 코인 오디오 
+    const audio = document.getElementById('shopItemSound');
+
+    container
+        .addEventListener('click', function(event) {
+            if (event.target && event.target.tagName === 'BUTTON') {
+                if (audio) {
+                    audio.currentTime = 0;
+                    audio.play();
+                }
+            }
+        });
+
     document
         .getElementById("shop-btn-checkout")
         .addEventListener("click", function () {
+            const audio = document.getElementById('shopCheckoutSound');
+
+            if (audio) {
+                audio.currentTime = 0;
+                audio.play();
+                audio.onended = function() {
+                onShopCheckoutAndLeave();
+                };
+            } else {
             onShopCheckoutAndLeave();
-        });
+            }
+         });
+
     document
         .getElementById("shop-btn-leave")
         .addEventListener("click", function () {
-            onShopLeave();
+            const audio = document.getElementById('shopLeaveSound');
+
+            if (audio) {
+                audio.volume = 0.3;
+                audio.currentTime = 0;
+                audio.play();
+                audio.onended = function() {
+                    onShopLeave();
+                };
+            } else {
+                onShopLeave();
+            }
         });
     document
         .getElementById("shop-btn-skip")

@@ -101,8 +101,26 @@ function bindDropTarget() {
         }
 
         console.log("드롭:", itemName);
+
+        const soundFiles = {
+            "칼" : { path: "assets/soundEffect/knife.wav", duration: 1000 },
+            "담배" : { path: "assets/soundEffect/cigar.mp3", duration: 4000 },
+            "레몬" : { path: "assets/soundEffect/lemonSqueeze.MP3", duration: 2000 }
+        };
+
+        const soundConfig = soundFiles[itemName];
+        if (soundConfig) {
+            const audio = new Audio(soundConfig.path);
+            audio.volume = 0.5;
+            audio.play();
+            setTimeout(() => {
+                audio.pause();
+                onItemClick(itemName);
+            }, soundConfig.duration);
+        } else {
         // ★ 팀원의 onItemClick 재사용 — 성공/실패 처리 자동으로 돌아감
         onItemClick(itemName);
+        };
     });
 }
 
