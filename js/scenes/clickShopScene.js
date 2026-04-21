@@ -118,7 +118,7 @@ function resetShopGame() {
 function setShopItemButtonsEnabled(isEnabled) {
     for (let i = 0; i < DATA.SHOP_ITEMS.length; i++) {
         document.getElementById("shop-btn-" + DATA.SHOP_ITEMS[i]).disabled =
-            !isEnabled;
+            isEnabled;
     }
 }
 
