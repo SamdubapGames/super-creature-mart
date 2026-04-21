@@ -6,6 +6,7 @@
         <link rel="stylesheet" href="fullgame.css" />
     </head>
     <body>
+        <img id="bg-layer" />
         <!-- ════════════════════════════════════
              씬 1: 시작 화면
              ════════════════════════════════════ -->
@@ -23,7 +24,10 @@
             <div id="path-route-display" class="info-box">경로 로딩중...</div>
 
             <!-- 현재 부위 (크게) -->
-            <div id="path-current-part"></div>
+            <div class="path-stage">
+                <div id="path-current-part"></div>
+                <img id="monster-layer" src="" alt="" />
+            </div>
 
             <!-- 메시지 -->
             <p id="path-message" class="message-box"></p>
@@ -41,6 +45,18 @@
             <!-- 디버그: 스킵 -->
             <button id="path-btn-skip" class="debug-skip">
                 [DEV] 길 스킵 →
+            </button>
+            <!-- 디버그: 길다음스텝으로 스킵 -->
+            <button id="path-btn-dev-next-bg" class="debug-skip">
+                [DEV] 배경만 다음 →
+            </button>
+            <!-- 디버그: 괴물부위 -->
+            <button id="path-btn-dev-next-part" class="debug-skip">
+                [DEV] 부위 다음 →
+            </button>
+            <!-- 디버그: 매칭 -->
+            <button id="path-btn-dev-match-test" class="debug-skip">
+                [DEV] 매칭 테스트
             </button>
         </div>
 
@@ -152,6 +168,9 @@
         <script src="js/notebook.js"></script>
         <script src="js/scenes/clickPathScene.js"></script>
         <script src="js/scenes/clickShopScene.js"></script>
+        <script src="js/visualLayer.js"></script>
+        <script src="js/dragDrop.js"></script>
+        <script src="js/visualWrappers.js"></script>
         <script src="fullgame.js"></script>
     </body>
 </html>
