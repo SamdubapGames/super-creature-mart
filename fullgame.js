@@ -42,6 +42,8 @@ function startNewGame() {
     inventory = DATA.CONFIG.START_INVENTORY.slice();
     budget = DATA.CONFIG.STARTING_BUDGET;
     switchScene("start");
+    // 오프닝 (시작할 때)
+    playSceneBgm('opening');
 }
 
 // ============================================================
@@ -51,6 +53,7 @@ function onStartClick() {
     direction = "go";
     initPathGame();
     switchScene("path");
+    playSceneBgm('streetGoMart');
 }
 
 // ============================================================
@@ -61,6 +64,7 @@ function onPathClear() {
     if (direction === "go") {
         initShopGame();
         switchScene("shop");
+        playSceneBgm('mart');
     } else {
         startEndingScene("alive");
     }
@@ -74,6 +78,7 @@ function onShopLeave() {
     direction = "back";
     initPathGame();
     switchScene("path");
+    playSceneBgm('streetComeback');
 }
 
 function onShopCheckoutAndLeave() {
@@ -98,6 +103,7 @@ function startEndingScene(type) {
             "그 길에서 멈춰버렸다.\n\n게임 오버...";
     }
     switchScene("ending");
+    playSceneBgm('ending');
 }
 
 // ============================================================
