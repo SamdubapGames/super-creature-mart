@@ -28,6 +28,9 @@ var visualLayer = {
                 idx = DATA.BG_IMAGES.path.length - 1;
             }
             bg.src = DATA.BG_IMAGES.path[idx];
+        } else if (sceneName === "title") {
+            // 타이틀 화면
+            bg.src = DATA.BG_IMAGES.title;
         }
     },
 };

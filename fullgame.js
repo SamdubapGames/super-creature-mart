@@ -38,14 +38,19 @@ function switchScene(sceneName) {
 // 게임 시작
 // ============================================================
 function startNewGame() {
+    switchScene("title");
+}
+// ============================================================
+// 타이틀에서 '게임 시작'버튼 눌렀을 때
+// ============================================================
+function onGameStartClick() {
     direction = "go";
     inventory = DATA.CONFIG.START_INVENTORY.slice();
     budget = DATA.CONFIG.STARTING_BUDGET;
     switchScene("start");
     // 오프닝 (시작할 때)
-    playSceneBgm('opening');
+    playSceneBgm("opening");
 }
-
 // ============================================================
 // 시작 씬 → 길 씬
 // ============================================================
@@ -53,7 +58,7 @@ function onStartClick() {
     direction = "go";
     initPathGame();
     switchScene("path");
-    playSceneBgm('streetGoMart');
+    playSceneBgm("streetGoMart");
 }
 
 // ============================================================
@@ -64,7 +69,7 @@ function onPathClear() {
     if (direction === "go") {
         initShopGame();
         switchScene("shop");
-        playSceneBgm('mart');
+        playSceneBgm("mart");
     } else {
         startEndingScene("alive");
     }
@@ -78,7 +83,7 @@ function onShopLeave() {
     direction = "back";
     initPathGame();
     switchScene("path");
-    playSceneBgm('streetComeback');
+    playSceneBgm("streetComeback");
 }
 
 function onShopCheckoutAndLeave() {
@@ -103,7 +108,7 @@ function startEndingScene(type) {
             "그 길에서 멈춰버렸다.\n\n게임 오버...";
     }
     switchScene("ending");
-    playSceneBgm('ending');
+    playSceneBgm("ending");
 }
 
 // ============================================================
@@ -127,87 +132,49 @@ function debugJump(sceneName) {
     }
 }
 
-// (DEV 전용, Phase 1 테스트 끝나면 삭제)
-// document
-//     .getElementById("path-btn-dev-next-bg")
-//     .addEventListener("click", function () {
-//         currentStep++;
-//         if (currentStep < DATA.CONFIG.ROUTE_LENGTH) {
-//             visualLayer.setBackground("path", currentStep);
-//             console.log("배경 테스트 → step", currentStep);
-//         } else {
-//             console.log("마지막 배경까지 확인 완료");
-//         }
-//     });
-
-// // ─── DEV 전용: 부위 이미지 순환 테스트 ───
-// // PHASE6TODO: Phase 2 테스트 끝나면 이 블록 + HTML 버튼 삭제
-// let _devPartIndex = 0;
-// document
-//     .getElementById("path-btn-dev-next-part")
-//     .addEventListener("click", function () {
-//         const parts = DATA.MONSTER_PARTS;
-//         const part = parts[_devPartIndex];
-
-//         // 원본 showCurrentPart 를 건너뛰고 직접 텍스트 세팅
-//         document.getElementById("path-current-part").innerText = part;
-//         updateMonsterImage(); // ← 이미지만 갱신
-
-//         console.log("부위 테스트 →", part);
-//         _devPartIndex = (_devPartIndex + 1) % parts.length;
-//     });
-
-// // ─── DEV: 입-떡 매칭 테스트 ───
-// // PHASE6TODO: Phase 3/4 테스트 끝나면 삭제
-// document
-//     .getElementById("path-btn-dev-match-test")
-//     .addEventListener("click", function () {
-//         // 현재 부위를 "입"으로 강제 세팅
-//         document.getElementById("path-current-part").innerText = "입";
-//         updateMonsterImage();
-//         console.log("테스트 시작: 부위는 '입'. 아이템 버튼을 눌러보세요.");
-
-//         // 아이템 버튼 4개에 테스트 핸들러 붙이기
-//         DATA.MONSTER_ITEMS.forEach(function (itemName) {
-//             const btn = document.getElementById("path-btn-" + itemName);
-//             if (!btn) return;
-//             btn.disabled = false; // 혹시 disabled 면 풀기
-//             btn.onclick = function () {
-//                 if (itemName === "떡") {
-//                     console.log("✅ 확인! 입 - 떡 매칭 성공");
-//                 } else {
-//                     console.log("❌ 실패. '" + itemName + "' 은 입에 안 맞음");
-//                 }
-//             };
-//         });
-//     });
 // ============================================================
 // 이벤트 연결
 // ============================================================
+
 window.addEventListener("DOMContentLoaded", function () {
-    // ── 시작 씬 ──
+    // ── 타이틀 ──
     document
-        .getElementById("btn-start")
-        .addEventListener("click", function() {
-            const audio = document.getElementById('openDoorSound');
+        .getElementById("btn-game-start")
+        .addEventListener("click", function () {
+            // const audio = document.getElementById("openDoorSound");
 
             if (audio) {
                 audio.volume = 0.3;
                 audio.currentTime = 0;
                 audio.play();
-                audio.onended = function() {
-                    onStartClick();
+                audio.onended = function () {
+                    onGameStartClick();
                 };
             } else {
-                onStartClick();
+                onGameStartClick();
             }
         });
+    // ── 시작 씬 ──
+    document.getElementById("btn-start").addEventListener("click", function () {
+        const audio = document.getElementById("openDoorSound");
+
+        if (audio) {
+            audio.volume = 0.3;
+            audio.currentTime = 0;
+            audio.play();
+            audio.onended = function () {
+                onStartClick();
+            };
+        } else {
+            onStartClick();
+        }
+    });
 
     // ── 길 씬 ──
     document
         .getElementById("path-btn-walk")
         .addEventListener("click", function () {
-            const audio = document.getElementById('walkSound');
+            const audio = document.getElementById("walkSound");
 
             if (audio) {
                 audio.currentTime = 0;
@@ -241,51 +208,51 @@ window.addEventListener("DOMContentLoaded", function () {
             showShopMessageText("물건을 골라서 [담기] 버튼을 누르세요!");
         });
 
-    const container = document.getElementById('shop-item-buttons-container'); // 상점 아이템 코인 오디오 
-    const audio = document.getElementById('shopItemSound');
+    const container = document.getElementById("shop-item-buttons-container"); // 상점 아이템 코인 오디오
+    const audio = document.getElementById("shopItemSound");
 
-    container
-        .addEventListener('click', function(event) {
-            if (event.target && event.target.tagName === 'BUTTON') {
-                if (audio) {
-                    audio.currentTime = 0;
-                    audio.play();
-                }
+    container.addEventListener("click", function (event) {
+        if (event.target && event.target.tagName === "BUTTON") {
+            if (audio) {
+                audio.currentTime = 0;
+                audio.play();
             }
-        });
+        }
+    });
 
     document
         .getElementById("shop-btn-checkout")
         .addEventListener("click", function () {
-            const audio = document.getElementById('shopCheckoutSound');
+            const audio = document.getElementById("shopCheckoutSound");
 
             if (audio) {
                 audio.currentTime = 0;
                 audio.play();
-                audio.onended = function() {
-                onShopCheckoutAndLeave();
+                audio.onended = function () {
+                    onShopCheckoutAndLeave();
                 };
             } else {
-            onShopCheckoutAndLeave();
+                onShopCheckoutAndLeave();
             }
-         });
+        });
 
     document
         .getElementById("shop-btn-leave")
         .addEventListener("click", function () {
-            const audio = document.getElementById('shopLeaveSound');
+            const audio = document.getElementById("shopLeaveSound");
 
             if (audio) {
                 audio.volume = 0.3;
                 audio.currentTime = 0;
                 audio.play();
-                audio.onended = function() {
+                audio.onended = function () {
                     onShopLeave();
                 };
             } else {
                 onShopLeave();
             }
         });
+
     document
         .getElementById("shop-btn-skip")
         .addEventListener("click", function () {
@@ -298,6 +265,19 @@ window.addEventListener("DOMContentLoaded", function () {
     document
         .getElementById("btn-restart")
         .addEventListener("click", startNewGame);
+
+    // ─── 키보드 단축키 ───
+    document.addEventListener("keydown", function (e) {
+        // 길 씬에서만, W 키 누르면 걸어가기
+        if (currentScene !== "path") return;
+
+        if (e.key === "w" || e.key === "W") {
+            const walkBtn = document.getElementById("path-btn-walk");
+            // 버튼이 비활성화 상태면 무시 (맞는 아이템 안 썼을 때)
+            if (walkBtn.disabled) return;
+            walkBtn.click(); // 버튼 클릭 효과 (기존 리스너 그대로 발동)
+        }
+    });
 
     // ── 게임 시작 ──
     startNewGame();

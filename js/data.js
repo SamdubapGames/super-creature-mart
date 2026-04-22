@@ -20,18 +20,19 @@ const DATA = {
         start: "assets/bg/start.png", // 벙커 문
         path: [
             "assets/bg/path001.png", // 출발 직후
-            "assets/bg/path002.png", // 중간
-            "assets/bg/path003.png", // 중간
-            "assets/bg/path004.png", // 중간
-            "assets/bg/path005.png", // 마트 근처
-            "assets/bg/path006.png", // 마트 근처
-            "assets/bg/path007.png", // 마트 근처
-            "assets/bg/path008.png", // 마트 근처
-            "assets/bg/path009.png", // 마트 근처
-            "assets/bg/path010.png", // 마트 근처
+            "assets/bg/path002.png",
+            "assets/bg/path003.png",
+            "assets/bg/path004.png",
+            "assets/bg/path005.png",
+            "assets/bg/path006.png",
+            "assets/bg/path007.png",
+            "assets/bg/path008.png",
+            "assets/bg/path009.png",
+            "assets/bg/path010.png", // 마트
         ],
         shop: "assets/bg/shop.png", // 마트 내부
         ending: "assets/bg/ending.png", // 엔딩
+        title: "assets/bg/title.png", // 타이틀
     },
     // 참고: path 배열 길이 = 배경 사진 장수
     // route 길이(5)가 path 배열 길이보다 길면 나머지는 마지막 사진 재사용
@@ -66,6 +67,15 @@ const DATA = {
     SHOP_STOCK: [3, 5, 0, 2, 4, 1],
     // items[i], prices[i], stock[i] 는 항상 한 세트
     // stock 이 0 이면 품절
+    SHOP_ITEM_IMAGES: {
+        // "점라면(낱개)": "assets/items/item_ramen.png",
+        // 감자: "assets/items/item_potato.png",
+        // "아이스크림 대파맛": "assets/items/item_icecream.png",
+        // 레몬: "assets/items/item_lemon.png",
+        // 두부: "assets/items/item_tofu.png",
+        // 탄산수: "assets/items/item_soda.png",
+        dummy: "assets/items/shop/shop-item.png",
+    },
 
     // ─────────────────────────────
     // 게임 설정값
