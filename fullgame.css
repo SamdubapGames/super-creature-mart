@@ -54,9 +54,11 @@ h1.title {
 }
 p.subtitle {
     color: #808080;
-    font-size: 12px;
+    font-size: 24px;
     margin-bottom: 30px;
     text-align: center;
+    background-color: #000000;
+    padding: 8px 12px;
 }
 
 /* ── 버튼 공통 ── */
@@ -234,9 +236,13 @@ button:disabled {
 }
 
 /* ── 시작 화면 ── */
-#scene-start {
-    justify-content: center;
+#scene-start.active {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    min-width: 100vw;
     min-height: 60vh;
+    padding: 20px 180px;
     text-align: center;
 }
 #scene-start h1 {
@@ -244,7 +250,15 @@ button:disabled {
     margin-bottom: 12px;
 }
 #scene-start p {
-    margin-bottom: 30px;
+    /* margin-bottom: 30px; */
+}
+#btn-start {
+    width: 240px;
+    height: 64px;
+    color: #cecece;
+}
+.btn-main:hover {
+    background-color: #4a0f0f;
 }
 
 /* ── 길 화면 ── */
@@ -285,8 +299,14 @@ button:disabled {
 }
 
 #path-btn-walk {
-    width: 120px;
-    height: 120px;
+    width: 160px;
+    height: 80px;
+}
+
+#path-btn-enter {
+    width: 240px;
+    height: 64px;
+    color: #cecece;
 }
 
 /* ── 상점 화면 ── */
@@ -389,8 +409,8 @@ button:disabled {
     text-align: center;
 }
 .ending-text {
-    font-size: 18px;
-    color: #ce9178;
+    font-size: 36px;
+    color: #b4b4b4;
     margin-bottom: 30px;
     white-space: pre-line;
 }
