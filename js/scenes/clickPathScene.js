@@ -114,9 +114,9 @@ function initPathGame() {
     const buttonArea = document.getElementById("path-button-area");
     const monsterLayer = document.getElementById("monster-layer");
 
-    if (monsterArea) monsterArea.style.display = ""; // 빈 문자열 = CSS 기본값 복구
-    if (buttonArea) buttonArea.style.display = "";
-    if (monsterLayer) monsterLayer.style.display = "";
+    if (monsterArea) monsterArea.style.display = "inline-block";
+    if (buttonArea) buttonArea.style.display = "inline-block";
+    if (monsterLayer) monsterLayer.style.display = "inline-block";
 
     // 화면에 보여주기
     // showRoute();
