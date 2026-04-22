@@ -124,7 +124,10 @@
                 <div class="player-area">
                     <!-- 예산 -->
                     <div class="budget-area">
-                        <h3>예산: <span id="shop-budget-original"></span></h3>
+                        <h3>
+                            예산:
+                            <span id="shop-budget-original">30,000원</span>
+                        </h3>
                         <h3 id="shop-remaining-display"></h3>
                     </div>
                     <!-- 내가 구매한 -->
@@ -133,11 +136,11 @@
                     <pre id="shop-receipt-display" class="receipt-box"></pre>
                     <!-- 구매 완료 / 떠나기 -->
                     <div class="button-bar">
+                        <audio
+                            id="shopCheckoutSound"
+                            src="assets/soundEffect/receipt.wav"
+                        ></audio>
                         <button id="shop-btn-checkout" class="btn-checkout">
-                            <audio
-                                id="shopCheckoutSound"
-                                src="assets/soundEffect/receipt.wav"
-                            ></audio>
                             구매 완료
                         </button>
                     </div>

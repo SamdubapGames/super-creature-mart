@@ -9,12 +9,16 @@ const DATA = {
     CURRENT_PART: "",
     CURRENT_PART_CORRECT_ITEM: "", //현재 나온 부위와 맞는 정답 아니템
     CURRENT_PLAYER_ITEM: "", // 현재 플레이어가 선택한 아이템
+
     ITEM_IMAGES: {
         레몬: "assets/items/lemon.png",
         떡: "assets/items/tteok.png",
         칼: "assets/items/knief.png",
         담배: "assets/items/cigar.png",
     },
+
+    // 플레이어 데이터
+    CURRENT_DIRECTION: "go", //"go" | "back" // "go" = 마트로, "back" = 집으로
     // ─────────────────────────────
     // 배경 이미지 경로
     // ─────────────────────────────
