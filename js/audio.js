@@ -1,9 +1,9 @@
 const bgms = {
-    opening: new Audio("./assets/bgm/opening.mp3"),
-    streetGoMart: new Audio("./assets/bgm/street_goMart.mp3"),
-    mart: new Audio("./assets/bgm/mart.mp3"),
-    streetComeback: new Audio("./assets/bgm/street_comeback.mp3"),
-    ending: new Audio("./assets/bgm/ending.mp3"),
+    opening: new Audio("assets/bgm/opening.mp3"),
+    streetGoMart: new Audio("assets/bgm/street_goMart.mp3"),
+    mart: new Audio("assets/bgm/mart.mp3"),
+    streetComeback: new Audio("assets/bgm/street_comeback.mp3"),
+    ending: new Audio("assets/bgm/ending.mp3"),
 };
 
 // 각 파일별로 초기 볼륨 세팅
