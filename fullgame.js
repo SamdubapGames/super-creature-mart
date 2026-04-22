@@ -259,13 +259,13 @@ window.addEventListener("DOMContentLoaded", function () {
             }
         });
 
-    document
-        .getElementById("shop-btn-skip")
-        .addEventListener("click", function () {
-            DATA.CURRENT_DIRECTION = "back";
-            initPathGame();
-            switchScene("path");
-        });
+    // document
+    //     .getElementById("shop-btn-skip")
+    //     .addEventListener("click", function () {
+    //         DATA.CURRENT_DIRECTION = "back";
+    //         initPathGame();
+    //         switchScene("path");
+    //     });
 
     // ── 엔딩 씬 ──
     document
