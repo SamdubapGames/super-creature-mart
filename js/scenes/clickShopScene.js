@@ -146,9 +146,15 @@ function resetShopGame() {
 // isEnabled 가 true  → 모든 구매 버튼 enabled (클릭 가능)
 // isEnabled 가 false → 모든 구매 버튼 disabled (클릭 불가)
 function setShopItemButtonsEnabled(isEnabled) {
+    // 텍스트 버전
     for (let i = 0; i < DATA.SHOP_ITEMS.length; i++) {
         document.getElementById("shop-btn-" + DATA.SHOP_ITEMS[i]).disabled =
-            isEnabled;
+            !isEnabled;
+    }
+    // fullgame.html 구매버튼들 비활성화
+    const buttons = document.getElementsByClassName("item-btn");
+    for (let i = 0; i < DATA.SHOP_ITEMS.length; i++) {
+        buttons[i].disabled = !isEnabled;
     }
 }
 
@@ -293,15 +299,19 @@ function onBuyItem(itemName) {
         remainingBudget,
         DATA.SHOP_ITEMS,
         DATA.SHOP_PRICES,
-        DATA.SHOP_STOCK,
+        // DATA.SHOP_STOCK,
+        stock,
     );
     if (result.indexOf("구매 완료!") !== -1) {
         let itemIndex = findItemIndex(DATA.SHOP_ITEMS, itemName);
         remainingBudget -= DATA.SHOP_PRICES[itemIndex];
         showBudget();
-        showShopList(DATA.SHOP_ITEMS, DATA.SHOP_PRICES, DATA.SHOP_STOCK);
+        // 메뉴판 업데이트
+        let menuText = showShopList(DATA.SHOP_ITEMS, DATA.SHOP_PRICES, stock);
+        document.getElementById("shop-menu-display").innerText = menuText;
         purchased.push(itemName);
-        showPurchased(itemName);
+
+        showPurchased();
         showShopMessageText(result);
     } else {
         showShopMessageText(result);
@@ -358,16 +368,26 @@ function onCheckout() {
     } else {
         let receipt = showReceipt(purchased, DATA.SHOP_ITEMS, DATA.SHOP_PRICES);
         document.getElementById("shop-receipt-display").innerText = receipt;
+        // document.getElementById("shopCheckoutSound").play(); // 먼저 소리 시작
+        // 버튼들 비활성화
         document.getElementById("shop-btn-checkout").disabled = true;
         document.getElementById("shop-btn-show-menu").disabled = true;
-        document.getElementById("shop-btn-reset").style.display =
-            "inline-block";
-        document.getElementById("shop-btn-reset").disabled = false;
+        // 구매버튼들 비활성화
+        const buttons = document.getElementsByClassName("item-btn");
+        for (let i = 0; i < buttons.length; i++) {
+            buttons[i].disabled = true;
+        }
+
+        let resetBtn = document.getElementById("shop-btn-reset");
+        if (resetBtn) {
+            resetBtn.style.display = "inline-block";
+            resetBtn.disabled = false;
+        }
     }
     // 풀게임 vs 독립 미니게임 분기
-    if (typeof onShopCheckout === "function") {
+    if (typeof onShopLeave === "function") {
         // 풀게임: 마트에서 나가기 버튼 활성화
-        onShopCheckout();
+        // onShopCheckoutAndLeave();
     } else {
         // 독립 미니게임: 다시하기 버튼 표시
         document.getElementById("shop-btn-reset").style.display =

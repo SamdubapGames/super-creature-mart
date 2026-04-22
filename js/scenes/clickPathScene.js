@@ -427,6 +427,9 @@ function onWalkClick() {
 
         // 풀게임 vs 독립 미니게임 분기
         if (typeof onPathClear === "function") {
+            if (DATA.CURRENT_DIRECTION === "back") {
+                onPathClear();
+            }
             // 풀게임: fullgame.js 가 씬 전환 담당
             showMessageText("마트 도착!");
             console.log("마트도착..");
@@ -439,7 +442,6 @@ function onWalkClick() {
             let martEnterBtn = document.getElementById("path-btn-enter");
             martEnterBtn.disabled = false;
             martEnterBtn.style.display = "inline-block";
-            // onPathClear();
         } else {
             // 독립 미니게임: 다시하기 버튼 표시
             showMessageText("클리어!");

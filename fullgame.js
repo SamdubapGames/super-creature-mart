@@ -7,7 +7,7 @@
 // ============================================================
 // 게임 전체 상태
 // ============================================================
-var direction = "go"; // "go" = 마트로, "back" = 집으로
+// var direction = "go"; // "go" = 마트로, "back" = 집으로
 var budget = 0;
 // 주의: inventory 는 clickPathScene.js 에서 선언됨, 여기서 다시 선언하지 않음
 
@@ -44,7 +44,7 @@ function startNewGame() {
 // 타이틀에서 '게임 시작'버튼 눌렀을 때
 // ============================================================
 function onGameStartClick() {
-    direction = "go";
+    DATA.CURRENT_DIRECTION = "go";
     inventory = DATA.CONFIG.START_INVENTORY.slice();
     budget = DATA.CONFIG.STARTING_BUDGET;
     switchScene("start");
@@ -55,7 +55,7 @@ function onGameStartClick() {
 // 시작 씬 → 길 씬
 // ============================================================
 function onStartClick() {
-    direction = "go";
+    DATA.CURRENT_DIRECTION = "go";
     initPathGame();
     switchScene("path");
     playSceneBgm("streetGoMart");
@@ -66,7 +66,7 @@ function onStartClick() {
 // ============================================================
 // clickPathScene.js 의 onWalkClick 에서 경로 끝나면 이 함수를 호출하세요.
 function onPathClear() {
-    if (direction === "go") {
+    if (DATA.CURRENT_DIRECTION === "go") {
         initShopGame();
         switchScene("shop");
         playSceneBgm("mart");
@@ -80,7 +80,7 @@ function onPathClear() {
 // ============================================================
 function onShopLeave() {
     budget = remainingBudget;
-    direction = "back";
+    DATA.CURRENT_DIRECTION = "back";
     initPathGame();
     switchScene("path");
     playSceneBgm("streetComeback");
@@ -90,7 +90,7 @@ function onShopCheckoutAndLeave() {
     onCheckout();
     budget = remainingBudget;
     setTimeout(function () {
-        direction = "back";
+        DATA.CURRENT_DIRECTION = "back";
         initPathGame();
         switchScene("path");
     }, 1500);
@@ -117,7 +117,7 @@ function startEndingScene(type) {
 function debugJump(sceneName) {
     inventory = DATA.CONFIG.START_INVENTORY.slice();
     budget = DATA.CONFIG.STARTING_BUDGET;
-    direction = "go";
+    DATA.CURRENT_DIRECTION = "go";
 
     if (sceneName === "start") {
         switchScene("start");
@@ -187,6 +187,7 @@ window.addEventListener("DOMContentLoaded", function () {
                 onWalkClick();
             }
         });
+
     document
         .getElementById("path-btn-enter")
         .addEventListener("click", function () {
@@ -209,7 +210,7 @@ window.addEventListener("DOMContentLoaded", function () {
                 stock,
             );
             document.getElementById("shop-menu-display").innerText = menuText;
-            // setShopItemButtonsEnabled(false);
+            setShopItemButtonsEnabled(true);
             showShopMessageText("물건을 골라서 [담기] 버튼을 누르세요!");
         });
 
@@ -234,10 +235,10 @@ window.addEventListener("DOMContentLoaded", function () {
                 audio.currentTime = 0;
                 audio.play();
                 audio.onended = function () {
-                    onShopCheckoutAndLeave();
+                    onCheckout();
                 };
             } else {
-                onShopCheckoutAndLeave();
+                onCheckout();
             }
         });
 
@@ -261,7 +262,7 @@ window.addEventListener("DOMContentLoaded", function () {
     document
         .getElementById("shop-btn-skip")
         .addEventListener("click", function () {
-            direction = "back";
+            DATA.CURRENT_DIRECTION = "back";
             initPathGame();
             switchScene("path");
         });
