@@ -61,20 +61,56 @@ let currentStep = 0; // 현재 몇 번째 구간인지 (0부터 시작)
 let inventory = []; // 플레이어가 가진 아이템들
 let isPathCleared = false; // 길 씬을 클리어했는지 (true/false)
 
+// 추가
+function createRoute(numOfMonsterOccurance, totalNumOfSteps, numOfSafeStart) {
+    // 몬스터 출현 횟수와 전체 발걸음을 가지고 최종 루트를 만든다.
+    let numOfSafeLeftover =
+        totalNumOfSteps - numOfMonsterOccurance - numOfSafeStart - 1;
+    DATA.CONFIG.ROUTE_LENGTH = totalNumOfSteps;
+    let safeLeftoverArr = Array(numOfSafeLeftover).fill("");
+    let safeStartArr = Array(numOfSafeStart).fill("");
+
+    // 랜덤 괴물 리스트
+    let randomMonsterRoute = generateRoute(
+        DATA.MONSTER_PARTS,
+        numOfMonsterOccurance,
+    );
+    // 랜덤괴물리스트+안전구간리스트 -> 랜덤화
+    randomMonsterRoute = shuffle(randomMonsterRoute.concat(safeLeftoverArr));
+    console.log(
+        "정말 랜덤한가?" +
+            randomMonsterRoute +
+            "길이" +
+            randomMonsterRoute.length,
+    );
+
+    // 처음 시작할때 무조건 안전한 구간의 횟수: numOfSafeStart -> 랜덤화리스트 앞에 붙임
+    let finalRoute = safeStartArr.concat(randomMonsterRoute);
+    // 마지막도 무조건 안전한 구간 (일단은)
+    finalRoute.push("");
+
+    return finalRoute;
+}
+
 // ============================================================
 // initPathGame — 게임 시작 (이미 완성됨!)
 // ============================================================
 function initPathGame() {
     // 시작 값들 초기화
-    DATA.ROUTE = generateRoute(DATA.MONSTER_PARTS, DATA.CONFIG.ROUTE_LENGTH);
+
+    // 모든 스텝에 몬스터 출현:
+    // DATA.ROUTE = generateRoute(DATA.MONSTER_PARTS, DATA.CONFIG.ROUTE_LENGTH);
+
+    // 게임 최종용 (몬스터 나오는 구간:5, 안나오는 구간 구분 있음(총 10걸음))
+    DATA.ROUTE = createRoute(5, 10, 2);
     route = DATA.ROUTE;
-    console.log("dasfalkdsjf" + DATA.ROUTE);
+    console.log("최종 루트:" + DATA.ROUTE + DATA.ROUTE.length + "걸음");
     currentStep = 0;
     inventory = DATA.CONFIG.START_INVENTORY.slice();
     isPathCleared = false;
 
     // 화면에 보여주기
-    showRoute();
+    // showRoute();
     showCurrentPart();
     showMessageText("아이템 버튼을 눌러서 부위에 맞는 아이템을 사용하세요!");
 
@@ -96,11 +132,16 @@ function initPathGame() {
 
     // 시작 상태: 아이템 버튼 enabled(켜짐), 걸어가기 버튼 disabled(꺼짐)
     setItemButtonsEnabled(true);
-    document.getElementById("path-btn-walk").disabled = true;
+    // 현재 부위에 따라 걸어가기 버튼 설정 (맨처음은 항상 안전구간이라 걸을 수 있음)
+    setWalkButtonStatus(DATA.CURRENT_PART);
 
     // 다시하기 버튼은 숨김 (클리어하면 다시 보임)
     let resetBtn = document.getElementById("path-btn-reset");
     if (resetBtn) resetBtn.style.display = "none";
+
+    // 마트 들어가기 버튼 숨김 (마지막 스텝에 보임)
+    let martBtn = document.getElementById("path-btn-enter");
+    if (martBtn) martBtn.style.display = "none";
 }
 
 // ============================================================
@@ -122,6 +163,17 @@ function setItemButtonsEnabled(isEnabled) {
     }
 }
 
+// 추가
+function setWalkButtonStatus(currPart) {
+    // 현재 부위에 따라서 걷기 활성화/비활성화
+    if (currPart === "") {
+        // 안전구간: 걸을 수 있음
+        document.getElementById("path-btn-walk").disabled = false;
+    } else {
+        //괴물 부위 출현: 걸을 수 없음(아이템이용시까지)
+        document.getElementById("path-btn-walk").disabled = true;
+    }
+}
 // ============================================================
 // Function 1: 메시지 텍스트 표시
 // ============================================================
@@ -196,9 +248,9 @@ function showRouteText(text) {
 
 function showCurrentPart() {
     if (currentStep < route.length) {
+        // 현재 부위 가져오기
         let partName = route[currentStep];
-
-        // 추가: data.js 업데이트하기
+        // 추가: data.js에 현재 부위 업데이트하기
         updateCurrentMonster(partName);
 
         // 화면에 크게 표시하기- fullgame.html에서는 안써서 코멘트 처리
@@ -217,10 +269,15 @@ function showCurrentPart() {
 // + 그에 대응하는 올바른 아이템을 찾아서 CURRENT_PART_CORRECT_ITEM을 저장하기
 // 리턴 없음
 function updateCurrentMonster(targetPart) {
-    let targetIndex = findPartIndex(DATA.MONSTER_PARTS, targetPart);
-
+    if (targetPart === "") {
+        // 안전한 구간 (몬스터 출현 x)
+        DATA.CURRENT_PART_CORRECT_ITEM = "";
+    } else {
+        // 몬스터 출현
+        let targetIndex = findPartIndex(DATA.MONSTER_PARTS, targetPart);
+        DATA.CURRENT_PART_CORRECT_ITEM = DATA.MONSTER_ITEMS[targetIndex];
+    }
     DATA.CURRENT_PART = targetPart;
-    DATA.CURRENT_PART_CORRECT_ITEM = DATA.MONSTER_ITEMS[targetIndex];
 }
 
 // ============================================================
@@ -355,23 +412,34 @@ function onItemClick(itemName) {
 function onWalkClick() {
     currentStep++;
     if (currentStep < route.length) {
-        showRoute();
+        // 걷는 동안
+        // showRoute();
         showCurrentPart();
         setItemButtonsEnabled(true);
-        document.getElementById("path-btn-walk").disabled = true;
+        setWalkButtonStatus(DATA.CURRENT_PART);
     } else {
         // ─── 여기가 "마지막 걸음 = 클리어" 처리 ───
+        console.log("마지막이야" + currentStep);
         isPathCleared = true;
-        showRoute();
+        // showRoute();
         // showPartText("");
         setItemButtonsEnabled(false);
-        document.getElementById("path-btn-walk").disabled = true;
 
         // 풀게임 vs 독립 미니게임 분기
         if (typeof onPathClear === "function") {
             // 풀게임: fullgame.js 가 씬 전환 담당
             showMessageText("마트 도착!");
-            onPathClear();
+            console.log("마트도착..");
+            // 걸어가기 버튼 비활성화, 숨기기
+            document.getElementById("path-btn-walk").disabled = true;
+            document.getElementById("path-monster-area").style.display = "none";
+            document.getElementById("path-button-area").style.display = "none";
+
+            // 마트 들어가기 버튼 활성화
+            let martEnterBtn = document.getElementById("path-btn-enter");
+            martEnterBtn.disabled = false;
+            martEnterBtn.style.display = "inline-block";
+            // onPathClear();
         } else {
             // 독립 미니게임: 다시하기 버튼 표시
             showMessageText("클리어!");

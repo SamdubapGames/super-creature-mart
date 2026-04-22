@@ -34,9 +34,11 @@
         <div id="scene-path" class="scene">
             <!-- 경로 표시 -->
             <!-- <div id="path-route-display" class="info-box">경로 로딩중...</div> -->
-
             <!-- 현재 부위 (크게) -->
-            <div class="path-stage">
+            <button id="path-btn-enter" class="btn-action">
+                마트 들어가기
+            </button>
+            <div class="path-stage" id="path-monster-area">
                 <!-- 디버그: 스킵 -->
                 <button id="path-btn-skip" class="debug-skip">
                     [DEV] 길 스킵 →
@@ -50,7 +52,7 @@
             <!-- 메시지 -->
             <!-- <p id="path-message" class="message-box"></p> -->
 
-            <div class="path-buttons-container">
+            <div class="path-buttons-container" id="path-button-area">
                 <!-- 아이템 버튼들 (동적 생성) -->
                 <div class="button-bar" id="path-item-buttons">
                     <audio id="칼" src="assets/soundEffect/knife.wav"></audio>
@@ -196,6 +198,7 @@
 
         <!-- 스크립트 로드 순서 -->
         <script src="js/data.js"></script>
+        <script src="js/utils.js"></script>
         <script src="js/path.js"></script>
         <script src="js/shop.js"></script>
         <script src="js/notebook.js"></script>
