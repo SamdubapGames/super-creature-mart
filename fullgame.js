@@ -187,6 +187,11 @@ window.addEventListener("DOMContentLoaded", function () {
                 onWalkClick();
             }
         });
+    document
+        .getElementById("path-btn-enter")
+        .addEventListener("click", function () {
+            onPathClear(); // 이제 여기서 씬 전환
+        });
 
     document
         .getElementById("path-btn-skip")
