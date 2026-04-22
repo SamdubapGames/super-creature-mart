@@ -39,7 +39,7 @@ body {
     display: none;
     width: 100%;
     max-width: 800px;
-    height: 80vh;
+    height: 90vh;
     flex-direction: column;
     align-items: center;
 }
@@ -155,9 +155,12 @@ button:disabled {
 }
 /* 드롭 타겟 위에 드래그 중일 때 */
 #path-current-part.drop-active {
-    outline: 3px dashed #4ec9b0;
+    /* outline: 3px dashed #4ec9b0; */
     outline-offset: 8px;
     border-radius: 8px;
+    font-size: 24px;
+    color: #161111;
+    background-color: #6a6b6bb5;
 }
 
 /* ── 메시지 박스 (노란색 왼쪽 줄) ── */
@@ -232,11 +235,19 @@ button:disabled {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    padding: 40px 0;
+}
+.path-stage {
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 #path-current-part {
-    font-size: 80px;
-    color: #f44747;
+    /* 드래그드롭 영역 */
+    width: 500px;
+    height: 300px;
     min-height: 120px;
     display: flex;
     align-items: center;
@@ -248,6 +259,17 @@ button:disabled {
     letter-spacing: 2px;
     font-size: 18px;
     margin-bottom: 40px;
+}
+
+.path-buttons-container {
+    display: flex;
+    align-items: center;
+    /* margin-bottom: 40px; */
+}
+
+#path-btn-walk {
+    width: 120px;
+    height: 120px;
 }
 
 /* ── 상점 화면 ── */

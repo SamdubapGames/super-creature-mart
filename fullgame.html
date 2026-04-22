@@ -37,33 +37,39 @@
 
             <!-- 현재 부위 (크게) -->
             <div class="path-stage">
+                <!-- 디버그: 스킵 -->
+                <button id="path-btn-skip" class="debug-skip">
+                    [DEV] 길 스킵 →
+                </button>
+                <!-- 드래그앤드롭 영역 -->
                 <div id="path-current-part"></div>
+                <!-- 몬스터 등장 시 이미지 -->
                 <img id="monster-layer" src="" alt="" />
             </div>
 
             <!-- 메시지 -->
             <!-- <p id="path-message" class="message-box"></p> -->
 
-            <!-- 아이템 버튼들 (동적 생성) -->
-            <div class="button-bar" id="path-item-buttons"></div>
-            <audio id="칼" src="assets/soundEffect/knife.wav"></audio>
-            <audio id="담배" src="assets/soundEffect/cigar.mp3"></audio>
-            <audio id="레몬" src="assets/soundEffect/lemonSqueeze.MP3"></audio>
+            <div class="path-buttons-container">
+                <!-- 아이템 버튼들 (동적 생성) -->
+                <div class="button-bar" id="path-item-buttons">
+                    <audio id="칼" src="assets/soundEffect/knife.wav"></audio>
+                    <audio id="담배" src="assets/soundEffect/cigar.mp3"></audio>
+                    <audio
+                        id="레몬"
+                        src="assets/soundEffect/lemonSqueeze.MP3"
+                    ></audio>
+                </div>
 
-            <!-- 전진 버튼 -->
-            <div class="button-bar">
+                <!-- 전진 버튼 -->
                 <button id="path-btn-walk" class="btn-action">
                     <audio
                         id="walkSound"
                         src="assets/soundEffect/walk.wav"
                     ></audio>
-                    걸어가기 →
+                    걸어가기
                 </button>
             </div>
-            <!-- 디버그: 스킵 -->
-            <button id="path-btn-skip" class="debug-skip">
-                [DEV] 길 스킵 →
-            </button>
         </div>
 
         <!-- ════════════════════════════════════
