@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>괴물 마트</title>
+        <link rel="stylesheet" href="css/style.css" />
+    </head>
+
+    <body>
+        <!-- ─────────────────────────────────────
+    게임 컨테이너
+    모든 레이어가 이 안에서 absolute로 겹침
+    position: relative 가 기준점
+  ───────────────────────────────────────── -->
+        <div id="game-container">
+            <!-- 레이어 1: 배경 사진 -->
+            <img id="background" src="" alt="" />
+
+            <!-- 레이어 2: 연기 효과 -->
+            <canvas id="fx" width="800" height="600"></canvas>
+
+            <!-- 레이어 3: 괴물 부위 -->
+            <canvas id="monster" width="800" height="600"></canvas>
+
+            <!-- 레이어 4: UI (모든 씬의 UI가 여기 들어감)
+         개념: UI는 항상 가장 위에 있어야 클릭 가능
+    -->
+            <div id="ui-layer">
+                <!-- ── 시작 화면 UI ── -->
+                <div id="start-ui" class="ui-screen">
+                    <h1 class="title">괴물 마트</h1>
+                    <p class="subtitle">먹고 살기 위해 나가야 한다</p>
+                    <button id="start-btn" class="btn-main">나가기</button>
+
+                    <!-- ── 개발용 디버그 메뉴 — 배포 시 삭제 ── -->
+                    <div
+                        id="debug-menu"
+                        style="
+                            position: fixed;
+                            bottom: 12px;
+                            left: 50%;
+                            transform: translateX(-50%);
+                            background: rgba(0, 0, 0, 0.85);
+                            border: 1px solid #555;
+                            border-radius: 8px;
+                            padding: 8px 16px;
+                            display: flex;
+                            gap: 8px;
+                            align-items: center;
+                            z-index: 9999;
+                            font-family: monospace;
+                            font-size: 12px;
+                        "
+                    >
+                        <span style="color: #f44; margin-right: 4px"
+                            >🛠 DEV</span
+                        >
+                        <button
+                            class="debug-btn"
+                            onclick="debugJump('start')"
+                            style="
+                                background: #569cd6;
+                                color: #fff;
+                                border: none;
+                                border-radius: 4px;
+                                padding: 4px 10px;
+                                cursor: pointer;
+                                font-size: 12px;
+                            "
+                        >
+                            시작화면
+                        </button>
+                        <button
+                            class="debug-btn"
+                            onclick="debugJump('path')"
+                            style="
+                                background: #4ec9b0;
+                                color: #fff;
+                                border: none;
+                                border-radius: 4px;
+                                padding: 4px 10px;
+                                cursor: pointer;
+                                font-size: 12px;
+                            "
+                        >
+                            길
+                        </button>
+                        <button
+                            class="debug-btn"
+                            onclick="debugJump('shop')"
+                            style="
+                                background: #dcdcaa;
+                                color: #000;
+                                border: none;
+                                border-radius: 4px;
+                                padding: 4px 10px;
+                                cursor: pointer;
+                                font-size: 12px;
+                            "
+                        >
+                            상점
+                        </button>
+                        <button
+                            class="debug-btn"
+                            onclick="debugJump('ending')"
+                            style="
+                                background: #ce9178;
+                                color: #fff;
+                                border: none;
+                                border-radius: 4px;
+                                padding: 4px 10px;
+                                cursor: pointer;
+                                font-size: 12px;
+                            "
+                        >
+                            엔딩
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ── 길 화면 UI ── -->
+                <div id="path-ui" class="ui-screen hidden">
+                    <!-- 체력 표시 -->
+                    <div id="hp-display" class="hud-top-left"></div>
+
+                    <!-- 공책 버튼 -->
+                    <button id="notebook-btn" class="btn-sub">공책 보기</button>
+
+                    <!-- 공책 팝업 -->
+                    <div id="notebook-popup" class="popup hidden">
+                        <div id="notebook-content"></div>
+                        <button id="notebook-close" class="btn-sub">
+                            닫기
+                        </button>
+                    </div>
+
+                    <!-- 인벤토리 (드래그 가능한 아이템들) -->
+                    <div id="inventory-bar">
+                        <!-- JS가 gameState.player.inventory 읽어서 동적으로 생성 -->
+                    </div>
+
+                    <!-- 괴물 위에 드롭 존 -->
+                    <div id="drop-zone" class="hidden"></div>
+
+                    <!-- 결과 메시지 (맞음/틀림) -->
+                    <div id="path-message" class="message hidden"></div>
+                </div>
+
+                <!-- ── 상점 화면 UI ── -->
+                <div id="shop-ui" class="ui-screen hidden">
+                    <h2 class="shop-title">마트</h2>
+
+                    <!-- 예산 표시 -->
+                    <div id="budget-display" class="hud-top-right"></div>
+
+                    <div class="shop-layout">
+                        <!-- 왼쪽: 상점 목록 -->
+                        <div class="shop-left">
+                            <h3>상품 목록</h3>
+                            <div id="shop-list"></div>
+                            <!-- 구매 버튼들은 JS가 shop-list 안에 동적으로 생성 -->
+                        </div>
+
+                        <!-- 오른쪽: 인벤토리 -->
+                        <div class="shop-right">
+                            <h3>인벤토리</h3>
+                            <div id="inventory-display"></div>
+                        </div>
+                    </div>
+
+                    <div id="shop-message" class="message"></div>
+                    <button id="leave-btn" class="btn-main">마트 떠나기</button>
+                </div>
+
+                <!-- ── 엔딩 화면 UI ── -->
+                <div id="ending-ui" class="ui-screen hidden">
+                    <p id="ending-text" class="ending-text"></p>
+                    <button id="restart-btn" class="btn-main">다시 하기</button>
+                </div>
+            </div>
+            <!-- /ui-layer -->
+        </div>
+        <!-- /game-container -->
+
+        <!-- 스크립트 로드 순서 = 의존 순서 -->
+        <!-- 개념: 의존 순서대로 로드해야 함
+     data.js가 없으면 engine.js가 DATA를 못 읽음
+     state.js가 없으면 gameState를 못 씀
+     씬 파일들은 SceneManager.register 전에 있어야 함 -->
+        <script src="js/data.js"></script>
+        <script src="js/state.js"></script>
+        <script src="js/layers.js"></script>
+        <script src="js/notebook.js"></script>
+        <script src="js/path.js"></script>
+        <script src="js/shop.js"></script>
+        <script src="js/scenes/startScene.js"></script>
+        <script src="js/scenes/pathScene.js"></script>
+        <script src="js/scenes/shopScene.js"></script>
+        <script src="js/scenes/endingScene.js"></script>
+
+        <!-- ── 방어 코드 + 디버그 도구 — 배포 시 삭제 ── -->
+        <script>
+            // ============================================================
+            // 방어 코드: 팀원 함수가 아직 미완성이어도 크래시 방지
+            // 함수가 undefined면 경고 메시지를 반환하는 스텁으로 대체
+            // ============================================================
+            (function installGuards() {
+                const guards = [
+                    // notebook.js
+                    {
+                        name: "formatTipLine",
+                        fallback: function () {
+                            return "[미완성] formatTipLine";
+                        },
+                    },
+                    {
+                        name: "showNotebook",
+                        fallback: function () {
+                            return "[미완성] showNotebook";
+                        },
+                    },
+                    // path.js
+                    {
+                        name: "findPartIndex",
+                        fallback: function () {
+                            return -1;
+                        },
+                    },
+                    {
+                        name: "generateRoute",
+                        fallback: function (parts, n) {
+                            console.warn(
+                                "⚠️ generateRoute 미완성 — 더미 경로 사용",
+                            );
+                            var route = [];
+                            for (var i = 0; i < n; i++) route.push(parts[0]);
+                            return route;
+                        },
+                    },
+                    {
+                        name: "checkMatch",
+                        fallback: function () {
+                            return false;
+                        },
+                    },
+                    {
+                        name: "useItem",
+                        fallback: function () {
+                            return false;
+                        },
+                    },
+                    {
+                        name: "playTurn",
+                        fallback: function () {
+                            return {
+                                success: false,
+                                message: "[미완성] playTurn",
+                            };
+                        },
+                    },
+                    // shop.js
+                    {
+                        name: "findItemIndex",
+                        fallback: function () {
+                            return -1;
+                        },
+                    },
+                    {
+                        name: "getStockLabel",
+                        fallback: function () {
+                            return "[미완성]";
+                        },
+                    },
+                    {
+                        name: "formatShopLine",
+                        fallback: function () {
+                            return "[미완성] formatShopLine";
+                        },
+                    },
+                    {
+                        name: "showShopList",
+                        fallback: function () {
+                            return "[미완성] showShopList — shop.js를 완성하세요!";
+                        },
+                    },
+                    {
+                        name: "isAffordable",
+                        fallback: function () {
+                            return false;
+                        },
+                    },
+                    {
+                        name: "buyItem",
+                        fallback: function () {
+                            return "[미완성] buyItem";
+                        },
+                    },
+                    {
+                        name: "calcTotal",
+                        fallback: function () {
+                            return 0;
+                        },
+                    },
+                    {
+                        name: "showReceipt",
+                        fallback: function () {
+                            return "[미완성] showReceipt";
+                        },
+                    },
+                ];
+
+                guards.forEach(function (g) {
+                    var original = window[g.name];
+                    if (typeof original !== "function") {
+                        // 함수가 아예 없으면 스텁 설치
+                        console.warn(
+                            "⚠️ " +
+                                g.name +
+                                " 이 아직 정의되지 않았습니다 → 스텁 사용",
+                        );
+                        window[g.name] = g.fallback;
+                    } else {
+                        // 함수는 있지만 return이 없을 수 있으니 감싸기
+                        window[g.name] = function () {
+                            try {
+                                var result = original.apply(this, arguments);
+                                if (result === undefined) {
+                                    console.warn(
+                                        "⚠️ " +
+                                            g.name +
+                                            " 이 undefined를 반환했습니다 — return 문을 확인하세요!",
+                                    );
+                                    return g.fallback.apply(this, arguments);
+                                }
+                                return result;
+                            } catch (e) {
+                                console.error(
+                                    "❌ " + g.name + " 에서 오류 발생:",
+                                    e.message,
+                                );
+                                return g.fallback.apply(this, arguments);
+                            }
+                        };
+                    }
+                });
+            })();
+
+            // ============================================================
+            // initDragDrop 스텁 (아직 구현 안 된 경우)
+            // ============================================================
+            if (typeof initDragDrop !== "function") {
+                function initDragDrop() {
+                    console.log("ℹ️ initDragDrop 아직 미구현 — 스킵");
+                }
+            }
+
+            // ============================================================
+            // 디버그 씬 점프
+            // ============================================================
+            function debugJump(sceneName) {
+                console.log("🛠 디버그 점프 →", sceneName);
+
+                // 상태 리셋 (어느 씬에서든 안전하게 점프하도록)
+                gameState.player.hp = DATA.CONFIG.STARTING_HP;
+                gameState.player.inventory =
+                    DATA.CONFIG.START_INVENTORY.slice();
+                gameState.player.budget = DATA.CONFIG.STARTING_BUDGET;
+                gameState.scene.direction = "go";
+                gameState.path.currentStep = 0;
+
+                // 상점 재고 리셋
+                DATA.SHOP_STOCK = [3, 5, 0, 2, 4];
+
+                SceneManager.switchTo(sceneName);
+            }
+        </script>
+
+        <script src="js/engine.js"></script>
+    </body>
+</html>
