@@ -293,15 +293,19 @@ function onBuyItem(itemName) {
         remainingBudget,
         DATA.SHOP_ITEMS,
         DATA.SHOP_PRICES,
-        DATA.SHOP_STOCK,
+        // DATA.SHOP_STOCK,
+        stock,
     );
     if (result.indexOf("구매 완료!") !== -1) {
         let itemIndex = findItemIndex(DATA.SHOP_ITEMS, itemName);
         remainingBudget -= DATA.SHOP_PRICES[itemIndex];
         showBudget();
-        showShopList(DATA.SHOP_ITEMS, DATA.SHOP_PRICES, DATA.SHOP_STOCK);
+        // 메뉴판 업데이트
+        let menuText = showShopList(DATA.SHOP_ITEMS, DATA.SHOP_PRICES, stock);
+        document.getElementById("shop-menu-display").innerText = menuText;
         purchased.push(itemName);
-        showPurchased(itemName);
+
+        showPurchased();
         showShopMessageText(result);
     } else {
         showShopMessageText(result);
