@@ -385,14 +385,14 @@ function onCheckout() {
         }
     }
     // 풀게임 vs 독립 미니게임 분기
-    if (typeof onShopLeave === "function") {
-        // 풀게임: 마트에서 나가기 버튼 활성화
-        // onShopCheckoutAndLeave();
-    } else {
-        // 독립 미니게임: 다시하기 버튼 표시
-        document.getElementById("shop-btn-reset").style.display =
-            "inline-block";
-    }
+    // if (typeof onShopLeave === "function") {
+    //     // 풀게임: 마트에서 나가기 버튼 활성화
+    //     // onShopCheckoutAndLeave();
+    // } else {
+    //     // 독립 미니게임: 다시하기 버튼 표시
+    //     document.getElementById("shop-btn-reset").style.display =
+    //         "inline-block";
+    // }
 }
 
 // ✅ 확인법: 물건을 몇 개 산 뒤 [구매 완료] 버튼을 누르세요.

@@ -141,7 +141,7 @@ window.addEventListener("DOMContentLoaded", function () {
     document
         .getElementById("btn-game-start")
         .addEventListener("click", function () {
-            // const audio = document.getElementById("openDoorSound");
+            const audio = document.getElementById("openDoorSound");
 
             if (audio) {
                 audio.volume = 0.3;
@@ -156,13 +156,13 @@ window.addEventListener("DOMContentLoaded", function () {
         });
     // ── 시작 씬 ──
     document.getElementById("btn-start").addEventListener("click", function () {
-        const audio = document.getElementById("openDoorSound");
+        const doorAudio = document.getElementById("openDoorSound");
 
-        if (audio) {
-            audio.volume = 0.5;
-            audio.currentTime = 0;
-            audio.play();
-            audio.onended = function () {
+        if (doorAudio) {
+            doorAudio.volume = 0.5;
+            doorAudio.currentTime = 0;
+            doorAudio.play();
+            doorAudio.onended = function () {
                 onStartClick();
             };
         } else {
@@ -174,13 +174,13 @@ window.addEventListener("DOMContentLoaded", function () {
     document
         .getElementById("path-btn-walk")
         .addEventListener("click", function () {
-            const audio = document.getElementById("walkSound");
+            const walkAudio = document.getElementById("walkSound");
 
-            if (audio) {
-                audio.currentTime = 0;
-                audio.play();
+            if (walkAudio) {
+                walkAudio.currentTime = 0;
+                walkAudio.play();
                 setTimeout(() => {
-                    audio.pause();
+                    walkAudio.pause();
                     onWalkClick();
                 }, 2000);
             } else {
@@ -215,13 +215,13 @@ window.addEventListener("DOMContentLoaded", function () {
         });
 
     const container = document.getElementById("shop-item-buttons-container"); // 상점 아이템 코인 오디오
-    const audio = document.getElementById("shopItemSound");
+    const itemAudio = document.getElementById("shopItemSound");
 
     container.addEventListener("click", function (event) {
         if (event.target && event.target.tagName === "BUTTON") {
-            if (audio) {
-                audio.currentTime = 0;
-                audio.play();
+            if (itemAudio) {
+                itemAudio.currentTime = 0;
+                itemAudio.play();
             }
         }
     });
@@ -229,12 +229,12 @@ window.addEventListener("DOMContentLoaded", function () {
     document
         .getElementById("shop-btn-checkout")
         .addEventListener("click", function () {
-            const audio = document.getElementById("shopCheckoutSound");
+            const checkoutAudio = document.getElementById("shopCheckoutSound");
 
-            if (audio) {
-                audio.currentTime = 0;
-                audio.play();
-                audio.onended = function () {
+            if (checkoutAudio) {
+                checkoutAudio.currentTime = 0;
+                checkoutAudio.play();
+                checkoutAudio.onended = function () {
                     onCheckout();
                 };
             } else {
@@ -245,13 +245,13 @@ window.addEventListener("DOMContentLoaded", function () {
     document
         .getElementById("shop-btn-leave")
         .addEventListener("click", function () {
-            const audio = document.getElementById("shopLeaveSound");
+            const shopExitAudio = document.getElementById("shopLeaveSound");
 
-            if (audio) {
-                audio.volume = 0.3;
-                audio.currentTime = 0;
-                audio.play();
-                audio.onended = function () {
+            if (shopExitAudio) {
+                shopExitAudio.volume = 0.3;
+                shopExitAudio.currentTime = 0;
+                shopExitAudio.play();
+                shopExitAudio.onended = function () {
                     onShopLeave();
                 };
             } else {
