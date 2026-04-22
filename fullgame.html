@@ -11,21 +11,30 @@
              씬 0: 타이틀 화면 
              ════════════════════════════════════ -->
         <div id="scene-title" class="scene active">
-            <h1>안녕</h1>
-            <button id="btn-game-start" class="btn-main">시작하기</button>
+            <h1 id="main-title">
+                먼지속세상에서<br />괴물을피해마트를<br />다녀오는법
+            </h1>
+            <button id="btn-game-start" class="btn-main">마트 다녀오기</button>
         </div>
 
         <!-- ════════════════════════════════════
              씬 1: 벙커 내부 화면
              ════════════════════════════════════ -->
         <div id="scene-start" class="scene active">
-            <!-- <h1 class="title">괴물 마트</h1> -->
-            <p class="subtitle">
-                밖은.. 먼지 지옥이다.. 하지만 나는 배가 고프다...
-            </p>
-            <p class="subtitle">.... 마트에 가야겠다</p>
+            <div class="start-text">
+                <p class="subtitle">
+                    밖은.. 먼지 지옥이다.. 하지만 나는 배가 고프다...
+                </p>
+                <p class="subtitle">.... 마트에 가야겠다</p>
+            </div>
 
-            <button id="btn-start" class="btn-main">밖으로 나가기</button>
+            <button id="btn-start" class="btn-main">
+                <audio
+                    id="openDoorSound"
+                    src="assets/soundEffect/openDoor.wav"
+                ></audio
+                ><b>밖으로 나가기</b>
+            </button>
         </div>
 
         <!-- ════════════════════════════════════
@@ -35,14 +44,12 @@
             <!-- 경로 표시 -->
             <!-- <div id="path-route-display" class="info-box">경로 로딩중...</div> -->
             <!-- 현재 부위 (크게) -->
-            <button id="path-btn-enter" class="btn-action">
-                마트 들어가기
-            </button>
+            <button id="path-btn-enter" class="btn-main">마트 들어가기</button>
             <div class="path-stage" id="path-monster-area">
                 <!-- 디버그: 스킵 -->
-                <button id="path-btn-skip" class="debug-skip">
+                <!-- <button id="path-btn-skip" class="debug-skip">
                     [DEV] 길 스킵 →
-                </button>
+                </button> -->
                 <!-- 드래그앤드롭 영역 -->
                 <div id="path-current-part"></div>
                 <!-- 몬스터 등장 시 이미지 -->
@@ -64,7 +71,7 @@
                 </div>
 
                 <!-- 전진 버튼 -->
-                <button id="path-btn-walk" class="btn-action">
+                <button id="path-btn-walk" class="btn-main">
                     <audio
                         id="walkSound"
                         src="assets/soundEffect/walk.wav"
@@ -78,7 +85,7 @@
              씬 3: 상점 화면
              ════════════════════════════════════ -->
         <div id="scene-shop" class="scene">
-            <h1 class="title">🛒 톳 마트에 오신 것 을 환영 합니 다</h1>
+            <h1 class="title">톳 마트에 오신 것 을 환영 합니 다</h1>
 
             <div class="shop-top">
                 <div id="shop-notice">
@@ -156,14 +163,14 @@
              씬 4: 엔딩 화면
              ════════════════════════════════════ -->
         <div id="scene-ending" class="scene">
-            <p id="ending-text" class="ending-text"></p>
-            <button id="btn-restart" class="btn-main">다시 하기</button>
+            <p id="ending-text" class="subtitle"></p>
+            <button id="btn-restart" class="btn-main">마트.. 다시 가기?</button>
         </div>
 
         <!-- ════════════════════════════════════
              디버그 메뉴 (하단 고정)
              ════════════════════════════════════ -->
-        <div id="debug-menu">
+        <!-- <div id="debug-menu">
             <span>🛠 DEV</span>
             <button
                 class="debug-btn btn-main"
@@ -197,7 +204,7 @@
             >
                 엔딩
             </button>
-        </div>
+        </div> -->
 
         <!-- 스크립트 로드 순서 -->
         <script src="js/data.js"></script>

@@ -427,11 +427,8 @@ function onWalkClick() {
 
         // 풀게임 vs 독립 미니게임 분기
         if (typeof onPathClear === "function") {
-            if (DATA.CURRENT_DIRECTION === "back") {
-                onPathClear();
-            }
             // 풀게임: fullgame.js 가 씬 전환 담당
-            showMessageText("마트 도착!");
+            // showMessageText("마트 도착!");
             console.log("마트도착..");
             // 걸어가기 버튼 비활성화, 숨기기
             document.getElementById("path-btn-walk").disabled = true;
@@ -439,9 +436,16 @@ function onWalkClick() {
             document.getElementById("path-button-area").style.display = "none";
 
             // 마트 들어가기 버튼 활성화
-            let martEnterBtn = document.getElementById("path-btn-enter");
-            martEnterBtn.disabled = false;
-            martEnterBtn.style.display = "inline-block";
+            if (DATA.CURRENT_DIRECTION === "go") {
+                let martEnterBtn = document.getElementById("path-btn-enter");
+                martEnterBtn.disabled = false;
+                martEnterBtn.style.display = "inline-block";
+            } else {
+                let homeEnterBtn = document.getElementById("path-btn-enter");
+                homeEnterBtn.innerText = "집 들어가기";
+                homeEnterBtn.disabled = false;
+                homeEnterBtn.style.display = "inline-block";
+            }
         } else {
             // 독립 미니게임: 다시하기 버튼 표시
             showMessageText("클리어!");

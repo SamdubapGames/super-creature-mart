@@ -102,7 +102,7 @@ function onShopCheckoutAndLeave() {
 function startEndingScene(type) {
     if (type === "alive") {
         document.getElementById("ending-text").innerText =
-            "마트에서 돌아왔다.\n하지만 무언가 달라져 있었다.\n\n생존 성공!";
+            "마트에서 무사히 돌아왔다...\n\n\n\n근데.. 으 뭔가.. 속이.. 이상한 것 같 기 도... ..\n..\n\n\n 어라..? \n\n내 손이 왜... \n\n\n검게 물들어있 지...?";
     } else {
         document.getElementById("ending-text").innerText =
             "그 길에서 멈춰버렸다.\n\n게임 오버...";
@@ -159,7 +159,7 @@ window.addEventListener("DOMContentLoaded", function () {
         const audio = document.getElementById("openDoorSound");
 
         if (audio) {
-            audio.volume = 0.3;
+            audio.volume = 0.5;
             audio.currentTime = 0;
             audio.play();
             audio.onended = function () {
@@ -194,11 +194,11 @@ window.addEventListener("DOMContentLoaded", function () {
             onPathClear(); // 이제 여기서 씬 전환
         });
 
-    document
-        .getElementById("path-btn-skip")
-        .addEventListener("click", function () {
-            onPathClear();
-        });
+    // document
+    //     .getElementById("path-btn-skip")
+    //     .addEventListener("click", function () {
+    //         onPathClear();
+    //     });
 
     // ── 상점 씬 ──
     document
