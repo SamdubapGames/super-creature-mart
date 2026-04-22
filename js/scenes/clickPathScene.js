@@ -109,6 +109,15 @@ function initPathGame() {
     inventory = DATA.CONFIG.START_INVENTORY.slice();
     isPathCleared = false;
 
+    // ─── UI 보이게 하기 (돌아오는길에 복구) ───
+    const monsterArea = document.getElementById("path-monster-area");
+    const buttonArea = document.getElementById("path-button-area");
+    const monsterLayer = document.getElementById("monster-layer");
+
+    if (monsterArea) monsterArea.style.display = ""; // 빈 문자열 = CSS 기본값 복구
+    if (buttonArea) buttonArea.style.display = "";
+    if (monsterLayer) monsterLayer.style.display = "";
+
     // 화면에 보여주기
     // showRoute();
     showCurrentPart();
