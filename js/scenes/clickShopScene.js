@@ -75,15 +75,45 @@ function initShopGame() {
     // 1. 구매 버튼 동적 생성 (제일 먼저!)
     let btnContainer = document.getElementById("shop-item-buttons-container");
     btnContainer.innerHTML = "";
+
     for (let i = 0; i < DATA.SHOP_ITEMS.length; i++) {
-        let btn = document.createElement("button");
-        btn.id = "shop-btn-" + DATA.SHOP_ITEMS[i];
+        const itemName = DATA.SHOP_ITEMS[i];
+
+        // 1) 행 전체 래퍼 (flex 컨테이너)
+        const row = document.createElement("div");
+        row.className = "shop-item-btn-row";
+
+        // 2) 아이템 아이콘
+        const icon = document.createElement("img");
+        icon.className = "shop-item-icon";
+        icon.src = "";
+        if (DATA.SHOP_ITEM_IMAGES[itemName]) {
+            icon.src = DATA.SHOP_ITEM_IMAGES[itemName];
+        } else {
+            icon.src = DATA.SHOP_ITEM_IMAGES["dummy"];
+        }
+
+        // 3) 아이템 이름
+        const label = document.createElement("p");
+        label.className = "shop-item-name";
+        label.innerText = itemName;
+
+        // 4) 사기 버튼
+        const btn = document.createElement("button");
+        btn.id = "shop-btn-" + itemName;
         btn.className = "item-btn";
-        btn.innerText = DATA.SHOP_ITEMS[i] + " 사기";
+        btn.innerText = "구매하기";
         btn.addEventListener("click", function () {
-            onBuyItem(DATA.SHOP_ITEMS[i]);
+            onBuyItem(itemName);
         });
-        btnContainer.appendChild(btn);
+
+        // 5) 행에 순서대로 붙이기 (왼쪽 → 오른쪽)
+        row.appendChild(icon);
+        row.appendChild(label);
+        row.appendChild(btn);
+
+        // 6) 컨테이너에 행 붙이기
+        btnContainer.appendChild(row);
     }
 
     // 2. 버튼 생성 끝난 뒤에 비활성화 (리스트 보기 누르기 전까지 못 삼)

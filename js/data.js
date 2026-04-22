@@ -67,6 +67,15 @@ const DATA = {
     SHOP_STOCK: [3, 5, 0, 2, 4, 1],
     // items[i], prices[i], stock[i] 는 항상 한 세트
     // stock 이 0 이면 품절
+    SHOP_ITEM_IMAGES: {
+        // "점라면(낱개)": "assets/items/item_ramen.png",
+        // 감자: "assets/items/item_potato.png",
+        // "아이스크림 대파맛": "assets/items/item_icecream.png",
+        // 레몬: "assets/items/item_lemon.png",
+        // 두부: "assets/items/item_tofu.png",
+        // 탄산수: "assets/items/item_soda.png",
+        dummy: "assets/items/shop/shop-item.png",
+    },
 
     // ─────────────────────────────
     // 게임 설정값
