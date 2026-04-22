@@ -5,7 +5,8 @@ const DATA = {
     // parts[i] 와 items[i] 는 항상 한 쌍:
     //   입 ↔ 떡, 꼬리 ↔ 칼, 코 ↔ 담배, 눈 ↔ 레몬
     // 나중에 object 단계 오면 → [{part:"입", item:"떡"}, ...] 로 합쳐짐
-
+    ROUTE: [],
+    PARTNAME: "",
     ITEM_IMAGES: {
         레몬: "assets/items/lemon.png",
         떡: "assets/items/tteok.png",
@@ -23,6 +24,11 @@ const DATA = {
             "assets/bg/path003.png", // 중간
             "assets/bg/path004.png", // 중간
             "assets/bg/path005.png", // 마트 근처
+            "assets/bg/path006.png", // 마트 근처
+            "assets/bg/path007.png", // 마트 근처
+            "assets/bg/path008.png", // 마트 근처
+            "assets/bg/path009.png", // 마트 근처
+            "assets/bg/path010.png", // 마트 근처
         ],
         shop: "assets/bg/shop.png", // 마트 내부
         ending: "assets/bg/ending.png", // 엔딩
@@ -32,10 +38,14 @@ const DATA = {
     // → pathScene에서 BG_IMAGES.path[step] ?? BG_IMAGES.path.at(-1) 로 처리
 
     PART_IMAGES: {
-        입: "assets/monster/part_mouth.png",
-        꼬리: "assets/monster/part_tail.png",
-        코: "assets/monster/part_nose.png",
-        눈: "assets/monster/part_eye.png",
+        입: "assets/monster/part_mouth.GIF",
+        꼬리: "assets/monster/part_tail.GIF",
+        코: "assets/monster/part_nose.GIF",
+        눈: "assets/monster/part_eye.GIF",
+        // 입: "assets/monster/part_mouth.png",
+        // 꼬리: "assets/monster/part_tail.png",
+        // 코: "assets/monster/part_nose.png",
+        // 눈: "assets/monster/part_eye.png",
     },
     // object(딕셔너리)로 관리하는 이유:
     // PART_IMAGES["입"] 으로 바로 꺼낼 수 있음
@@ -63,7 +73,7 @@ const DATA = {
     CONFIG: {
         STARTING_HP: 3, // 현재는 사용 안 함 (LATER: HP 시스템)
         STARTING_BUDGET: 30000,
-        ROUTE_LENGTH: 5, // generateRoute()에 넘길 n
+        ROUTE_LENGTH: 10, // generateRoute()에 넘길 n
 
         // 시작 인벤토리: 모든 아이템을 한 번씩.
         // 현재는 path.js 의 playTurn 이 인벤토리에서 차감하지 않으므로

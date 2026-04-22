@@ -30,7 +30,7 @@ showCurrentPart = function () {
 };
 
 function updateMonsterImage() {
-    const part = document.getElementById("path-current-part").innerText.trim();
+    const part = DATA.PARTNAME;
     const img = document.getElementById("monster-layer");
     console.log("어떤부위????" + part);
     console.log("어떤부위????" + DATA.PART_IMAGES[part]);
