@@ -20,18 +20,19 @@ const DATA = {
         start: "assets/bg/start.png", // 벙커 문
         path: [
             "assets/bg/path001.png", // 출발 직후
-            "assets/bg/path002.png", // 중간
-            "assets/bg/path003.png", // 중간
-            "assets/bg/path004.png", // 중간
-            "assets/bg/path005.png", // 마트 근처
-            "assets/bg/path006.png", // 마트 근처
-            "assets/bg/path007.png", // 마트 근처
-            "assets/bg/path008.png", // 마트 근처
-            "assets/bg/path009.png", // 마트 근처
-            "assets/bg/path010.png", // 마트 근처
+            "assets/bg/path002.png",
+            "assets/bg/path003.png",
+            "assets/bg/path004.png",
+            "assets/bg/path005.png",
+            "assets/bg/path006.png",
+            "assets/bg/path007.png",
+            "assets/bg/path008.png",
+            "assets/bg/path009.png",
+            "assets/bg/path010.png", // 마트
         ],
         shop: "assets/bg/shop.png", // 마트 내부
         ending: "assets/bg/ending.png", // 엔딩
+        title: "assets/bg/title.png", // 타이틀
     },
     // 참고: path 배열 길이 = 배경 사진 장수
     // route 길이(5)가 path 배열 길이보다 길면 나머지는 마지막 사진 재사용

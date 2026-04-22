@@ -8,6 +8,14 @@
     <body>
         <img id="bg-layer" />
         <!-- ════════════════════════════════════
+             씬 0: 타이틀 화면 
+             ════════════════════════════════════ -->
+        <div id="scene-title" class="scene active">
+            <h1>안녕</h1>
+            <button id="btn-game-start" class="btn-main">시작하기</button>
+        </div>
+
+        <!-- ════════════════════════════════════
              씬 1: 시작 화면
              ════════════════════════════════════ -->
         <div id="scene-start" class="scene active">
@@ -52,6 +60,10 @@
                     걸어가기 →
                 </button>
             </div>
+            <!-- 디버그: 스킵 -->
+            <button id="path-btn-skip" class="debug-skip">
+                [DEV] 길 스킵 →
+            </button>
         </div>
 
         <!-- ════════════════════════════════════
@@ -110,6 +122,10 @@
 
             <!-- 영수증 -->
             <pre id="shop-receipt-display" class="receipt-box"></pre>
+            <!-- 디버그: 스킵 -->
+            <button id="shop-btn-skip" class="debug-skip">
+                [DEV] 상점 스킵 →
+            </button>
         </div>
 
         <!-- ════════════════════════════════════

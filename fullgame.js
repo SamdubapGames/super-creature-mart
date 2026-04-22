@@ -38,6 +38,12 @@ function switchScene(sceneName) {
 // 게임 시작
 // ============================================================
 function startNewGame() {
+    switchScene("title");
+}
+// ============================================================
+// 타이틀에서 '게임 시작'버튼 눌렀을 때
+// ============================================================
+function onGameStartClick() {
     direction = "go";
     inventory = DATA.CONFIG.START_INVENTORY.slice();
     budget = DATA.CONFIG.STARTING_BUDGET;
@@ -45,7 +51,6 @@ function startNewGame() {
     // 오프닝 (시작할 때)
     playSceneBgm("opening");
 }
-
 // ============================================================
 // 시작 씬 → 길 씬
 // ============================================================
@@ -130,7 +135,25 @@ function debugJump(sceneName) {
 // ============================================================
 // 이벤트 연결
 // ============================================================
+
 window.addEventListener("DOMContentLoaded", function () {
+    // ── 타이틀 ──
+    document
+        .getElementById("btn-game-start")
+        .addEventListener("click", function () {
+            // const audio = document.getElementById("openDoorSound");
+
+            if (audio) {
+                audio.volume = 0.3;
+                audio.currentTime = 0;
+                audio.play();
+                audio.onended = function () {
+                    onGameStartClick();
+                };
+            } else {
+                onGameStartClick();
+            }
+        });
     // ── 시작 씬 ──
     document.getElementById("btn-start").addEventListener("click", function () {
         const audio = document.getElementById("openDoorSound");
@@ -163,6 +186,12 @@ window.addEventListener("DOMContentLoaded", function () {
             } else {
                 onWalkClick();
             }
+        });
+
+    document
+        .getElementById("path-btn-skip")
+        .addEventListener("click", function () {
+            onPathClear();
         });
 
     // ── 상점 씬 ──
@@ -224,10 +253,31 @@ window.addEventListener("DOMContentLoaded", function () {
             }
         });
 
+    document
+        .getElementById("shop-btn-skip")
+        .addEventListener("click", function () {
+            direction = "back";
+            initPathGame();
+            switchScene("path");
+        });
+
     // ── 엔딩 씬 ──
     document
         .getElementById("btn-restart")
         .addEventListener("click", startNewGame);
+
+    // ─── 키보드 단축키 ───
+    document.addEventListener("keydown", function (e) {
+        // 길 씬에서만, W 키 누르면 걸어가기
+        if (currentScene !== "path") return;
+
+        if (e.key === "w" || e.key === "W") {
+            const walkBtn = document.getElementById("path-btn-walk");
+            // 버튼이 비활성화 상태면 무시 (맞는 아이템 안 썼을 때)
+            if (walkBtn.disabled) return;
+            walkBtn.click(); // 버튼 클릭 효과 (기존 리스너 그대로 발동)
+        }
+    });
 
     // ── 게임 시작 ──
     startNewGame();
