@@ -5,10 +5,14 @@
 //       - #path-current-part = 드롭 타겟 (drop target)
 //       - drop 시 팀원의 onItemClick(itemName) 을 호출 → 기존 로직 재사용
 //
-// PHASE6TODO: 팀원 작업 완료 후 리팩터 시, 이 파일을 clickPathScene.js 에
-//             통합할지 결정. 지금은 관심사 분리 원칙으로 별도 파일.
 // ============================================================
 
+function cleanUpDropArea(docTarget) {
+    // const target = document.getElementById("path-current-part");
+    // 텍스트 클리어
+    showPartText("");
+    if (docTarget) docTarget.classList.remove("drop-active");
+}
 // ============================================================
 // 메인 진입점: 드래그&드롭 활성화
 // ============================================================
@@ -32,6 +36,8 @@ function enableDragDrop() {
 // dragstart: 드래그 시작 시 itemName 을 dataTransfer 에 저장
 // dragend:   드래그 종료 시 시각 피드백 초기화 (성공/취소 무관)
 function bindDragSources() {
+    const target = document.getElementById("path-current-part");
+
     DATA.MONSTER_ITEMS.forEach(function (itemName) {
         const btn = document.getElementById("path-btn-" + itemName);
         if (!btn) {
@@ -47,6 +53,12 @@ function bindDragSources() {
             e.dataTransfer.setData("text/plain", itemName);
             e.dataTransfer.effectAllowed = "move";
             btn.classList.add("dragging");
+
+            DATA.CURRENT_PLAYER_ITEM = itemName;
+            // 드래그 부위에 지금 던진다는 걸 알려주는 메세지 띄우기
+            showPartText(itemName + " 여기에 던지기");
+            // 드롭 영역을 표시하기
+            target.classList.add("drop-active");
             console.log("드래그 시작:", itemName);
         });
 
@@ -55,8 +67,7 @@ function bindDragSources() {
         btn.addEventListener("dragend", function () {
             btn.classList.remove("dragging");
             // 혹시 drop 이 안 된 채 끝났어도 타겟 하이라이트 제거
-            const target = document.getElementById("path-current-part");
-            if (target) target.classList.remove("drop-active");
+            cleanUpDropArea(target);
         });
     });
 }
@@ -86,26 +97,32 @@ function bindDropTarget() {
 
     // dragleave: 타겟 밖으로 드래그가 나감
     target.addEventListener("dragleave", function () {
-        target.classList.remove("drop-active");
+        // target.classList.remove("drop-active");
+        cleanUpDropArea(target);
     });
 
     // drop: 타겟 위에서 마우스 놓음 → 실제 게임 로직 실행
     target.addEventListener("drop", function (e) {
         e.preventDefault();
         const itemName = e.dataTransfer.getData("text/plain");
-        target.classList.remove("drop-active");
+        // target.classList.remove("drop-active");
+        cleanUpDropArea(target);
 
         if (!itemName) {
             console.warn("drop 이벤트에 itemName 없음");
             return;
         }
-
+        // 텍스트 클리어
+        showPartText("");
         console.log("드롭:", itemName);
 
         const soundFiles = {
-            "칼" : { path: "assets/soundEffect/knife.wav", duration: 1000 },
-            "담배" : { path: "assets/soundEffect/cigar.mp3", duration: 4000 },
-            "레몬" : { path: "assets/soundEffect/lemonSqueeze.MP3", duration: 2000 }
+            칼: { path: "assets/soundEffect/knife.wav", duration: 1000 },
+            담배: { path: "assets/soundEffect/cigar.mp3", duration: 4000 },
+            레몬: {
+                path: "assets/soundEffect/lemonSqueeze.MP3",
+                duration: 2000,
+            },
         };
 
         const soundConfig = soundFiles[itemName];
@@ -118,9 +135,9 @@ function bindDropTarget() {
                 onItemClick(itemName);
             }, soundConfig.duration);
         } else {
-        // ★ 팀원의 onItemClick 재사용 — 성공/실패 처리 자동으로 돌아감
-        onItemClick(itemName);
-        };
+            // ★ 팀원의 onItemClick 재사용 — 성공/실패 처리 자동으로 돌아감
+            onItemClick(itemName);
+        }
     });
 }
 
@@ -135,6 +152,8 @@ function bindDropTarget() {
 //   - CSS pointer-events: none 은 드래그까지 막힘
 //   - capture 차단은 드래그는 살리고 click 만 죽일 수 있음
 function disableItemClicks() {
+    const target = document.getElementById("path-current-part");
+
     DATA.MONSTER_ITEMS.forEach(function (itemName) {
         const btn = document.getElementById("path-btn-" + itemName);
         if (!btn) return;
@@ -144,8 +163,14 @@ function disableItemClicks() {
             function (e) {
                 e.stopImmediatePropagation();
                 e.preventDefault();
+                DATA.CURRENT_PLAYER_ITEM = itemName;
                 // 클릭은 조용히 무시. 드래그만 유효함을 메시지로 알려도 OK:
-                // showMessageText("아이템을 괴물 부위로 드래그하세요!");
+
+                // 드래그만 유효함을 알려주기 드롭 영역을 표시해주기
+                target.classList.add("drop-active");
+
+                // 드래그 부위에 지금 던진다는 걸 알려주는 메세지 띄우기
+                showPartText(itemName + " 여기에 던지기");
             },
             true,
         ); // ← 세 번째 인자 true = capture phase (다른 리스너보다 먼저 실행)

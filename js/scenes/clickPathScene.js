@@ -155,6 +155,9 @@ function showMessageText(text) {
 // 리턴: 없음
 
 function showPartText(text) {
+    // fullgame.html에는 혹시 없을 수도 있어서
+    if (document.getElementById("path-current-part") === null) return;
+
     document.getElementById("path-current-part").innerText = text;
 }
 
@@ -194,8 +197,12 @@ function showRouteText(text) {
 function showCurrentPart() {
     if (currentStep < route.length) {
         let partName = route[currentStep];
-        DATA.PARTNAME = route[currentStep];
-        showPartText(partName);
+
+        // 추가: data.js 업데이트하기
+        updateCurrentMonster(partName);
+
+        // 화면에 크게 표시하기- fullgame.html에서는 안써서 코멘트 처리
+        // showPartText(partName);
     } else {
         showPartText("");
     }
@@ -205,6 +212,16 @@ function showCurrentPart() {
 //    → 화면 가운데에 빨간 글씨로 부위 이름 (입/꼬리/코/눈 중 하나)이
 //      크게 보이면 성공!
 //    → 아무것도 안 보이면 아직 안 된 것.
+
+// 추가: data.js에 현재 몬스터 부위을 ->  CURRENT_PART에 저장하기
+// + 그에 대응하는 올바른 아이템을 찾아서 CURRENT_PART_CORRECT_ITEM을 저장하기
+// 리턴 없음
+function updateCurrentMonster(targetPart) {
+    let targetIndex = findPartIndex(DATA.MONSTER_PARTS, targetPart);
+
+    DATA.CURRENT_PART = targetPart;
+    DATA.CURRENT_PART_CORRECT_ITEM = DATA.MONSTER_ITEMS[targetIndex];
+}
 
 // ============================================================
 // Function 5: 경로 보여주기
@@ -380,6 +397,7 @@ window.addEventListener("DOMContentLoaded", function () {
     if (document.getElementById("path-current-part") === null) return;
     if (document.getElementById("path-route-display") === null) return;
     if (document.getElementById("path-message") === null) return;
+    if (document.getElementById("path-current-part") === null) return;
 
     document
         .getElementById("path-btn-walk")

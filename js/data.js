@@ -6,7 +6,9 @@ const DATA = {
     //   입 ↔ 떡, 꼬리 ↔ 칼, 코 ↔ 담배, 눈 ↔ 레몬
     // 나중에 object 단계 오면 → [{part:"입", item:"떡"}, ...] 로 합쳐짐
     ROUTE: [],
-    PARTNAME: "",
+    CURRENT_PART: "",
+    CURRENT_PART_CORRECT_ITEM: "", //현재 나온 부위와 맞는 정답 아니템
+    CURRENT_PLAYER_ITEM: "", // 현재 플레이어가 선택한 아이템
     ITEM_IMAGES: {
         레몬: "assets/items/lemon.png",
         떡: "assets/items/tteok.png",
