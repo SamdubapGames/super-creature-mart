@@ -132,7 +132,9 @@ function setItemButtonsEnabled(isEnabled) {
 // 리턴: 없음
 
 function showMessageText(text) {
-    // document.getElementById("path-message").innerText = text;
+    // fullgame.html에서는 이용 안함
+    if (document.getElementById("path-message") === null) return;
+
     document.getElementById("path-message").innerText = text;
 }
 
@@ -171,6 +173,9 @@ function showPartText(text) {
 // 리턴: 없음
 
 function showRouteText(text) {
+    // fullgame.html에서는 이용 안함
+    if (document.getElementById("path-route-display") === null) return;
+
     document.getElementById("path-route-display").innerText = text;
 }
 
@@ -373,6 +378,8 @@ window.addEventListener("DOMContentLoaded", function () {
     if (document.getElementById("path-btn-reset") === null) return;
     if (document.getElementById("path-btn-walk") === null) return;
     if (document.getElementById("path-current-part") === null) return;
+    if (document.getElementById("path-route-display") === null) return;
+    if (document.getElementById("path-message") === null) return;
 
     document
         .getElementById("path-btn-walk")
